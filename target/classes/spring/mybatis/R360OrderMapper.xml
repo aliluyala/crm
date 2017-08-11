@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="R360OrderEntity">
+	<select id="getOrderByOrderNo" parameterType="java.util.Map" resultType="R360OrderEntity">
+		<![CDATA[
+			SELECT 
+				ID			as	id,
+				ORDER_NO	as	orderNo,
+				CUSTOMER_ID	as	customerId,
+				ENABLE_FLAG	as	enableFlag,
+				CREATE_DATE	as	createDate,
+				UPDATE_DATE	as	updateDate
+			FROM
+				T_DDQ_R360_ORDER
+			WHERE
+				ORDER_NO = #{orderNo} AND ENABLE_FLAG = '1'
+		]]>
+	</select>
+	
+	<select id="getOrderByCustomerId" parameterType="java.util.Map" resultType="R360OrderEntity">
+		<![CDATA[
+			SELECT 
+				ID			as	id,
+				ORDER_NO	as	orderNo,
+				CUSTOMER_ID	as	customerId,
+				ENABLE_FLAG	as	enableFlag,
+				CREATE_DATE	as	createDate,
+				UPDATE_DATE	as	updateDate
+			FROM
+				T_DDQ_R360_ORDER
+			WHERE
+				CUSTOMER_ID = #{customerId} AND enable_flag = '1'
+		]]>
+	</select>
+	<!-- 插入insert -->
+	<insert id="insert" parameterType="R360OrderEntity">
+		INSERT INTO t_ddq_r360_order(
+			ORDER_NO,
+			CUSTOMER_ID,
+			ENABLE_FLAG,
+			CREATE_DATE,
+			UPDATE_DATE
+		)
+		VALUES
+			(
+			#{orderNo,jdbcType=VARCHAR},
+			#{customerId,jdbcType=BIGINT},
+			#{enableFlag,jdbcType=VARCHAR},
+			NOW(),
+			NOW()
+			)
+	</insert>
+	
+	<!-- 老用户，把该用户的上一个有效订单置为无效 -->
+	<update id="update" parameterType="R360OrderEntity">
+		<![CDATA[
+			 UPDATE t_ddq_r360_order 
+				SET UPDATE_DATE  = CURRENT_TIMESTAMP,
+					ENABLE_FLAG = 0
+			  WHERE CUSTOMER_ID  = #{customerId, jdbcType=BIGINT} 
+			  		AND ENABLE_FLAG = 1
+		]]>
+	</update>
+</mapper>
+

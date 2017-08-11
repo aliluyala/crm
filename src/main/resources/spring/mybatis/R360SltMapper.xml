@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="R360SltEntity">
+	<insert id="insertR360Slt" parameterType="R360SltEntity" >
+		<![CDATA[
+			INSERT INTO T_DDQ_R360_SLT 
+				(
+				ORDER_NO	,
+				CUSTOMER_ID	,
+				SLT_ACCOUNT_ID,
+				CREATE_DATE	,
+				UPDATE_DATE	
+				)
+			VALUES
+				(
+				#{orderNo},
+				#{customerId},
+				#{sltAccountId},
+				CURRENT_TIMESTAMP,
+				CURRENT_TIMESTAMP
+				)
+		]]>
+	</insert>
+	
+	<select id="getR360SltByOrderNo" parameterType="String" resultType="R360SltEntity">
+		SELECT
+			ID				as id,
+			ORDER_NO		as orderNo,
+			CUSTOMER_ID		as customerId,
+			SLT_ACCOUNT_ID	as sltAccountId,
+			CREATE_DATE		as createDate,
+			UPDATE_DATE		as updateDate
+		FROM
+			T_DDQ_R360_SLT
+		WHERE
+			ORDER_NO = #{orderNo}
+	</select>
+</mapper>
+

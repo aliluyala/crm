@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- insert,select,selectByPK,count, delete, update,updateAll -->
+<mapper namespace="LikeEntity">
+
+	<insert id="like" parameterType="com.vcredit.ddcash.server.model.entity.activities.bairi.LikeEntity"
+	useGeneratedKeys="true" keyProperty="id">
+	<![CDATA[
+		INSERT INTO T_DDQ_ACTIVITIES_BAIRI_LIKE (
+		    ID,
+            OPEN_ID,
+			AUTHOR_OPENID,
+			CREATE_DATE,
+			UPDATE_DATE
+		)
+		VALUES
+		(
+		    #{id},
+			#{openId, jdbcType=VARCHAR},
+			#{authorOpenId, jdbcType=VARCHAR},
+			CURRENT_TIMESTAMP,
+			CURRENT_TIMESTAMP
+		)
+	]]>
+	</insert>
+	
+	
+	
+	<select id="getLikeList" parameterType="com.vcredit.ddcash.server.model.entity.activities.bairi.LikeEntity" resultType="LikeEntity">
+	<![CDATA[
+		SELECT  ID				id,
+				OPEN_ID			openId,
+				AUTHOR_OPENID	 	authorOpenId
+        FROM T_DDQ_ACTIVITIES_BAIRI_LIKE t
+        WHERE t.OPEN_ID=#{openId} and  TO_DAYS(CURDATE())-TO_DAYS(CREATE_DATE) =0
+	]]>
+	</select>
+	
+	
+	
+	
+	<select id="isLiked" resultType="java.lang.Boolean" parameterType="LikeEntity">
+  		SELECT case  when ((select count(1) from  T_DDQ_ACTIVITIES_BAIRI_LIKE T
+  		WHERE T.AUTHOR_OPENID = #{authorOpenId} 
+  		and   T.OPEN_ID=#{openId} 
+  		AND TO_DAYS(CURDATE())-TO_DAYS(CREATE_DATE) =0
+  		)!=0)
+         then 'true' else 'false' end 
+  	</select>
+
+</mapper>

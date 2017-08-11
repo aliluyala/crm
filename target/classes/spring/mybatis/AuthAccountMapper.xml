@@ -1,0 +1,278 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- insert,select,selectByPK,count, delete, update,updateAll -->
+<mapper namespace="AuthAccountEntity">
+	<!-- 查询条件 -->
+	<sql id="QueryConditionSql">
+		<where>
+			<if test="customerId != null">
+				AND CUSTOMER_ID = #{customerId, jdbcType=BIGINT}
+			</if>
+			<if test="accountType != null and accountType != ''">
+				AND ACCOUNT_TYPE = #{accountType, jdbcType=BIGINT}
+			</if>
+			<if test="id != null">
+				AND ID = #{id, jdbcType=BIGINT}
+			</if>
+			<if test="status != null and status != ''">
+				AND STATUS = #{status, jdbcType=VARCHAR}
+			</if>
+			<if test="enableFlag != null and enableFlag != ''">
+				AND ENABLE_FLAG = #{enableFlag, jdbcType=VARCHAR}
+			</if>
+		</where>
+	</sql>
+
+	<!-- 插入 -->
+	<insert id="insert" parameterType="AuthAccountEntity">
+	<![CDATA[
+	INSERT INTO T_DDQ_AUTH_ACCOUNT (
+			CUSTOMER_ID,
+			ACCOUNT_TYPE,
+			USERNAME,
+			PASSWORD,
+			SCORE,
+			AUTH_DATE,
+			CITY_CODE,
+			STATUS,
+			CREATED_DATE,
+			UPDATED_DATE,
+			SPIDER_REAL_NAME,
+			ENABLE_FLAG,
+			APP_ID,
+			REPORT_SN,
+			MERCHANT_TOKEN 
+		)
+		VALUES
+		(
+			#{customerId, jdbcType=BIGINT}, 
+			#{accountType, jdbcType=VARCHAR}, 
+			#{username, jdbcType=VARCHAR}, 
+			#{password, jdbcType=VARCHAR}, 
+			#{score, jdbcType=INTEGER},
+			CURRENT_TIMESTAMP,
+			#{cityCode, jdbcType=VARCHAR},
+			#{status, jdbcType=VARCHAR},
+			CURRENT_TIMESTAMP,
+			CURRENT_TIMESTAMP,
+			#{spiderName, jdbcType=VARCHAR},
+			#{enableFlag, jdbcType=VARCHAR},
+			#{appId,jdbcType=VARCHAR},
+			#{reportSn, jdbcType=VARCHAR},
+			#{merchantToken, jdbcType=VARCHAR}
+		)
+	]]>
+		<selectKey resultType="Long" keyProperty="id" order="AFTER">
+			<![CDATA[ SELECT LAST_INSERT_ID()  AS id  ]]>
+	    </selectKey>
+	</insert>
+	
+	
+	<!-- 根据客户号查询身份证号 -->
+	<select id="getIdentityByCustomerID" parameterType="Long" resultType="String">
+		<![CDATA[
+			SELECT IDENTITY_NO FROM t_ddq_customer WHERE ID=#{value};
+		]]>
+	</select>
+	
+	
+	<!-- 根据客户号更改客户姓名 -->
+	<update id="updateCustomerNameByCustomerID" parameterType="AuthAccountEntity">
+		<![CDATA[
+			UPDATE 	t_ddq_customer 
+			SET 	REAL_NAME 		= 	#{realName, jdbcType=VARCHAR} 
+			WHERE 	ID 				= 	#{id, jdbcType=BIGINT} 
+		]]>
+	</update>
+	
+	<!-- 分页查询&过滤查询 -->
+	<select id="select" parameterType="AuthAccountEntity" resultType="AuthAccountEntity">
+	<![CDATA[
+		SELECT  ID                    ID,
+				CUSTOMER_ID           CUSTOMERID,
+				ACCOUNT_TYPE          ACCOUNTTYPE,
+				USERNAME              USERNAME,
+				PASSWORD              PASSWORD,
+				SCORE                 SCORE,
+				AUTH_DATE             AUTHDATE,
+				CITY_CODE             CITYCODE,
+				STATUS                STATUS,
+				SPIDER_REAL_NAME      SPIDERNAME,
+				CREATED_DATE          CREATEDDATE,
+				UPDATED_DATE          UPDATEDDATE,
+				ENABLE_FLAG           ENABLEFLAG
+		FROM T_DDQ_AUTH_ACCOUNT
+	]]>
+		<include refid="QueryConditionSql" />
+	<![CDATA[
+		ORDER BY UPDATED_DATE DESC
+	]]>
+	</select>
+
+	<!-- 记录总数 -->
+	<select id="count" parameterType="AuthAccountEntity" resultType="Integer">
+	<![CDATA[
+		SELECT COUNT(1) FROM T_DDQ_AUTH_ACCOUNT
+	]]>
+		<include refid="QueryConditionSql" />
+	</select>
+
+	<!-- 主键查询 -->
+	<select id="selectByPK" parameterType="Long" resultType="AuthAccountEntity">
+	<![CDATA[
+		SELECT  ID                    ID,
+				CUSTOMER_ID           CUSTOMERID,
+				ACCOUNT_TYPE          ACCOUNTTYPE,
+				USERNAME              USERNAME,
+				PASSWORD              PASSWORD,
+				SCORE                 SCORE,
+				AUTH_DATE             AUTHDATE,
+				CITY_CODE             CITYCODE,
+				STATUS                STATUS,
+				SPIDER_REAL_NAME      SPIDERNAME,
+				CREATED_DATE          CREATEDDATE,
+				UPDATED_DATE          UPDATEDDATE,
+				ENABLE_FLAG           ENABLEFLAG
+		FROM T_DDQ_AUTH_ACCOUNT WHERE ID = #{value}
+	]]>
+	</select>
+
+	<!-- 更新 -->
+	<update id="update" parameterType="AuthAccountEntity">
+	<![CDATA[
+		UPDATE T_DDQ_AUTH_ACCOUNT 
+	]]>
+		<set>
+		<![CDATA[
+			UPDATED_DATE = CURRENT_TIMESTAMP,
+		]]>
+			<if test="username != null and username != ''">
+				USERNAME = #{username, jdbcType=VARCHAR},
+			</if>
+			<if test="password != null and password != ''">
+				PASSWORD = #{password, jdbcType=VARCHAR},
+			</if>
+			<if test="score != null">
+				SCORE = #{score, jdbcType=INTEGER},
+			</if>
+			<if test="authDate != null">
+				AUTH_DATE = #{authDate, jdbcType=VARCHAR},
+			</if>
+			<if test="cityCode != null and cityCode != ''">
+				CITY_CODE = #{cityCode, jdbcType=VARCHAR},
+			</if>
+			<if test="status != null and status != ''">
+				STATUS = #{status, jdbcType=VARCHAR},
+			</if>
+			<if test="enableFlag != null and enableFlag != ''">
+				ENABLE_FLAG = #{enableFlag, jdbcType=VARCHAR},
+			</if>
+			<if test="creditMobile != null and creditMobile != ''">
+				CREDIT_MOBILE = #{creditMobile, jdbcType=VARCHAR},
+			</if>
+			<if test="reportSn != null and reportSn != ''">
+				REPORT_SN = #{reportSn, jdbcType=VARCHAR},
+			</if>
+		</set>
+	<![CDATA[
+		WHERE ID = #{id, jdbcType=BIGINT} 
+	]]>
+	</update>
+
+	<!-- 更新 -->
+	<update id="updateByCustomerIdAndAccountType" parameterType="AuthAccountEntity">
+	<![CDATA[
+		UPDATE T_DDQ_AUTH_ACCOUNT 
+	]]>
+		<set>
+		<![CDATA[
+			UPDATED_DATE = CURRENT_TIMESTAMP,
+		]]>
+			<if test="username != null and username != ''">
+				USERNAME = #{username, jdbcType=VARCHAR},
+			</if>
+			<if test="password != null and password != ''">
+				PASSWORD = #{password, jdbcType=VARCHAR},
+			</if>
+			<if test="score != null">
+				SCORE = #{score, jdbcType=INTEGER},
+			</if>
+			<if test="authDate != null">
+				AUTH_DATE = #{authDate, jdbcType=DATE},
+			</if>
+			<if test="cityCode != null and cityCode != ''">
+				CITY_CODE = #{cityCode, jdbcType=VARCHAR},
+			</if>
+			<if test="status != null and status != ''">
+				STATUS = #{status, jdbcType=VARCHAR},
+			</if>
+			<if test="spiderName != null and spiderName != ''">
+				SPIDER_REAL_NAME = #{spiderName, jdbcType=VARCHAR},
+			</if>
+			<if test="enableFlag != null and enableFlag != ''">
+				ENABLE_FLAG = #{enableFlag, jdbcType=VARCHAR},
+			</if>
+			
+			<if	test="reportSn != null and reportSn != ''">
+				REPORT_SN = #{reportSn, jdbcType=VARCHAR},
+			</if>
+		</set>
+	<![CDATA[
+		WHERE CUSTOMER_ID = #{customerId, jdbcType=BIGINT} 
+			AND ACCOUNT_TYPE = #{accountType, jdbcType=VARCHAR}
+			AND ENABLE_FLAG = '1'
+	]]>
+	</update>
+
+	<!-- customer account rest -->
+	<update id="reset" parameterType="Long">
+	<![CDATA[
+		UPDATE T_DDQ_AUTH_ACCOUNT 
+			SET UPDATED_DATE           = CURRENT_TIMESTAMP, 
+				ENABLE_FLAG            = '0'
+		 WHERE CUSTOMER_ID = #{value} AND ENABLE_FLAG = '1'
+	]]>
+	</update>
+	
+	<!--  查找机构征信账号信息 -->
+	<select id="queryICAccount" parameterType="Long" resultType="AuthAccountEntity">
+	<![CDATA[
+		SELECT  ID                    ID,
+				CUSTOMER_ID           CUSTOMERID,
+				ACCOUNT_TYPE          ACCOUNTTYPE,
+				USERNAME              USERNAME,
+				STATUS                STATUS,
+				REPORT_SN             reportSn
+		from t_ddq_auth_account 
+		where ACCOUNT_TYPE in ('DBC','WMC') 
+		and CUSTOMER_ID = #{value}
+		and ENABLE_FLAG ='1'
+	]]>		
+	</select>
+	
+	<select id="selectCreditAccount" parameterType="Long" resultType="AuthAccountEntity">
+	<![CDATA[
+		SELECT  ID                    id,
+				CUSTOMER_ID           customerId,
+				ACCOUNT_TYPE          accountType,
+				USERNAME              userName,
+				PASSWORD              password,
+				SCORE                 score,
+				AUTH_DATE             authDate,
+				CITY_CODE             cityCode,
+				STATUS                STATUS,
+				SPIDER_REAL_NAME      spiderName,
+				CREATED_DATE          createdDate,
+				UPDATED_DATE          updatedDate,
+				ENABLE_FLAG           enableFlag,
+				APP_ID                appId,
+				REPORT_SN             reportSn
+		FROM T_DDQ_AUTH_ACCOUNT WHERE CUSTOMER_ID = #{value}
+		and ACCOUNT_TYPE in('NC','DBC','WMC')
+		and ENABLE_FLAG = 1
+		ORDER BY UPDATED_DATE DESC limit 1
+	]]>
+	</select>
+</mapper> 

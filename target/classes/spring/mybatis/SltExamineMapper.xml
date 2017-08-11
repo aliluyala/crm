@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="SltExamineEntity">
+	<!-- 根据accountId查询被拒状态 -->
+	<select id="findRejectTimeByAccountId" resultType="SltExamineEntity" parameterType="java.lang.Long">
+		<![CDATA[
+			SELECT 
+				SLT_ACCOUNT_ID			sltAccountId,
+				reject_time_limit		rejectTimeLimit,
+				reject_reson			rejectReson,
+				review_date				reviewDate
+			FROM t_ddq_slt_examine
+			WHERE SLT_ACCOUNT_ID = #{sltAccountId};
+		]]>
+	</select>
+</mapper>

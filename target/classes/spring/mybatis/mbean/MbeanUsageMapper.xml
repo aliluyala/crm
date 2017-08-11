@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- insert,select,selectByPK,count, delete, update,updateAll -->
+<mapper namespace="MbeanUsageEntity">
+
+	<!-- 根据使用途径描述查询记录id -->
+	<select id="selectByUsageDesc" resultType="MbeanUsageEntity"
+		parameterType="String">
+		SELECT 	ID				id,
+				USAGE_NAME		usageName,
+				USAGE_DESC		usageDesc,
+				MAX_AMT			maxAmt,
+				MIN_AMT			minAmt,
+				ENABLE_FLAG		enableFlag,
+				CREATED_DATE	createdDate,
+				UPDATED_DATE	updatedDate
+		FROM t_ddq_mbean_usage
+		WHERE	USAGE_DESC = #{usageDesc}
+				AND
+				ENABLE_FLAG = 1
+	</select>
+
+</mapper> 

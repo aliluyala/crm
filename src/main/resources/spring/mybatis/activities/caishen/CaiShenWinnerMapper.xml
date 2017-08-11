@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- insert,select,selectByPK,count, delete, update,updateAll -->
+<mapper namespace="CaiShenWinnerEntity">
+
+	<insert id="insertNewWinner" parameterType="CaiShenWinnerEntity"
+		useGeneratedKeys="true" keyProperty="id">
+	<![CDATA[
+		INSERT INTO t_ddq_activities_caishen_winner (
+			ID,
+			CUSTOMER_ID,
+			OPEN_ID,
+			OBTAIN_SIXTH_GOD,
+			CREATED_DATE,
+			UPDATED_DATE
+		)
+		VALUES
+		(
+			#{id},
+			#{customerId},
+			#{openId},
+			#{obtainSixthGod},
+			NOW(),
+			NOW()
+		)
+	]]>
+	</insert>
+
+	<select id="isWinner" parameterType="string" resultType="boolean">
+		<![CDATA[
+			SELECT  
+			CASE
+			WHEN(
+				(
+					SELECT COUNT(1)
+					FROM 	t_ddq_activities_caishen_winner
+					WHERE	OPEN_ID=#{openId}		
+				)			
+			)!=0
+			THEN 'true' ELSE 'false'
+			END
+		]]>
+	</select>
+
+	<update id="obtainedSixthGod" parameterType="string">
+		<![CDATA[
+			UPDATE  t_ddq_activities_caishen_winner
+			SET		OBTAIN_SIXTH_GOD = TRUE
+			WHERE   OPEN_ID=#{openId}
+		]]>
+	</update>
+	
+	<select id="selectCandidates" resultType="CustomerEntity">
+		<![CDATA[
+			SELECT  t2.ID 					id,
+					t2.OPEN_ID				openId,
+					t2.CREATED_DATE			createdDate,
+					t2.UPDATED_DATE			updatedDate					
+			FROM	t_ddq_activities_caishen_participant t1 , t_ddq_customer t2
+			WHERE 	t1.OPEN_ID = t2.OPEN_ID
+					AND
+					t1.IS_OLD_WX_CUSTOMER = TRUE
+					AND
+					t1.SUCCESS_TIME = 5
+					AND
+					(
+						SELECT	COUNT(1) 
+						FROM 	t_ddq_slt_account  
+						WHERE 	CUSTOMER_ID = t2.ID
+								AND
+								TRANS_STATUS = 3
+					)=0
+					AND
+					(
+						SELECT 	COUNT(1)
+						FROM	t_ddq_slt_account
+						WHERE	CUSTOMER_ID = t2.ID
+								AND
+								TRANS_STATUS IN (0,1,2,4)
+					)>0
+		]]>
+	</select>
+</mapper>

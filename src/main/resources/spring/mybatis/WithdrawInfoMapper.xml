@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- insert,select,selectByPK,count, delete, update,updateAll -->
+<mapper namespace="WithdrawInfoEntity">
+
+	<!-- 插入 -->
+	<insert id="insert" parameterType="com.vcredit.ddcash.server.model.entity.transfer.WithdrawInfoEntity">
+	<![CDATA[
+		INSERT INTO T_DDQ_WITHDRAW_INFO (
+            SLT_ACCOUNT_ID,
+            WITHDRAW_STATUS,
+            LOAN_STATUS,
+            FAIL_CONTENT,
+			CREATED_DATE,
+			UPDATED_DATE
+		)
+		VALUES
+		(
+			#{sltAccountId, jdbcType=BIGINT}, 
+			#{withdrawStatus, jdbcType=VARCHAR}, 
+			#{loanStatus, jdbcType=VARCHAR}, 
+			#{failContent, jdbcType=VARCHAR}, 
+			CURRENT_TIMESTAMP,
+			CURRENT_TIMESTAMP
+		)
+	]]>
+	<selectKey resultType="Long" keyProperty="withdrawId" order="AFTER">
+		<![CDATA[ SELECT LAST_INSERT_ID()  AS withdrawId  ]]>
+	</selectKey>
+	</insert>
+
+	<!-- 分页查询&过滤查询 -->
+	<select id="select" parameterType="WithdrawInfoEntity" resultType="WithdrawInfoEntity">
+	<![CDATA[
+		 select WITHDRAW_ID     withdrawId,
+                SLT_ACCOUNT_ID  sltAccountId,
+                WITHDRAW_STATUS withdrawStatus,
+                LOAN_STATUS     loanStatus,
+                FAIL_CONTENT    failContent,
+                CREATED_DATE    createDate,
+                UPDATED_DATE    updateDate
+          from  T_DDQ_WITHDRAW_INFO 
+	]]>
+	<where>
+		<if test="withdrawId != null">
+			AND WITHDRAW_ID = #{withdrawId, jdbcType=BIGINT}
+		</if>
+		<if test="sltAccountId != null and sltAccountId != ''">
+			AND SLT_ACCOUNT_ID = #{sltAccountId, jdbcType=BIGINT}
+		</if>
+		<if test="withdrawStatus != null and withdrawStatus != ''">
+			AND WITHDRAW_STATUS = #{withdrawStatus, jdbcType=VARCHAR}
+		</if>
+		<if test="loanStatus != null and loanStatus != ''">
+			AND LOAN_STATUS = #{loanStatus, jdbcType=VARCHAR}
+		</if>
+	</where>
+	<![CDATA[
+		ORDER BY UPDATE_DATE DESC
+	]]>
+	</select>
+
+	<!-- 记录总数 -->
+	<select id="count" parameterType="WithdrawInfoEntity" resultType="Integer">
+	<![CDATA[
+		SELECT COUNT(1) FROM T_DDQ_WITHDRAW_INFO
+	]]>
+	</select>
+
+	<!-- 主键查询 -->
+	<select id="selectByPK" parameterType="Long" resultType="WithdrawInfoEntity">
+	<![CDATA[
+		 select WITHDRAW_ID     withdrawId,
+                SLT_ACCOUNT_ID  sltAccountId,
+                WITHDRAW_STATUS withdrawStatus,
+                LOAN_STATUS     loanStatus,
+                FAIL_CONTENT    failContent,
+                CREATED_DATE    createDate,
+                UPDATED_DATE    updateDate
+		FROM T_DDQ_WITHDRAW_INFO WHERE WITHDRAW_ID = #{value}
+	]]>
+	</select>
+
+	<!-- 删除 -->
+	<delete id="delete" parameterType="Long">
+	<![CDATA[
+		DELETE FROM T_DDQ_WITHDRAW_INFO WHERE ID = #{value}
+	]]>
+	</delete>
+
+	<!-- 更新 -->
+	<update id="update" parameterType="WithdrawInfoEntity">
+	<![CDATA[
+		UPDATE T_DDQ_WITHDRAW_INFO 
+	]]>
+		<set>
+		<![CDATA[
+			UPDATED_DATE = CURRENT_TIMESTAMP,
+		]]>
+			<if test="sltAccountId != null and sltAccountId != ''">
+				SLT_ACCOUNT_ID = #{sltAccountId, jdbcType=BIGINT},
+			</if>
+			<if test="withdrawStatus != null and withdrawStatus != ''">
+				WITHDRAW_STATUS = #{withdrawStatus, jdbcType=VARCHAR},
+			</if>
+			<if test="loanStatus != null and loanStatus != ''">
+				LOAN_STATUS = #{loanStatus, jdbcType=VARCHAR},
+			</if>
+			<if test="failContent != null and failContent != ''">
+				FAIL_CONTENT = #{failContent, jdbcType=VARCHAR},
+			</if>
+		</set>
+	<![CDATA[
+		WHERE WITHDRAW_ID = #{withdrawId, jdbcType=BIGINT} 
+	]]>
+	</update>
+
+	<!-- 更新所有 -->
+	<update id="updateAll" parameterType="WithdrawInfoEntity">
+	<![CDATA[
+		UPDATE T_DDQ_WITHDRAW_INFO 
+			SET UPDATED_DATE      = CURRENT_TIMESTAMP, 
+				SLT_ACCOUNT_ID    = #{sltAccountId, jdbcType=BIGINT},
+				WITHDRAW_STATUS   = #{withdrawStatus, jdbcType=VARCHAR},
+				LOAN_STATUS       = #{loanStatus, jdbcType=VARCHAR},
+				FAIL_CONTENT      = #{failContent, jdbcType=VARCHAR}
+		 WHERE WITHDRAW_ID = #{withdrawId, jdbcType=BIGINT}
+	]]>
+	</update>
+
+
+</mapper> 

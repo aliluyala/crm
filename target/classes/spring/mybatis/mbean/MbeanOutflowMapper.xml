@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- insert,select,selectByPK,count, delete, update,updateAll -->
+<mapper namespace="MbeanOutflowEntity">
+
+	<!-- 冻结中魔豆数 -->
+	<select id="selectFrozenAmtByCustomerId" resultType="Integer"
+		parameterType="long">
+		SELECT IFNULL(SUM(AMOUNT),0)
+		FROM t_ddq_mbean_outflow
+		WHERE	CUSTOMER_ID = #{customerId}
+				AND
+				STATUS = -1
+	</select>
+	
+	<!-- 查询消耗记录 -->
+	<select id="selectOutflowListByCustomerId" resultType="MbeanOutflowEntity"
+		parameterType="long">
+			SELECT
+				t1.ID 				id,
+				t1.USAGE 			_usage,
+				t1.AMOUNT 			amount,
+				t1.STATUS 			status,
+				t1.CUSTOMER_ID 		customerId,
+				t1.REF_ID 			refId,
+				t1.CREATED_DATE 	createdDate,
+				t1.UPDATED_DATE 	updatedDate,
+				t2.USAGE_NAME		displayChannel
+			FROM t_ddq_mbean_outflow t1, t_ddq_mbean_usage t2
+			WHERE 	t1.USAGE = t2.ID
+					AND
+					t1.CUSTOMER_ID = #{customerId}
+	</select>
+	
+	<!-- 插入新纪录 -->
+	<insert id="insert" parameterType="MbeanOutflowEntity"
+		useGeneratedKeys="true" keyProperty="ID">
+		INSERT INTO t_ddq_mbean_outflow
+		VALUES(
+			NULL,
+			#{_usage},
+			#{amount},
+			#{status},
+			#{customerId},
+			#{refId},
+			NOW(),
+			NOW()
+		)
+	</insert>
+	
+	<!-- 更新纪录 -->
+	<update id="update" parameterType="MbeanOutflowEntity">
+		UPDATE t_ddq_mbean_outflow t
+		<set>
+			<if test="_usage != null">
+				t.USAGE = #{_usage},
+			</if>
+			<if test="amount != null">
+				t.AMOUNT = #{amount},
+			</if>
+			<if test="status != null">
+				t.STATUS = #{status},
+			</if>
+			<if test="refId != null">
+				t.REF_ID = #{refId},
+			</if>
+			<if test="1==1">
+				t.UPDATED_DATE=NOW(),
+			</if>
+		</set>
+		WHERE ID = #{id} AND CUSTOMER_ID = #{customerId}
+	</update>
+	
+	<!-- 根据usage和refid查询消耗记录 -->
+	<select id="selectByUsageAndRefId" resultType="MbeanOutflowEntity"
+		parameterType="MbeanOutflowEntity">
+			SELECT
+				t1.ID 				id,
+				t1.USAGE 			_usage,
+				t1.AMOUNT 			amount,
+				t1.STATUS 			status,
+				t1.CUSTOMER_ID 		customerId,
+				t1.REF_ID 			refId,
+				t1.CREATED_DATE 	createdDate,
+				t1.UPDATED_DATE 	updatedDate
+			FROM t_ddq_mbean_outflow t1, t_ddq_mbean_usage t2
+			WHERE 	t1.USAGE = #{_usage}
+					AND
+					t1.REF_ID = #{refId}
+	</select>
+</mapper> 

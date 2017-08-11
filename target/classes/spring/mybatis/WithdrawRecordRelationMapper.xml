@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- insert,select,selectByPK,count, delete, update,updateAll -->
+<mapper namespace="WithdrawRecordRelationDto">
+
+	<resultMap id="BaseResultMap" type="com.vcredit.ddcash.server.model.dto.home.WithdrawRecordRelationDto">
+		<id column="SLT_ACCOUNT_ID" property="sltAccountId" />
+	</resultMap>
+	<!-- 个人中心查询客户借款详情 -->
+  	<select id="getAllSltAccountInfo" resultMap="BaseResultMap" parameterType="java.lang.Long">
+  		select   DATE_FORMAT(slt.CREATED_DATE,'%Y-%m-%d') createdDateStr,  
+  		         DATE_FORMAT(slt.UPDATED_DATE,'%Y-%m-%d' ) updateDateStr,    
+  		         slt.UPDATED_DATE applyDate,
+                 slt.TRANS_STATUS transStatus,
+                 slt.SLT_ACCOUNT_ID sltAccountId,
+                 slt.CARD_ID cardId ,
+                 slt.CUSTOMER_ID customerId,
+                 con.LOAN_DATE  loanDate,
+                 con.LOAN_AMOUNT loanAmount,
+                 card.CARD_NO cardNo,
+                 card.CARD_BANK cardBank,
+                 card.BANK_CODE bankCode
+            from t_ddq_slt_account slt,
+                 t_ddq_bind_cards card,
+                 t_ddq_contract_info con
+           where slt.SLT_ACCOUNT_ID=con.SLT_ACCOUNT_ID
+             and card.ID=slt.CARD_ID
+             and slt.CUSTOMER_ID=#{value}
+  	</select>
+  	
+  	<select id="getSingleSltAccountRelInfo" resultMap="BaseResultMap" parameterType="String">
+  		select   DATE_FORMAT(slt.CREATED_DATE,'%Y-%m-%d') createdDateStr,  
+  		         DATE_FORMAT(slt.UPDATED_DATE,'%Y-%m-%d' ) updateDateStr,    
+  		         slt.UPDATED_DATE applyDate,
+                 slt.TRANS_STATUS transStatus,
+                 slt.SLT_ACCOUNT_ID sltAccountId,
+                 slt.CARD_ID cardId ,
+                 slt.CUSTOMER_ID customerId,
+                 con.LOAN_DATE  loanDate,
+                 con.LOAN_AMOUNT loanAmount,
+                 card.CARD_NO cardNo,
+                 card.CARD_BANK cardBank,
+                 card.BANK_CODE bankCode
+            from t_ddq_slt_account slt,
+                 t_ddq_bind_cards card,
+                 t_ddq_contract_info con
+           where slt.SLT_ACCOUNT_ID=con.SLT_ACCOUNT_ID
+             and card.ID=slt.CARD_ID
+             and slt.SLT_ACCOUNT_ID=#{value}
+  	</select>
+  	
+  	<select id="getSurrenderDate" resultType="String"  parameterType="java.lang.Long">
+  		select DATE_FORMAT(t.surrender_date,'%Y-%m-%d' ) surrenderDate
+  		  from t_ddq_slt_examine t 
+  		 where t.SLT_ACCOUNT_ID=#{value}
+  	</select>
+  	<select id="getSingleSltExamineRelInfo" resultType="com.vcredit.ddcash.server.model.entity.transfer.SltExamineEntity"  parameterType="java.lang.Long">
+  		
+            SELECT  t.SLT_ACCOUNT_ID sltAccountId,
+                    t.hang_up hangUp,
+                    DATE_FORMAT(t.hang_up_date,'%Y-%m-%d' ) hangUpDate,    
+                    t.hang_up_person hangUpPerson,
+                    t.reject_reson rejectReson,
+                    t.reject_time_limit rejectTimeLimit,
+                    t.remark remark,
+                    DATE_FORMAT(t.review_date,'%Y-%m-%d' ) reviewDate,  
+                    t.review_person reviewPerson,
+                    DATE_FORMAT(t.surrender_date,'%Y-%m-%d' ) surrenderDate,    
+                    t.surrender_person surrenderPerson
+              froM  t_ddq_slt_examine t 
+              where t.SLT_ACCOUNT_ID=#{value}
+  	</select>
+</mapper> 

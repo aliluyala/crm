@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="CustomerEntity">
+	<!-- 根据掩码身份证号，掩码手机号，用户姓名查询用户是否已存在 -->
+	<select id="checkCustomerExist" parameterType="CustomerEntity" resultType="CustomerEntity">
+		SELECT  ID                           ID,
+				AGENT						 AGENT,
+				IDENTITY_NO                  IDENTITYNO,
+				REAL_NAME                    REALNAME,
+				MOBILE                       MOBILE,
+				APP_ID						 APPID
+		FROM T_DDQ_CUSTOMER
+		<where>
+			<if test="identityNo!=null and identityNo.trim()!=''">
+				IDENTITY_NO LIKE #{identityNo}
+			</if>
+			<if test="mobile!=null and mobile.trim()!=''">
+				AND MOBILE LIKE #{mobile}
+			</if>
+			<if test="realName!=null and realName.trim()!=''">
+				AND REAL_NAME = #{realName}
+			</if>
+		</where>
+	</select>
+</mapper>

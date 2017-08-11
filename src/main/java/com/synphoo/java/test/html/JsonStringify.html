@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script type="text/javascript">
+var data={
+		"status":"1",
+		"msg":"调用微信支付生成预支付交易单成功",
+		"data":{
+			"msg":{"nonce_str":"R6j44toa8UtkH6C7","appid":"wx1ee63418bd8d7fbb","sign":"328CD751708E33E2BC93AFED8F2280FA","trade_type":"APP","return_msg":"OK","result_code":"SUCCESS","mch_id":"1480125002","return_code":"SUCCESS","prepay_id":"wx2017061410324782a586ec650014821481"},
+			"code":"200"}
+		};
+
+//alert("obj="+data.data.msg);
+//alert("jsonStr="+JSON.stringify(data.data.msg));
+//alert("str="+"'"+data.data.msg.toString()+"'");
+/* var bankNo="wx1ee63418bd8d7fbb";
+alert(bankNo.substring(bankNo.length-4,bankNo.length)); */
+if('undefined'==typeof(hasWeiXin)){
+	alert('true=');
+}else{
+	alert('false='+typeof(hasWeiXin));
+}
+</script>
+</head>
+<body>
+
+</body>
+</html>

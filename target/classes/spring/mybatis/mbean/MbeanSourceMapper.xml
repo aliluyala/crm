@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- insert,select,selectByPK,count, delete, update,updateAll -->
+<mapper namespace="MbeanSourceEntity">
+
+	<!-- 根据获取途径描述查询记录id -->
+	<select id="selectBySourceDesc" resultType="MbeanSourceEntity"
+		parameterType="String">
+		SELECT 	ID				id,
+				SOURCE_NAME		sourceName,
+				SOURCE_DESC		sourceDesc,
+				DEFAULT_AMT		defaultAmt,
+				USAGE_RANGE		usageRange,
+				ENABLE_FLAG		enableFlag,
+				CREATED_DATE	createdDate,
+				UPDATED_DATE	updatedDate
+		FROM 	t_ddq_mbean_source
+		WHERE	SOURCE_DESC = #{sourceDesc}
+				AND
+				ENABLE_FLAG = 1
+	</select>
+
+</mapper> 

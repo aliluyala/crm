@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<!-- insert,select,selectByPK,count, delete, update,updateAll -->
+<mapper namespace="ContacterInfoEntity">
+	<!-- 插入 -->
+	<insert id="saveContacterInfo" parameterType="java.util.List">
+	<![CDATA[
+		INSERT INTO T_DDQ_CONTACT_RELASIONSHIP (
+			        CUSTOMER_ID,
+			        CONTACTER_REL,
+			        CONTACTER_NAME,
+			        CONTACTER_MOBILE,	
+			        LEVEL,		        
+			        CREATED_DATE,
+			        UPDATED_DATE
+		)
+		VALUES		
+	]]>
+	<foreach collection="list" item="item" index="index" separator=",">
+			(
+			#{item.customerId, jdbcType=BIGINT},
+			#{item.contacterRel, jdbcType=VARCHAR},
+			#{item.contacterName, jdbcType=VARCHAR},
+			#{item.contacterMobile, jdbcType=VARCHAR},
+			#{item.level, jdbcType=BIGINT},			
+			CURRENT_TIMESTAMP,
+			CURRENT_TIMESTAMP
+			)
+		</foreach>
+	</insert>
+	<select id="queryContacterInfo" parameterType="ContacterInfoEntity" resultType="ContacterInfoEntity">
+	<![CDATA[
+		SELECT ID id,CONTACTER_REL contacterRel,
+		CONTACTER_NAME contacterName,
+		CONTACTER_MOBILE contacterMobile,
+		LEVEL level,
+		DELETE_FLAG flag		
+		FROM T_DDQ_CONTACT_RELASIONSHIP
+		WHERE CUSTOMER_ID = #{value}
+		AND DELETE_FLAG = '1'
+		ORDER BY UPDATED_DATE
+	]]>
+	</select>
+	<update id="updateContacterInfo" parameterType="ContacterInfoEntity">
+		<![CDATA[
+			UPDATE 	T_DDQ_CONTACT_RELASIONSHIP 
+			SET CONTACTER_REL = #{contacterRel, jdbcType=VARCHAR},
+	         	CONTACTER_NAME = #{contacterName, jdbcType=VARCHAR},
+	            CONTACTER_MOBILE = #{contacterMobile, jdbcType=VARCHAR},
+	            DELETE_FLAG = '1',	         	
+	         	UPDATED_DATE  = CURRENT_TIMESTAMP
+			WHERE CUSTOMER_ID  = #{customerId, jdbcType=BIGINT} 
+			AND   ID = #{id, jdbcType=BIGINT}
+		]]>
+	</update>
+	<insert id="insert" parameterType="ContacterInfoEntity">
+		INSERT INTO T_DDQ_CONTACT_RELASIONSHIP (
+			CUSTOMER_ID,
+			CONTACTER_REL,
+	        CONTACTER_NAME,
+	        CONTACTER_MOBILE,	
+	        DELETE_FLAG,
+	        LEVEL,		        
+	        CREATED_DATE,
+	        UPDATED_DATE
+		)
+		VALUES
+			(
+			#{customerId,jdbcType=BIGINT},
+			#{contacterRel,jdbcType=VARCHAR},
+			#{contacterName,jdbcType=VARCHAR},
+			#{contacterMobile,jdbcType=VARCHAR},
+			#{flag,jdbcType=VARCHAR},
+			#{level,jdbcType=INTEGER},
+			NOW(),
+			NOW()
+			)
+	</insert>
+	</mapper>

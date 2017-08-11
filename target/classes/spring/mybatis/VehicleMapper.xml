@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- insert,select,selectByPK,count, delete, update,updateAll -->
+<mapper namespace="VehicleEntity">
+
+	  <select id="queryVehicleByCustId" parameterType="Long" resultType="VehicleEntity">
+		SELECT  
+		     ID                          id,
+		     CUSTOMER_ID                 customerId ,
+		     LOCATION                    location,
+		     PLATE_NUMBER                plateNumber,
+		     VEHICLE_TYPE                vehicleType,
+		     FRAME_NO                    frameNo,
+		     ENGINE_NO                   engineNo,
+		     CREATED_DATE                createdDate
+		FROM t_ddq_vehicle
+		where CUSTOMER_ID =#{customerId}   
+		    and   DELETE_FLAG='1' 
+		    limit 1
+	</select>
+
+</mapper> 

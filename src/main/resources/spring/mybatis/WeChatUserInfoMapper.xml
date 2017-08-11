@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- insert,select,selectByPK,count, delete, update,updateAll -->
+<mapper namespace="WeChatInfoEntity">
+	<!-- 插入 -->
+	<insert id="insert" parameterType="WeChatInfoEntity">
+	<![CDATA[
+		INSERT INTO t_ddq_wechat_userinfo (
+			OPEN_ID,
+			NICK_NAME,
+			SEX,
+			CITY,
+			COUNTRY,
+			PROVINCE,
+			HEAD_IMG_URL,
+			UNION_ID,
+			CREATED_DATE,
+			UPDATED_DATE
+		)
+		VALUES
+		(
+			#{openId, jdbcType=VARCHAR}, 
+			#{nickName, jdbcType=VARCHAR}, 
+			#{sex, jdbcType=VARCHAR}, 
+			#{city, jdbcType=VARCHAR}, 
+			#{country, jdbcType=VARCHAR},
+			#{province, jdbcType=VARCHAR},
+			#{headImgUrl, jdbcType=VARCHAR},
+			#{unionId, jdbcType=VARCHAR},
+			CURRENT_TIMESTAMP,
+			CURRENT_TIMESTAMP
+		)
+	]]>
+		<selectKey resultType="Long" keyProperty="id" order="AFTER">
+		<![CDATA[ SELECT LAST_INSERT_ID()  AS id  ]]>
+		</selectKey>
+	</insert>
+
+	<!-- 主键查询 -->
+	<select id="selectByPK" parameterType="Long" resultType="WeChatInfoEntity">
+	<![CDATA[
+		SELECT  ID                           ID,
+				OPEN_ID                      OPENID,
+				NICK_NAME                    NICKNAME,
+				SEX                          SEX,
+				CITY                         CITY,
+				COUNTRY                      COUNTRY,
+				PROVINCE                     PROVINCE,
+				HEAD_IMG_URL                 HEADIMGURL,
+				UNION_ID                     UNIONID,
+				CREATED_DATE                 CREATEDDATE,
+				UPDATED_DATE                 UPDATEDDATE
+		FROM t_ddq_wechat_userinfo WHERE ID = #{value}
+	]]>
+	</select>
+
+	<!-- 主键查询 -->
+	<select id="selectByOpenId" parameterType="String" resultType="WeChatInfoEntity">
+	<![CDATA[
+		SELECT  ID                           ID,
+				OPEN_ID                      OPENID,
+				NICK_NAME                    NICKNAME,
+				SEX                          SEX,
+				CITY                         CITY,
+				COUNTRY                      COUNTRY,
+				PROVINCE                     PROVINCE,
+				HEAD_IMG_URL                 HEADIMGURL,
+				UNION_ID                     UNIONID,
+				CREATED_DATE                 CREATEDDATE,
+				UPDATED_DATE                 UPDATEDDATE
+		FROM t_ddq_wechat_userinfo WHERE OPEN_ID = #{value}
+	]]>
+	</select>
+
+	<update id="updateAll" parameterType="WeChatInfoEntity">
+	<![CDATA[
+		UPDATE t_ddq_wechat_userinfo 
+			SET UPDATED_DATE               = CURRENT_TIMESTAMP,
+				NICK_NAME                  = #{nickName, jdbcType=VARCHAR},
+				SEX                        = #{sex, jdbcType=VARCHAR},
+				CITY                       = #{city, jdbcType=VARCHAR},
+				COUNTRY                    = #{country, jdbcType=VARCHAR},
+				PROVINCE                   = #{province, jdbcType=VARCHAR},
+				HEAD_IMG_URL               = #{headImgUrl, jdbcType=VARCHAR},
+				UNION_ID                   = #{unionId, jdbcType=VARCHAR}
+		WHERE ID = #{id, jdbcType=BIGINT} 
+	]]>
+	</update>
+
+</mapper> 

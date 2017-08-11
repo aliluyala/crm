@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- insert,select,selectByPK,count, delete, update,updateAll -->
+<mapper namespace="IQSltExamineEntity">
+	
+	<!-- 根据主键查询-->
+	<select id="selectSltExamineEntityById" parameterType="java.lang.Long" resultType="IQSltExamineEntity">
+	<![CDATA[
+		SELECT  t4.id id,
+				t4.SLT_ACCOUNT_ID   sltAccountId,
+				T4.REMARK                       REMARK,
+				DATE_FORMAT(T4.REVIEW_DATE,'%Y-%m-%d %T')                  REVIEWDATE,
+				T4.REVIEW_PERSON    REVIEWPERSON,
+				T4.SURRENDER_PERSON                  SURRENDERPERSON,
+				DATE_FORMAT(T4.SURRENDER_DATE,'%Y-%m-%d %T')  SURRENDERDATE,
+				REJECT_RESON  rejectReson,
+				HANG_UP       hangUp,
+				HANG_UP_PERSON hangUpPerson,
+				DATE_FORMAT(T4.HANG_UP_DATE,'%Y-%m-%d %T')   hangUpDate,
+				REJECT_TIME_LIMIT rejectTimeLimit,
+				T4.AGREE_REMARK  agreeWithdrawalsRemark 
+		FROM  T_DDQ_SLT_EXAMINE T4 
+		WHERE T4.SLT_ACCOUNT_ID  = #{value}
+	]]>
+	</select>
+	
+	
+	<!-- 插入签约放款信息 -->
+	<insert id="insert" parameterType="IQSltExamineEntity" useGeneratedKeys="true" keyProperty="id">
+	<![CDATA[
+		INSERT INTO T_DDQ_SLT_EXAMINE(
+		SLT_ACCOUNT_ID,
+		REMARK,
+		REVIEW_DATE,
+		REVIEW_PERSON,
+		SURRENDER_PERSON,
+		SURRENDER_DATE,
+		REJECT_RESON,
+		HANG_UP,
+		HANG_UP_PERSON,
+		HANG_UP_DATE,
+		REJECT_TIME_LIMIT,
+		AGREE_REMARK
+		)
+		VALUES
+		(
+		#{sltAccountId},
+		#{remark},
+		STR_TO_DATE(#{reviewDate},'%Y-%m-%d %T'),
+		#{reviewPerson},
+		#{surrenderPerson},
+		STR_TO_DATE(#{surrenderDate},'%Y-%m-%d %T'),
+		#{rejectReson},
+		#{hangUp},
+		#{hangUpPerson},
+		STR_TO_DATE(#{hangUpDate},'%Y-%m-%d %T'),
+		#{rejectTimeLimit},
+		#{agreeWithdrawalsRemark}
+		)
+	]]>
+	
+		<selectKey resultType="Long" keyProperty="id" order="AFTER">
+			<![CDATA[ SELECT LAST_INSERT_ID()  AS id  ]]>
+	    </selectKey>
+	</insert>
+	
+	<!-- 更新签约放款信息 -->
+	<update id="updateSltExamineEntityById" parameterType="IQSltExamineEntity">
+	<![CDATA[
+		update T_DDQ_SLT_EXAMINE
+		set REMARK = #{remark},
+		REVIEW_DATE = STR_TO_DATE(#{reviewDate},'%Y-%m-%d %T'),
+		REVIEW_PERSON = #{reviewPerson},
+		SURRENDER_PERSON = #{surrenderPerson},
+		SURRENDER_DATE = STR_TO_DATE(#{surrenderDate},'%Y-%m-%d %T'),
+		REJECT_RESON = #{rejectReson},
+		HANG_UP = #{hangUp},
+		HANG_UP_PERSON = #{hangUpPerson},
+		HANG_UP_DATE = STR_TO_DATE(#{hangUpDate},'%Y-%m-%d %T'),
+		REJECT_TIME_LIMIT = #{rejectTimeLimit},
+		AGREE_REMARK = #{agreeWithdrawalsRemark}
+		where 
+		SLT_ACCOUNT_ID = #{sltAccountId}
+	]]>
+	</update>
+	
+</mapper> 

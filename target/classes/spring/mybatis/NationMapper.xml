@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- insert,select,selectByPK,count, delete, update,updateAll -->
+<mapper namespace="NationEntity">
+
+	<!-- 分页查询&过滤查询 -->
+	<select id="selectProvinceList" resultType="NationEntity">
+		<![CDATA[
+			SELECT  ID                    ID,
+					CODE                  CODE,
+					PROVINCE              PROVINCE,
+					CITY                  CITY,
+					DISTRICT              DISTRICT,
+					PARENT                PARENT,
+					PREFIX                PREFIX
+			FROM T_DDQ_WORK_CITY WHERE PARENT = '1'
+		]]>
+	</select>
+	
+	<!-- 分页查询&过滤查询 -->
+	<select id="selectCityList" resultType="NationEntity" parameterType="java.lang.Long">
+		<![CDATA[
+			SELECT  ID                    ID,
+					CODE                  CODE,
+					PROVINCE              PROVINCE,
+					CITY                  CITY,
+					DISTRICT              DISTRICT,
+					PARENT                PARENT,
+					PREFIX                PREFIX
+			FROM T_DDQ_WORK_CITY WHERE PARENT IN 
+				(SELECT ID FROM T_DDQ_WORK_CITY WHERE CODE=#{value} AND PARENT = '1' )
+		]]>
+	</select>
+
+    <!-- 查询所有城市信息 -->
+    <select id="selectAllCityList" resultType="NationEntity" >
+        <![CDATA[
+            SELECT  ID                    ID,
+                    CODE                  CODE,
+                    PROVINCE              PROVINCE,
+                    CITY                  CITY,
+                    DISTRICT              DISTRICT,
+                    PARENT                PARENT,
+                    PREFIX                PREFIX,
+                    SPELL                 SPELL
+            FROM T_DDQ_WORK_CITY WHERE SPELL IS NOT NULL 
+                  AND CODE LIKE '%00'
+        ]]>
+    </select>
+    	
+	<!--根据CityCode 获取城市名称  -->	
+	<select id="selectCityName" resultType="String" parameterType="java.lang.String">
+		<![CDATA[
+			SELECT
+				CONCAT(t2.PROVINCE,t1.CITY,t1.DISTRICT) as CITY_NAME
+			FROM t_ddq_work_city t1
+			LEFT JOIN t_ddq_work_city t2 ON t1.PARENT=t2.ID
+			WHERE t1.CODE = #{cityCode, jdbcType=VARCHAR}
+		]]>
+	</select>
+	
+	<!--根据CityCode 获取城市名称  -->	
+	<select id="getCityName" resultType="String" parameterType="java.lang.String">
+		<![CDATA[
+			SELECT CASE WHEN t.CITY = '' 
+			THEN (SELECT t2.CITY FROM t_ddq_work_city t2 WHERE t2.ID = t.PARENT) 
+			ELSE t.CITY END City FROM t_ddq_work_city t 
+			WHERE t.CODE = #{cityCode, jdbcType=VARCHAR}
+		]]>
+	</select>		
+    
+    <!--根据CityCode 获取省份名称  -->  
+    <select id="getProvinceCode" resultType="String" parameterType="java.lang.String">
+        <![CDATA[
+            SELECT  CODE              CODE
+            FROM T_DDQ_WORK_CITY 
+            WHERE id = (SELECT parent FROM t_ddq_work_city WHERE CODE = #{cityCode, jdbcType=VARCHAR})
+        ]]>
+    </select>	
+    
+    <!--根据CityName 获取市编号  -->  
+    <select id="findCitycodeByName" resultType="String" parameterType="java.lang.String">
+        <![CDATA[
+            SELECT  CODE              CODE
+            FROM T_DDQ_WORK_CITY 
+            WHERE city = #{name, jdbcType=VARCHAR}
+        ]]>
+    </select>	
+    
+    <!--360 根据城市模糊查询城市代号  -->  
+    <select id="findCitycodeLikeName" resultType="String" parameterType="java.lang.String">
+        <![CDATA[
+            SELECT  CODE              CODE
+            FROM T_DDQ_WORK_CITY 
+            WHERE city LIKE #{name, jdbcType=VARCHAR}
+        ]]>
+    </select>	
+    
+    <!--360  根据城市编号，查询城市名称  -->  
+    <select id="findCityByCitycode" resultType="String" parameterType="java.lang.String">
+        <![CDATA[
+            SELECT  CITY              CITY
+            FROM T_DDQ_WORK_CITY 
+            WHERE code = #{code, jdbcType=VARCHAR}
+        ]]>
+    </select>	
+</mapper> 

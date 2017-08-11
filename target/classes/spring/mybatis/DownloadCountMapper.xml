@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- insert,select,selectByPK,count, delete, update,updateAll -->
+<mapper namespace="DownloadCountEntity">
+    <!-- 更新 -->
+	<update id="updateCount" parameterType="DownloadCountEntity">
+	<![CDATA[
+		UPDATE t_ddq_app_download 
+			set DOWNLOADTIME = DOWNLOADTIME + 1,
+			UPDATED_DATE  = CURRENT_TIMESTAMP      
+		WHERE SOURCE  = #{source, jdbcType=VARCHAR} 
+	]]>
+	</update>
+		
+</mapper> 

@@ -1,0 +1,54 @@
+http://8.8.8.8888:9999/Service/SendDuanXinService.asmx?wsdl
+
+public TestDto sendSms(String mobile, String randomCode, String type,String smsType,String smsSign) throws Exception {
+	TestDto request = new TestDto();
+	request.setOperatedBy(0);
+	request.setMobile(mobile);
+	request.setSmsSource("MobileApp");
+	request.setSmsTypeName(smsType);
+	request.setSignStr(smsSign);
+	request.setCustomerType(1);
+	request.setParams(randomCode + ",5");
+	//url
+	String address = smsUrl + "/SendSmsCloudCommunication";
+	//content
+	String content = GsonUtils.toJson(request);
+	List<NameValuePair> paramList = new ArrayList<NameValuePair>();
+	paramList.add(new BasicNameValuePair("smsJsonString", content));
+	UrlEncodedFormEntity paramEntity = new UrlEncodedFormEntity(paramList, "utf-8");
+	String responseJson = HttpClientUtils.getMethodPostResponse(address, paramEntity);
+	String result = XmlUtils.xml2Obj(responseJson, String.class);
+	if (StringUtils.isBlank(result)) {
+	    throw new RuntimeException("发送短信无返回数据");
+	}
+	return GsonUtils.convertObj(result, TestDto.class); 
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

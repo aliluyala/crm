@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- insert,select,selectByPK,count, delete, update,updateAll -->
+<mapper namespace="ApplyCardInfoEntity">
+
+	<!-- 根据卡号查询卡信息 -->
+	<select id="selectByEntity" parameterType="ApplyCardInfoEntity" resultType="ApplyCardInfoEntity">
+		SELECT
+			id   id,
+			customer_id   customerId,
+			card_mobile   cardMobile,
+			card_no   cardNo,
+			bank_name   bankName,
+			card_type   cardType,
+			enable_flag   enableFlag,
+			created_date   createdDate,
+			updated_date   updatedDate
+		FROM t_ddq_apply_card_info
+		WHERE card_no = #{cardNo}
+				AND
+			  enable_flag = 1
+			  	AND
+			  card_type != ""
+			  	AND
+			  customer_id = #{customerId}
+			  	AND
+			  card_mobile = #{cardMobile}
+	</select>
+
+	<!-- 新增 -->
+	<insert id="insert" parameterType="ApplyCardInfoEntity">
+		<![CDATA[
+			INSERT INTO t_ddq_apply_card_info
+			(
+				id,
+				customer_id,
+				card_mobile,
+				card_no,
+				bank_name,
+				card_type,
+				enable_flag,
+				created_date,
+				updated_date
+			)
+			VALUES (
+				NULL,
+				#{customerId},
+				#{cardMobile},
+				#{cardNo},
+				#{bankName},
+				#{cardType},
+				#{enableFlag},
+				NOW(),
+				NOW()
+			)
+			]]>
+		<selectKey resultType="Long" keyProperty="id" order="AFTER">
+			<![CDATA[ SELECT LAST_INSERT_ID()  AS id  ]]>
+		</selectKey>
+	</insert>
+
+	<update id="resetAll" parameterType="Long">
+		UPDATE t_ddq_apply_card_info
+		SET enable_flag = 0,
+			updated_date = NOW()
+		WHERE customer_id = #{customerId}
+			  	AND
+			  enable_flag = 1
+	</update>
+</mapper> 

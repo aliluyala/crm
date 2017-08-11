@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- insert,select,selectByPK,count, delete, update,updateAll -->
+<mapper namespace="AmtPromotionEntity">
+
+
+	<!-- 分页查询&过滤查询 -->
+	<select id="getLatestPromotionDate" resultType="AmtPromotionEntity">
+	<![CDATA[
+		SELECT  id          		  	id,
+				CUSTOMER_ID           	customerId,
+				IDENTITY_NO 		  	identityNo,
+				AMT_PROMOTION_DATE 		amtPromotionDate
+		FROM t_ddq_credit_amount_promotion
+		WHERE CUSTOMER_ID=#{customerId} 
+		ORDER BY AMT_PROMOTION_DATE DESC LIMIT 1
+	]]>
+		
+	</select>
+	
+
+</mapper> 

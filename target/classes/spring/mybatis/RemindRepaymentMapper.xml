@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="RemindRepaymentEntity">
+	
+	<!-- 查找所有需要提醒还款的客户 -->
+	<select id="selectAll"  resultType="com.vcredit.ddcash.server.model.entity.schedule.RemindRepaymentEntity">
+	<![CDATA[
+		SELECT
+			T1.SLT_ACCOUNT_ID sltAccountId,
+			T1.CUSTOMER_ID customerId,
+			T2.REAL_NAME realName,
+			T3.CARD_NO cardNo,
+			T1.BEGIN_DATE beginDate,
+			T1.END_DATE endDate,
+			DATE_ADD(SYSDATE(),INTERVAL 1 DAY) repaymentDate,
+			T2.remind_repayment remindRepayment,
+			T2.OPEN_ID openId,
+			T3.CARD_BANK cardBank
+		FROM
+			t_ddq_slt_account T1,
+			t_ddq_customer T2,
+			T_ddq_bind_cards T3
+		WHERE
+			T1.CUSTOMER_ID = T2.ID
+			AND T1.CARD_ID = T3.ID
+			AND T1.VBS_BID IS NOT NULL
+			and T1.CONTRACTNO is not NULL
+			and T1.begin_date is not NULL
+			and T1.TRANS_STATUS in ('1','2','3')
+			and DAYOFMONTH(T1.BEGIN_DATE)=DAYOFMONTH(DATE_ADD(SYSDATE(),INTERVAL 2 DAY))
+	]]>
+	</select>
+</mapper> 

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="CmCommentsEntity">
+	<!--将用户吐槽内容存入表 t_ddq_customer_comments -->
+	<insert id="insert" parameterType="com.vcredit.functions.model.entity.CmCommentsEntity">
+	<![CDATA[
+		INSERT	INTO t_ddq_customer_comments(
+				COMMENTS_ID,
+				OPEN_ID,
+				CUSTOMER_COMMENTS,
+				CREATED_DATE
+		)VALUES
+		(
+				#{id,jdbcType=BIGINT},
+				#{openId,jdbcType=VARCHAR},
+				#{customerComments,jdbcType=VARCHAR},
+				CURRENT_TIMESTAMP	
+		)			
+	
+	]]>
+	</insert>
+	
+</mapper>

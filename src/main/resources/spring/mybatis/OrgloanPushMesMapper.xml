@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- insert,select,selectByPK,count, delete, update,updateAll -->
+<mapper namespace="OrgloanPushMesEntity">
+	<sql id="table_name" >
+  		T_DDQ_ORGLOAN_PUSHMES
+	</sql>
+	<insert id="insert" parameterType="com.vcredit.ddcash.server.model.entity.orgloan.OrgloanPushMesEntity">
+		<![CDATA[
+		INSERT INTO T_DDQ_ORGLOAN_PUSHMES (
+		USER_ID,
+		MOBILE_AUTH_STATUS,
+		MOBILE,
+		ORGLOAN_ORDER_ID,
+  		SLT_ACCOUNT_ID,
+  		NOTIFY_TYPE,
+  		REPONSE_MSG,
+  		IS_SUCCESS,
+  		KEY_TIME,
+  		CREATED_DATE,
+  		UPDATED_DATE
+		)
+		VALUES (
+		#{userId,jdbcType=VARCHAR},
+		#{mobileAuthIdentity,jdbcType=VARCHAR},
+		#{mobile,jdbcType=VARCHAR},
+		#{orgloanOrderId,jdbcType=VARCHAR},
+		#{sltAccountId,jdbcType=VARCHAR},
+		#{notifyType,jdbcType=VARCHAR},
+		#{reponseMsg,jdbcType=VARCHAR},
+		#{isSuccess,jdbcType=VARCHAR},
+		#{keyTime,jdbcType=VARCHAR},
+		CURRENT_TIMESTAMP,
+		CURRENT_TIMESTAMP
+		)
+		]]>
+	</insert>
+	<sql id="update_set_clause">
+		<trim prefix="set" suffixOverrides=",">  
+  			UPDATED_DATE = now(),
+			<if test="isSuccess !=null">  
+	            IS_SUCCESS = #{isSuccess},
+			</if>
+			<if test="reponseMsg !=null">  
+	            REPONSE_MSG = #{reponseMsg},
+			</if>
+		</trim>
+	</sql>
+	<update id="updateBySltAccountId" parameterType="com.vcredit.ddcash.server.model.entity.orgloan.OrgloanPushMesEntity">
+		update <include refid="table_name" /> 
+		<include refid="update_set_clause"/>
+        where SLT_ACCOUNT_ID = #{sltAccountId}
+	</update>
+	<select id="selectByPK" parameterType="Long" resultType="OrgloanAccountEntity">
+	<![CDATA[
+		SELECT  ID                           Id,
+				REPAY_ID                     repayId,
+				SLT_ACCOUNT_ID               sltAccountId,
+				CREATED_DATE                 createdDate,
+				UPDATED_DATE                 updatedDate,
+				INSTALLMENTS             	 installments
+		FROM T_DDQ_ORGLOAN_ACCOUNT WHERE ID = #{value}
+	]]>
+	</select>
+	
+	<select id="selectByKey" parameterType="String" resultType="com.vcredit.ddcash.server.model.entity.orgloan.OrgloanPushMesEntity">
+	<![CDATA[
+		SELECT  
+			USER_ID 				userId,
+			MOBILE_AUTH_STATUS		mobileAuthIdentity,
+			MOBILE					mobile,
+			ORGLOAN_ORDER_ID		orgloanOrderId,
+	  		SLT_ACCOUNT_ID			sltAccountId,
+	  		NOTIFY_TYPE				notifyType,
+	  		REPONSE_MSG				reponseMsg,
+	  		IS_SUCCESS				isSuccess,
+	  		KEY_TIME				keyTime
+		FROM t_ddq_orgloan_pushmes WHERE KEY_TIME = #{value}
+	]]>
+	</select>
+	
+	
+</mapper>

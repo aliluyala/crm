@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="CustomerAmtEntity">
+
+	<insert id="saveCustomer" parameterType="CustomerAmtEntity">
+		<![CDATA[
+			INSERT INTO T_DDQ_CUSTOMER_AMT(
+				OPEN_ID,
+				NICK_NAME,
+				EVENT_KEY,
+				CREATED_DATE,
+				UPDATED_DATE,
+				BE_NOTICED_OPEN_ID,
+				SUBSCRIBE_STATUS
+			)
+			VALUES
+			(
+				#{openId, jdbcType=VARCHAR},
+				#{nickName, jdbcType=VARCHAR},
+				#{eventKey, jdbcType=VARCHAR},
+				CURRENT_TIMESTAMP,
+				CURRENT_TIMESTAMP,
+				#{beNoticedOpenId, jdbcType=VARCHAR},
+				#{subscribeStatus,jdbcType=VARCHAR}
+			)
+		]]>
+	</insert>
+	
+	<select id="findCustomer" parameterType="String" resultType="Integer">
+		<![CDATA[
+			SELECT COUNT(OPEN_ID) 
+			FROM T_DDQ_CUSTOMER_AMT
+			WHERE OPEN_ID = #{openId, jdbcType=VARCHAR}
+		]]>
+	</select>
+	
+	<select id="selectByOpenId" parameterType="String" resultType="CustomerAmtEntity">
+		<![CDATA[
+			SELECT 	ID					id,
+					OPEN_ID				openId,
+					NICK_NAME			nickName,
+					EVENT_KEY			eventKey,
+					CREATED_DATE		createDate,
+					UPDATED_DATE		updateDate,
+					BE_NOTICED_OPEN_ID	beNoticedOpenId,
+					SUBSCRIBE_STATUS	subscribeStatus	
+			FROM 	T_DDQ_CUSTOMER_AMT
+			WHERE 	OPEN_ID = #{openId, jdbcType=VARCHAR}
+			ORDER BY UPDATED_DATE DESC
+		]]>
+	</select>
+	
+	<update id="updateCustomer" parameterType="CustomerAmtEntity">
+		<![CDATA[
+			 UPDATE T_DDQ_CUSTOMER_AMT 
+				SET UPDATED_DATE  = CURRENT_TIMESTAMP,
+					NICK_NAME	=	#{nickName},
+					EVENT_KEY	=	#{eventKey},
+					SUBSCRIBE_STATUS = #{subscribeStatus}
+			  WHERE OPEN_ID  = #{openId, jdbcType=VARCHAR} 
+		]]>
+	</update>
+	
+	<update id="updateWhenUnsbscribe" parameterType="CustomerAmtEntity">
+		<![CDATA[
+			 UPDATE T_DDQ_CUSTOMER_AMT 
+				SET UPDATED_DATE  = CURRENT_TIMESTAMP,
+					SUBSCRIBE_STATUS = #{subscribeStatus}
+			  WHERE OPEN_ID  = #{openId, jdbcType=VARCHAR} 
+		]]>
+	</update>
+	
+	
+		<!--获取已加油的人数 -->
+	<select id="getFollowedAmt" parameterType="String" resultType="Integer">
+		<![CDATA[
+			SELECT COUNT(1) FROM T_DDQ_CUSTOMER_AMT T 
+			WHERE T.BE_NOTICED_OPEN_ID=#{beNoticedOpenId,jdbcType=VARCHAR};
+		]]>
+	</select>
+	
+	<!--获取已获得额度的人数 -->
+	<select id="getLimitAmt" parameterType="String" resultType="Integer">
+		<![CDATA[
+			SELECT COUNT(1) FROM T_DDQ_CUSTOMER_AMT T1 , T_DDQ_CUSTOMER T2 ,T_DDQ_CREDIT_AUTH T3
+			WHERE T1.OPEN_ID= T2.OPEN_ID  AND T2.`STATUS`='06' AND T2.ID =T3.CUSTOMER_ID
+			AND T3.TOTAL_AMOUNT>0 AND T3.ENABLE_FLAG='1' and T1.BE_NOTICED_OPEN_ID=#{beNoticedOpenId,jdbcType=VARCHAR};
+		]]>
+	</select>
+	
+	<!--获取已成功放款的人数 -->
+	<select id="getLoanedAmt" parameterType="String" resultType="Integer">
+		<![CDATA[
+			SELECT COUNT(DISTINCT(T3.CUSTOMER_ID)) FROM T_DDQ_CUSTOMER_AMT T1 , T_DDQ_CUSTOMER T2,
+			T_DDQ_SLT_ACCOUNT T3,T_DDQ_CONTRACT_INFO T4 
+			WHERE T1.OPEN_ID= T2.OPEN_ID  AND T2.ID =T3.CUSTOMER_ID AND T4.SLT_ACCOUNT_ID = t3.SLT_ACCOUNT_ID
+			AND t4.LOAN_DATE!='' AND t1.BE_NOTICED_OPEN_ID=#{beNoticedOpenId,jdbcType=VARCHAR};
+		]]>
+	</select>
+	
+	<!--获取已加油好友名单-->
+	<select id="getFriendsList" parameterType="String" resultType="String">
+		<![CDATA[
+			SELECT T.NICK_NAME FROM T_DDQ_CUSTOMER_AMT T WHERE T.BE_NOTICED_OPEN_ID=#{beNoticedOpenId,jdbcType=VARCHAR} ORDER BY UPDATED_DATE DESC;
+		]]>
+		
+	</select>
+	
+	<!--获取自己名字-->
+	<select id="getNickName" parameterType="String" resultType="String">
+		<![CDATA[
+			SELECT T.NICK_NAME FROM T_DDQ_CUSTOMER_AMT T WHERE T.OPEN_ID=#{openId,jdbcType=VARCHAR};
+		]]>
+	</select>
+	<!--获取邀请码-->
+	<select id="getEventKey" parameterType="String" resultType="String">
+		<![CDATA[
+			SELECT T.EVENT_KEY 
+			FROM T_DDQ_CUSTOMER_AMT
+			T WHERE T.OPEN_ID=#{openId,jdbcType=VARCHAR}
+			ORDER BY T.CREATED_DATE DESC LIMIT 1
+			
+		]]>
+	</select>
+</mapper>

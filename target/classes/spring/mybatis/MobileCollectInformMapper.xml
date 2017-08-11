@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- insert,select,selectByPK,count, delete, update,updateAll -->
+<mapper namespace="MobileInformEntity">
+	<!-- 插入 -->
+	<insert id="insert" parameterType="MobileInformEntity">
+		<![CDATA[
+			INSERT INTO T_DDQ_MOBILE_INFORM (
+				REAL_NAME,
+				MOBILE,
+				IDENTITY_NO,
+				STATUS,
+				TOKEN,
+				CREATED_DATE,
+				UPDATED_DATE
+			)
+			VALUES
+			(
+				#{realName, jdbcType=VARCHAR}, 
+				#{mobile, jdbcType=VARCHAR}, 
+				#{identityNo, jdbcType=VARCHAR},
+				#{status, jdbcType=VARCHAR},
+				#{token,jdbcType=VARCHAR},
+				CURRENT_TIMESTAMP,
+				CURRENT_TIMESTAMP
+			)
+		]]>
+	</insert>
+
+	<!-- 分页查询&过滤查询 -->
+	<select id="findSyncData" resultType="MobileInformEntity">
+		<![CDATA[
+			SELECT 	t.ID ID,
+       				t.REAL_NAME REALNAME,
+       				t.MOBILE MOBILE,
+       				t.IDENTITY_NO IDENTITYNO,
+       				t.`STATUS`,
+       				t.TOKEN,
+       				t.CREATED_DATE CREATEDDATE,
+       				t.UPDATED_DATE UPDATEDDATE
+			FROM 	T_DDQ_MOBILE_INFORM t ,
+     				t_ddq_customer t1
+			WHERE 	t.`STATUS` <> '1'
+  					AND t.IDENTITY_NO = t1.IDENTITY_NO
+  					AND t1.MOBILE_APPLY_ID IS NULL ;
+		]]>
+	</select>
+
+	<!-- 更新 -->
+	<update id="update" parameterType="MobileInformEntity">
+		<![CDATA[
+			UPDATE T_DDQ_MOBILE_INFORM 
+				SET UPDATED_DATE           = CURRENT_TIMESTAMP, 
+					STATUS                 = #{status, jdbcType=VARCHAR}
+			 WHERE ID = #{id, jdbcType=BIGINT}
+		]]>
+	</update>
+
+</mapper> 

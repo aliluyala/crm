@@ -1,0 +1,366 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- insert,select,selectByPK,count, delete, update,updateAll -->
+<mapper namespace="InstallmentInfoEntity">
+	
+	<resultMap id="BaseResultMap" type="com.vcredit.ddcash.server.model.entity.transfer.InstallmentInfoEntity">
+		<id column="INSTALLMENT_ID" property="installmentId" />
+		<result column="SLT_ACCOUNT_ID" property="sltAccountId" />
+		<result column="LOAN_PERIOD_NO" property="loanPeriodNo" />
+		<result column="SCHEDULE_AMOUNT"      property="scheduleAmount" />
+		<result column="CAPITAL_AMOUNT" property="capitalAmount" />
+		<result column="REPAY_STATUS" property="repayStatus" />
+		<result column="DUE_AMOUNT" property="dueAmount" />
+		<result column="MONTH_DEDUCT_DATE" property="monthDeductDate" />
+		<result column="ADV_CLEAR_LOAN" property="advClearLoan" />
+		<result column="ORG_INSTALLMENT_ID" property="orgInstallmentId" />
+		<result column="REAL_REPAY_AMOUNT" property="realRepayAmount" />
+		<result column="CREATE_DATE" property="createDate" />
+		<result column="UPDATE_DATE" property="updateDate" />
+	</resultMap>
+	
+	<sql id="table_columns_without_id">
+  		SLT_ACCOUNT_ID,
+  		LOAN_PERIOD_NO ,
+  		SCHEDULE_AMOUNT,
+  		CAPITAL_AMOUNT,
+  		REPAY_STATUS,
+  		DUE_AMOUNT,
+  		MONTH_DEDUCT_DATE,
+  		ADV_CLEAR_LOAN,
+  		ORG_INSTALLMENT_ID,
+  		REAL_REPAY_AMOUNT,
+  		CREATE_DATE,
+  		UPDATE_DATE
+   	</sql>
+  
+  	<sql id="columns" >
+  		INSTALLMENT_ID,<include refid="table_columns_without_id"/>
+  	</sql>
+
+	<sql id="table_name" >
+  		T_DDQ_INSTALLMENT_INFO
+  	</sql>
+  	
+  	<insert id="insert" parameterType="com.vcredit.ddcash.server.model.entity.transfer.InstallmentInfoEntity"
+  	 useGeneratedKeys="true" keyProperty="installmentId">
+  		<![CDATA[
+		INSERT INTO T_DDQ_INSTALLMENT_INFO (
+		SLT_ACCOUNT_ID,
+  		LOAN_PERIOD_NO ,
+  		SCHEDULE_AMOUNT,
+  		CAPITAL_AMOUNT,
+  		REPAY_STATUS,
+  		DUE_AMOUNT,
+  		MONTH_DEDUCT_DATE,
+  		ADV_CLEAR_LOAN,
+  		ORG_INSTALLMENT_ID,
+  		REAL_REPAY_AMOUNT,
+  		CREATE_DATE,
+  		UPDATE_DATE
+		)
+		VALUES (
+		#{sltAccountId},
+		#{loanPeriodNo},
+		#{scheduleAmount},
+		#{capitalAmount},
+		#{repayStatus},
+		#{dueAmount},
+		#{monthDeductDate},
+		#{advClearLoan},
+		#{orgInstallmentId},
+		#{realRepayAmount},
+		now(),
+		now()
+		)
+		]]>
+		
+		<selectKey resultType="Long" keyProperty="installmentId" order="AFTER">
+		<![CDATA[ SELECT LAST_INSERT_ID()  AS installmentId  ]]>
+	    </selectKey>
+	    
+	</insert>
+	
+	<sql id="query_where_clause">
+  		<trim prefix="where" prefixOverrides="and|or"> 
+  			<if test="installmentId !=null ">  
+	            INSTALLMENT_ID = #{installmentId}
+	        </if> 
+	         <if test="sltAccountId != null">  
+	            and SLT_ACCOUNT_ID = #{sltAccountId}
+	        </if> 
+	        <if test="loanPeriodNo != null">  
+	           and LOAN_PERIOD_NO = #{loanPeriodNo}
+	        </if> 
+	        <if test="advClearLoan != null">  
+	           and ADV_CLEAR_LOAN = #{advClearLoan}
+	        </if> 
+	    </trim> 
+  	</sql>
+  	
+  	<sql id="update_where_clause">
+		<trim prefix="where" prefixOverrides="and|or"> 
+	        <if test="installmentId !=null ">  
+	            INSTALLMENT_ID = #{installmentId}
+	        </if> 
+	        <if test="sltAccountId != null">  
+	            and SLT_ACCOUNT_ID = #{sltAccountId}
+	        </if> 
+	        <if test="loanPeriodNo != null">  
+	           and LOAN_PERIOD_NO = #{loanPeriodNo}
+	        </if> 
+	        <if test="advClearLoan != null">  
+	           and ADV_CLEAR_LOAN = #{advClearLoan}
+	        </if> 
+	    </trim>
+   	</sql>
+   	
+   	<sql id="update_set_clause">
+  		<trim prefix="set" suffixOverrides=",">  
+  			UPDATE_DATE = now(),
+	         <if test="scheduleAmount !=null">  
+	            SCHEDULE_AMOUNT = #{scheduleAmount},
+	        </if>
+	        <if test="capitalAmount !=null">  
+	            CAPITAL_AMOUNT = #{capitalAmount},
+	        </if>
+	         <if test="repayStatus !=null">  
+	            REPAY_STATUS = #{repayStatus},
+	        </if>
+	        <if test="advClearLoan !=null">  
+	            ADV_CLEAR_LOAN = #{advClearLoan},
+	        </if>
+	         <if test="dueAmount !=null">  
+	            DUE_AMOUNT = #{dueAmount},
+	        </if>
+	        <if test="monthDeductDate !=null">  
+	            MONTH_DEDUCT_DATE = #{monthDeductDate},
+	        </if>
+	        <if test="realRepayAmount !=null">  
+	            REAL_REPAY_AMOUNT = #{realRepayAmount}
+	        </if>
+   		</trim>
+  	</sql>
+  	
+  	<select id="count" resultType="java.lang.Integer" parameterType="com.vcredit.ddcash.server.model.entity.transfer.InstallmentInfoEntity">
+  		select count(1)
+        from <include refid="table_name" />  
+       	<include refid="query_where_clause"/>
+   	</select>
+  	
+  	<select id="list" resultMap="BaseResultMap" parameterType="com.vcredit.ddcash.server.model.entity.transfer.InstallmentInfoEntity">
+   		select  <include refid="columns" /> 
+   		from <include refid="table_name" /> 
+   		<include refid="query_where_clause"/>
+  	</select>
+  	
+  	<select id="listByAdvClearLoan" resultMap="BaseResultMap" parameterType="com.vcredit.ddcash.server.model.entity.transfer.InstallmentInfoEntity">
+   		select  <include refid="columns" /> 
+   		from <include refid="table_name" /> 
+   		<include refid="query_where_clause"/>
+   		and REPAY_STATUS in('-1','2','3','4')
+  	</select>
+   	
+   	<update id="update" parameterType="com.vcredit.ddcash.server.model.entity.transfer.InstallmentInfoEntity">
+   		update <include refid="table_name" /> 
+       	<include refid="update_set_clause"/>
+       	<include refid="update_where_clause"/>
+  	</update>
+   	
+   	 <update id="updateById" parameterType="com.vcredit.ddcash.server.model.entity.transfer.InstallmentInfoEntity">
+   		update <include refid="table_name" /> 
+       	<include refid="update_set_clause"/>
+       where INSTALLMENT_ID = #{installmentId}
+  	</update>
+  	
+   	<update id="updateBySltAccountId" parameterType="com.vcredit.ddcash.server.model.entity.transfer.InstallmentInfoEntity">
+   		update <include refid="table_name" /> 
+       	<include refid="update_set_clause"/>
+        where SLT_ACCOUNT_ID = #{sltAccountId}
+        and   (REPAY_STATUS = 1 or REPAY_STATUS = 2 or REPAY_STATUS = 4) 
+  	</update>
+   	
+   	<select id="selectByPK" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+  		select <include refid="columns" /> 
+  		from <include refid="table_name" /> 
+  		where INSTALLMENT_ID = #{installmentId}
+  	</select>
+  	
+  	<select id="list4OverdueBySltAccountId" resultMap="BaseResultMap" parameterType="java.lang.Long">
+  		select <include refid="columns" /> 
+  		from <include refid="table_name" /> 
+  		where SLT_ACCOUNT_ID = #{value} and (REPAY_STATUS = 2 or REPAY_STATUS = 4)
+  	</select>
+  	
+  	
+    <select id="listLessThanMonthDeductDate" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        select <include refid="columns" /> 
+  		from <include refid="table_name" /> 
+  		where SLT_ACCOUNT_ID = #{sltAccountId} and 
+  		  <![CDATA[ DATE_FORMAT(date_add(now(),interval 1 day),'%Y-%m-%d') <= DATE_FORMAT(MONTH_DEDUCT_DATE,'%Y-%m-%d') ORDER BY MONTH_DEDUCT_DATE]]>
+  	
+  	</select>
+  	
+  	
+  	<select id="listLessThanMonthDeductDateWithoutTime" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        select <include refid="columns" /> 
+  		from <include refid="table_name" /> 
+  		where SLT_ACCOUNT_ID = #{sltAccountId} and  REPAY_STATUS=1 and
+  		  <![CDATA[ DATE_FORMAT(date_add(now(),interval 1 day),'%Y-%m-%d') <= DATE_FORMAT(MONTH_DEDUCT_DATE,'%Y-%m-%d')]]>
+  	    order by LOAN_PERIOD_NO
+  	</select>
+  	
+  	
+  	<select id="NextBillInOneMonth" resultMap="BaseResultMap" parameterType="java.lang.Long">
+  		 select <include refid="columns" /> 
+  		from <include refid="table_name" /> 
+  		where SLT_ACCOUNT_ID = #{sltAccountId} and REPAY_STATUS=1 and 
+  		  <![CDATA[ DATE_FORMAT(date_add(now(),interval 1 month),'%Y-%m-%d') >= DATE_FORMAT(MONTH_DEDUCT_DATE,'%Y-%m-%d')  and now() < MONTH_DEDUCT_DATE ]]>
+  	    
+  	</select>
+  	
+  <select id="getTotalOverDueAmt" resultType="java.math.BigDecimal" parameterType="java.lang.Long">
+    select sum(SCHEDULE_AMOUNT-REAL_REPAY_AMOUNT) from <include refid="table_name" /> 
+  	where SLT_ACCOUNT_ID = #{sltAccountId} and REPAY_STATUS = 4
+  </select>
+  
+  
+   <select id="getLastestIns" resultMap="BaseResultMap" parameterType="java.lang.Long">
+    select <include refid="columns" /> 
+    from <include refid="table_name" /> 
+  where	LOAN_PERIOD_NO = (select max(LOAN_PERIOD_NO)  
+  	from <include refid="table_name" />  where SLT_ACCOUNT_ID = #{sltAccountId}) 
+    and SLT_ACCOUNT_ID = #{sltAccountId}
+  </select>
+  
+   <select id="getInstallmentInfoByCustomerId" resultMap="BaseResultMap" parameterType="java.lang.Long">
+          select ins.INSTALLMENT_ID        installmentId,
+	             ins.SLT_ACCOUNT_ID        sltAccountId,
+	             ins.LOAN_PERIOD_NO        loanPeriodNo,
+	             ins.SCHEDULE_AMOUNT       scheduleAmount,
+	             ins.CAPITAL_AMOUNT        capitalAmount,
+	             ins.REPAY_STATUS          repayStatus,
+	             ins.DUE_AMOUNT            dueAmount,
+	             ins.MONTH_DEDUCT_DATE     monthDeductDate,
+	             ins.ADV_CLEAR_LOAN        advClearLoan,
+	             ins.ORG_INSTALLMENT_ID    orgInstallmentId, 
+	             ins.REAL_REPAY_AMOUNT     realRepayAmount,
+	             ins.CREATE_DATE           createDate,
+	             ins.UPDATE_DATE           updateDate
+            from t_ddq_slt_account slt ,
+                 t_ddq_installment_info   ins
+           where slt.TRANS_STATUS not in ('-1','0','4','5')
+             and ins.ADV_CLEAR_LOAN not in ('1')
+             and slt.SLT_ACCOUNT_ID=ins.SLT_ACCOUNT_ID
+             and slt.CUSTOMER_ID=#{customerId}
+            ORDER BY ins.INSTALLMENT_ID desc
+  </select>
+   <select id="selectBySltAccountId" resultMap="BaseResultMap" parameterType="java.lang.Long">
+       select    ins.INSTALLMENT_ID        installmentId,
+	             ins.SLT_ACCOUNT_ID        sltAccountId,
+	             ins.LOAN_PERIOD_NO        loanPeriodNo,
+	             ins.SCHEDULE_AMOUNT       scheduleAmount,
+	             ins.CAPITAL_AMOUNT        capitalAmount,
+	             ins.REPAY_STATUS          repayStatus,
+	             ins.DUE_AMOUNT            dueAmount,
+	             ins.MONTH_DEDUCT_DATE     monthDeductDate,
+	             ins.ADV_CLEAR_LOAN        advClearLoan,
+	             ins.ORG_INSTALLMENT_ID    orgInstallmentId, 
+	             ins.REAL_REPAY_AMOUNT     realRepayAmount,
+	             ins.CREATE_DATE           createDate,
+	             ins.UPDATE_DATE           updateDate
+            from t_ddq_installment_info   ins
+           where ins.ADV_CLEAR_LOAN not in('1')
+             and ins.REPAY_STATUS is not NULL
+             and ins.SLT_ACCOUNT_ID=#{sltAccountId}
+             ORDER BY ins.INSTALLMENT_ID ASC
+  </select>
+   <select id="instalListByAdvClearLoan" resultMap="BaseResultMap" parameterType="java.lang.Long">
+       select    ins.INSTALLMENT_ID        installmentId,
+	             ins.SLT_ACCOUNT_ID        sltAccountId,
+	             ins.LOAN_PERIOD_NO        loanPeriodNo,
+	             ins.SCHEDULE_AMOUNT       scheduleAmount,
+	             ins.CAPITAL_AMOUNT        capitalAmount,
+	             ins.REPAY_STATUS          repayStatus,
+	             ins.DUE_AMOUNT            dueAmount,
+	             ins.MONTH_DEDUCT_DATE     monthDeductDate,
+	             ins.ADV_CLEAR_LOAN        advClearLoan,
+	             ins.ORG_INSTALLMENT_ID    orgInstallmentId, 
+	             ins.REAL_REPAY_AMOUNT     realRepayAmount,
+	             ins.CREATE_DATE           createDate,
+	             ins.UPDATE_DATE           updateDate
+            from t_ddq_installment_info   ins
+           where ins.REPAY_STATUS not in('-1','1')
+             and ins.SLT_ACCOUNT_ID=#{sltAccountId}
+             ORDER BY ins.INSTALLMENT_ID ASC
+  </select>
+  
+  	<!-- 删除 -->
+	<delete id="deleteInstallment" parameterType="com.vcredit.ddcash.server.model.entity.transfer.InstallmentInfoEntity">
+		DELETE FROM <include refid="table_name"/> 
+		WHERE ADV_CLEAR_LOAN = 1
+        AND SLT_ACCOUNT_ID = #{sltAccountId}
+	</delete>
+	
+ 	<select id="selectBySltId" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+  		select <include refid="columns" /> 
+  		from <include refid="table_name" /> 
+  		where SLT_ACCOUNT_ID = #{sltAccountId}
+  	</select>
+  	<!-- 查询还款日为今天的甜橙小贷订单 -->
+ 	<select id="selectByMonthDeductDate" resultMap="BaseResultMap" parameterType="java.util.Date" >
+ 		SELECT 
+ 		a.INSTALLMENT_ID,
+ 		a.SLT_ACCOUNT_ID,
+ 		a.LOAN_PERIOD_NO,
+ 		a.SCHEDULE_AMOUNT,
+ 		a.CAPITAL_AMOUNT,
+ 		a.REPAY_STATUS,
+ 		a.DUE_AMOUNT,
+ 		a.MONTH_DEDUCT_DATE,
+ 		a.ADV_CLEAR_LOAN,
+ 		a.ORG_INSTALLMENT_ID,
+ 		a.REAL_REPAY_AMOUNT,
+ 		a.CREATE_DATE,
+ 		a.UPDATE_DATE FROM 
+		t_ddq_installment_info a LEFT JOIN t_ddq_slt_account b 
+		ON
+		a.SLT_ACCOUNT_ID = b.SLT_ACCOUNT_ID 
+		WHERE
+		b.ORGLOAN_ORDER_ID IS NOT NULL AND
+		a.MONTH_DEDUCT_DATE = #{monthDeductDate};
+  	</select>
+  	
+  	
+  	<select id="selectLatestDeductDate" resultMap="BaseResultMap" parameterType="java.lang.Long">
+  		select 
+  		INSTALLMENT_ID,
+  		LOAN_PERIOD_NO,
+  		MONTH_DEDUCT_DATE,
+  		REPAY_STATUS
+  		from t_ddq_installment_info
+  		where (repay_status=1 or repay_status=4)
+  		AND SLT_ACCOUNT_ID = #{sltAccountId} ORDER BY MONTH_DEDUCT_DATE ASC LIMIT 1
+  	</select>
+  	
+  	<select id="selectInstallmentInfos4Channel" parameterType="Long" resultType="com.vcredit.ddcash.server.model.entity.transfer.InstallmentInfoEntity">
+  		SELECT
+  			SLT_ACCOUNT_ID			as sltAccountId,
+	 		LOAN_PERIOD_NO 			as loanPeriodNo,
+	 		SCHEDULE_AMOUNT			as scheduleAmount,
+	 		CAPITAL_AMOUNT			as capitalAmount,
+	 		'1'						as repayStatus,
+	 		DUE_AMOUNT				as dueAmount,
+	 		MONTH_DEDUCT_DATE		as monthDeductDate,
+	 		ADV_CLEAR_LOAN			as advClearLoan,
+	 		ORG_INSTALLMENT_ID		as orgInstallmentId,
+	 		CREATE_DATE				as createDate,
+	 		UPDATE_DATE				as updateDate
+	 	FROM
+	 		t_ddq_installment_info
+	 	WHERE 
+	 		SLT_ACCOUNT_ID = #{sltAccountId}
+  	</select>
+</mapper>

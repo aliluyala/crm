@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- insert,select,selectByPK,count, delete, update,updateAll -->
+<mapper namespace="CaiShenStatisticsEntity">
+
+	<insert id="insert" parameterType="CaiShenStatisticsEntity"
+		useGeneratedKeys="true" keyProperty="id">
+		<![CDATA[
+			INSERT INTO t_ddq_activities_caishen_statistics (
+				ID,
+				OPEN_ID,
+				BTN_NAME,
+				COUNT,
+				IS_OLD_WX_CUSTOMER,
+				CREATED_DATE,
+				UPDATED_DATE
+			)
+			VALUES
+			(
+				#{id},
+				#{openId},
+				#{btnName},
+				#{count},
+				#{isOldWXCustomer},
+				NOW(),
+				NOW()
+			)
+		]]>
+	</insert>
+
+	<select id="selectCountByBtnNameAndOpenId" parameterType="CaiShenStatisticsEntity"
+		resultType="int">
+		<![CDATA[
+			SELECT 	COUNT(1)
+			FROM 	t_ddq_activities_caishen_statistics
+			WHERE	BTN_NAME = #{btnName}		
+					AND
+					OPEN_ID = #{openId}
+		]]>
+	</select>
+
+	<select id="selectCountByBtnName" parameterType="string"
+		resultType="int">
+		<![CDATA[
+			SELECT 	IFNULL(SUM(COUNT),0)
+			FROM 	t_ddq_activities_caishen_statistics
+			WHERE	BTN_NAME = #{btnName}		
+		]]>
+	</select>
+
+	<select id="selectCountByBtnNameOfOld" parameterType="string"
+		resultType="int">
+		<![CDATA[
+			SELECT 	IFNULL(SUM(COUNT),0)
+			FROM 	t_ddq_activities_caishen_statistics
+			WHERE	BTN_NAME = #{btnName}	
+					AND
+					IS_OLD_WX_CUSTOMER = TRUE	
+		]]>
+	</select>
+
+	<select id="selectTotalCount" resultType="int">
+		<![CDATA[
+			SELECT 	IFNULL(SUM(COUNT),0)
+			FROM 	t_ddq_activities_caishen_statistics
+		]]>
+	</select>
+
+	<update id="click" parameterType="CaiShenStatisticsEntity">
+		<![CDATA[
+			UPDATE  t_ddq_activities_caishen_statistics
+			SET		COUNT = COUNT + 1,
+					UPDATED_DATE = NOW()
+			WHERE   OPEN_ID=#{openId}
+					AND
+					BTN_NAME = #{btnName}
+		]]>
+	</update>
+</mapper>

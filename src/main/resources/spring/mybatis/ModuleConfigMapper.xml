@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="ModuleConfigEntity">
+	<!-- 根据dictName查询单条记录 -->
+	<select id="selectByConfigName" resultType="ModuleConfigEntity">
+		<![CDATA[
+			SELECT  ID                    id ,
+					CONFIG_NAME           configName,
+					CONFIG_DESC     	  configDesc,
+					CONFIG_VALUE          configValue,
+					PID    				  pid,
+					REMARK             	  remark
+			FROM t_ddq_module_config WHERE CONFIG_NAME = #{value} and DELETE_FLAG=0 limit 1
+		]]>
+	</select>
+	
+</mapper> 

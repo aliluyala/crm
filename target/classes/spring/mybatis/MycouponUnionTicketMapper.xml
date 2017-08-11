@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="MycouponUnionTicketDto">
+	
+	<resultMap id="MycouponUnionTicketDtoResultMap" type="com.vcredit.ddcash.server.model.dto.mycoupon.MycouponUnionTicketDto">
+		<id column="mycouponId" property="mycouponId" />
+		<result column="CUSTOMER_ID" property="customerId" />
+		<result column="STATUS" property="status" />
+		<result column="EXPIRE_DATE" property="expireDate" />
+		<result column="CREATED_DATE"      property="createdDate" />
+	   
+		<association property="ticketEntity" javaType="com.vcredit.ddcash.server.model.entity.mycoupon.TicketTypeEntity">
+			<id column="ticketId" property="ticketId" />
+			<result column="TICKET_NAME" property="ticketName"/>
+			<result column="TICKET_ABBREVIATE" property="ticketAbbreviate"/>
+			<result column="TICKET_AMOUNT" property="ticketAmount"/>
+			<result column="TICKET_TYPE" property="ticketType"/>
+			<result column="USE_RANGE" property="useRange"/>
+		</association>
+	</resultMap>
+	
+	
+	<!-- 根据客户openId和使用状态查询 -->
+	<select id="selectByCusIdAndStatus" parameterType="java.util.Map" resultMap="MycouponUnionTicketDtoResultMap" >
+		SELECT 
+		  cou.ID 				AS mycouponId,
+		  cou.CUSTOMER_ID,
+		  cou.STATUS,
+		  cou.EXPIRE_DATE,
+		  cou.CREATED_DATE,
+		  ti.ID 				AS ticketId,
+		  ti.TICKET_NAME,
+		  ti.TICKET_ABBREVIATE,
+		  ti.TICKET_TYPE,
+		  ti.TICKET_AMOUNT,
+		  ti.USE_RANGE 
+		FROM
+		  t_ddq_mycoupon cou,
+		  t_ddq_ticket_type ti 
+		WHERE cou.TICKET_ID = ti.ID   
+		  AND cou.DELETE_FLAG = 1 
+		  AND cou.STATUS in 
+		  <foreach collection="statusList" item="item" index="index" 
+	          open="(" separator="," close=")">
+	         	 #{item}
+	      </foreach>
+		  AND CUSTOMER_ID = #{customerId} 
+		ORDER BY cou.CREATED_DATE DESC 
+	</select>	
+		
+</mapper> 

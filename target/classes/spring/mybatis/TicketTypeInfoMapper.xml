@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- insert,select,selectByPK,count, delete, update,updateAll -->
+<mapper namespace="TicketTypeEntity">
+
+	
+	  <!-- 根据任务ID查询-->
+	<select id="selectByPK" parameterType="Long" resultType="TicketTypeEntity">
+		SELECT	ID                		ticketId ,
+		     	TICKET_NAME         	ticketName ,
+		     	TICKET_ABBREVIATE   	ticketAbbreviate,
+		     	TICKET_TYPE         	ticketType,
+		     	TICKET_AMOUNT          	ticketAmount,
+	         	USE_RANGE          		useRange, 
+             	TICKET_EXPIRE          	ticketExpire, 
+		     	CREATED_DATE       		createdDate,
+		     	UPDATED_DATE         	updatedDate
+		FROM 	t_ddq_ticket_type 
+		WHERE 	id = #{value}
+        		AND  DELETE_FLAG = '1'
+	</select>
+	
+	<select id="selectByAmountAndSX" parameterType="TicketTypeEntity" resultType="TicketTypeEntity">
+		SELECT  ID                		ticketId ,
+		     	TICKET_NAME         	ticketName ,
+		     	TICKET_ABBREVIATE   	ticketAbbreviate,
+		     	TICKET_TYPE         	ticketType,
+		     	TICKET_AMOUNT          	ticketAmount,
+	         	USE_RANGE          		useRange, 
+            	TICKET_EXPIRE          	ticketExpire, 
+		     	CREATED_DATE       		createdDate,
+		     	UPDATED_DATE         	updatedDate
+		FROM 	t_ddq_ticket_type 
+		WHERE 	TICKET_AMOUNT = #{ticketAmount}
+				AND  
+        		TICKET_ABBREVIATE = #{ticketAbbreviate}
+        		AND  
+        		DELETE_FLAG = '1'
+	</select>
+	
+		
+</mapper> 

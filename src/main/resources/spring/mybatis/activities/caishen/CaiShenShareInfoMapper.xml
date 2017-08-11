@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- insert,select,selectByPK,count, delete, update,updateAll -->
+<mapper namespace="CaiShenShareInfoEntity">
+
+	<select id="count" parameterType="CaiShenShareInfoEntity"
+		resultType="java.lang.Integer">
+		<![CDATA[
+			SELECT  COUNT(1) 
+			FROM  	t_ddq_activities_caishen_share_info 
+			WHERE  	SHARER_OPEN_ID=#{sharerOpenId} 
+					AND 
+					ANSWER_SHARE_OPEN_ID=#{answerShareOpenId}
+		]]>
+	</select>
+
+	<select id="totalShareCount" resultType="java.lang.Integer">
+		<![CDATA[
+			SELECT  COUNT(1) 
+			FROM  	t_ddq_activities_caishen_share_info 
+		]]>
+	</select>
+
+	<insert id="insertNewShareInfo" parameterType="CaiShenShareInfoEntity"
+		useGeneratedKeys="true" keyProperty="id">
+		<![CDATA[
+			INSERT INTO t_ddq_activities_caishen_share_info (
+				ID,
+				SHARER_OPEN_ID,
+				ANSWER_SHARE_OPEN_ID,
+				CREATED_DATE,
+				UPDATED_DATE
+			)
+			VALUES
+			(
+				#{id},
+				#{sharerOpenId},
+				#{answerShareOpenId},
+				NOW(),
+				NOW()
+			)
+		]]>
+	</insert>
+
+</mapper>

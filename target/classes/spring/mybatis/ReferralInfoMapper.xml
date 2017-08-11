@@ -1,0 +1,366 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<!-- insert,select,selectByPK,count, delete, update,updateAll -->
+<mapper namespace="ReferralInfoEntity">
+	<!-- 插入 -->
+	<insert id="saveUserInfo" parameterType="com.vcredit.ddcash.server.model.entity.invitation.ReferralInfoEntity"
+	        useGeneratedKeys="true" keyProperty="id">
+	<![CDATA[
+		INSERT INTO T_DDQ_REFERRER (
+		 	   OPEN_ID,
+			   INVITE_ID,			  
+		       IDENTITY_NO,
+		       REAL_NAME,
+		       MOBILE,
+		       RATIO,
+		       CUSTOMER_ID,
+		       SOURCE,
+		       REWARD_AMOUNT,
+		       CREATED_DATE,
+		       UPDATED_DATE			       			       
+		)
+		VALUES
+		(
+			#{openId, jdbcType=VARCHAR},
+			#{inviteId, jdbcType=VARCHAR},
+			#{identityNo, jdbcType=VARCHAR},
+			#{name, jdbcType=VARCHAR},
+			#{mobile, jdbcType=BIGINT},
+			#{ratio, jdbcType=FLOAT},
+			#{customerId, jdbcType=BIGINT},		
+			#{source, jdbcType=VARCHAR},
+			#{rewardAmount, jdbcType=DECIMAL},
+			CURRENT_TIMESTAMP,
+			CURRENT_TIMESTAMP
+		)
+	]]>
+	</insert>
+	<select id="selectReferralInfo" parameterType="String" resultType="ReferralInfoEntity">
+	<![CDATA[
+		SELECT ref.ID id,
+			   ref.INVITE_ID inviteId,
+		       ref.IDENTITY_NO identityNo,		       
+		       ref.MOBILE mobile,
+		       ref.RATIO ratio,
+		       ref.CUSTOMER_ID customerId,
+		       ref.SOURCE source,
+		       ref.CREATED_DATE createDate,
+		       ref.UPDATED_DATE	updateDate,
+		       ref.REWARD_AMOUNT rewardAmount,
+		       amt.NICK_NAME name
+		FROM T_DDQ_REFERRER ref
+		LEFT JOIN T_DDQ_CUSTOMER_AMT amt
+		ON ref.OPEN_ID = amt.OPEN_ID
+		WHERE ref.OPEN_ID = #{value}
+		ORDER BY ref.CREATED_DATE DESC LIMIT 1	
+	]]>
+	</select>
+	<select id="selectReferralInfoByIdenNo" parameterType="String" resultType="ReferralInfoEntity">
+	<![CDATA[
+		SELECT INVITE_ID inviteId,
+				OPEN_ID openId,
+		       IDENTITY_NO identityNo,
+		       MOBILE mobile,
+		       RATIO ratio,
+		       CUSTOMER_ID customerId,
+		       SOURCE source,
+		       CREATED_DATE createDate,
+		       UPDATED_DATE	updateDate
+		FROM T_DDQ_REFERRER
+		WHERE IDENTITY_NO = #{value}	
+	]]>
+	</select>
+	<select id="selectReferralInfoByMobile" parameterType="String" resultType="ReferralInfoEntity">
+	<![CDATA[
+		SELECT INVITE_ID inviteId,
+		       IDENTITY_NO identityNo,
+		       MOBILE mobile,
+		       RATIO ratio,
+		       CUSTOMER_ID customerId,
+		       SOURCE source,
+		       CREATED_DATE createDate,
+		       UPDATED_DATE	updateDate
+		FROM T_DDQ_REFERRER
+		WHERE MOBILE = #{value}	
+	]]>
+	</select>		
+	<update id="pushUserInfoToDDCash" parameterType="ReferralInfoEntity">
+		<![CDATA[
+		UPDATE T_DDQ_CUSTOMER 
+			SET UPDATED_DATE               = CURRENT_TIMESTAMP,				
+				MOBILE                     = #{mobile, jdbcType=VARCHAR}
+		WHERE OPEN_ID = #{openId, jdbcType=BIGINT} 
+		]]>
+	</update>	
+	<update id="updateSharedStatus" parameterType="String">
+		<![CDATA[
+		UPDATE T_DDQ_REFERRER 
+			SET UPDATED_DATE               = CURRENT_TIMESTAMP,				
+				IS_SHARED                  = 1
+		WHERE OPEN_ID = #{value}	
+		]]>
+	</update>	
+	<insert id="createSequence" parameterType="com.vcredit.ddcash.server.model.entity.invitation.SequenceEntity"
+	        useGeneratedKeys="true" keyProperty="id">
+	<![CDATA[
+		INSERT INTO T_DDQ_SEQUENCE (
+		 	   COMMENTS,
+		       CREATED_DATE,
+		       UPDATED_DATE			       			       
+		)
+		VALUES
+		(
+			#{comments, jdbcType=VARCHAR},			
+			CURRENT_TIMESTAMP,
+			CURRENT_TIMESTAMP
+		)
+	]]>
+	</insert>
+	<insert id="updateInviteeStatus" parameterType="String"
+	        useGeneratedKeys="true" keyProperty="id">
+	<![CDATA[
+		INSERT INTO t_ddq_activities_invitee (
+		 	   OPEN_ID,
+		 	   FLAG,
+		       CREATED_DATE,
+		       UPDATED_DATE			       			       
+		)
+		VALUES
+		(
+			#{openId, jdbcType=VARCHAR},
+			#{flag, jdbcType=BIGINT},			
+			CURRENT_TIMESTAMP,
+			CURRENT_TIMESTAMP
+		)
+	]]>
+	</insert>
+	<select id="selectInviteeStatus" parameterType="String" resultType="Integer">
+	<![CDATA[
+		select count(*) count from t_ddq_activities_invitee t1 WHERE t1.open_id = #{value}	 
+	]]>
+	</select>
+	<select id="selectValidInviteCode" parameterType="string" resultType="com.vcredit.ddcash.server.model.entity.invitation.SequenceEntity">
+	<![CDATA[
+		SELECT * 
+		FROM T_DDQ_SEQUENCE
+		WHERE id = #{value}	
+	]]>
+	</select>
+	<select id="selectInvitedUser" parameterType="string" resultType="com.vcredit.ddcash.server.model.entity.auth.CustomerEntity">
+	<![CDATA[
+		SELECT  ID                           ID,
+				OPEN_ID                      OPENID,
+				INVITE_ID                    INVITEID,
+				AGENT                        AGENT,
+				IDENTITY_NO                  IDENTITYNO,
+				IDENTITY_EXPIRES             IDENTITYEXPIRES,
+				IDENTITY_PERSON              IDENTITYPERSON,
+				REAL_NAME                    REALNAME,
+				WORK_CITY                    WORKCITY,
+				WORK_PROVINCE                WORKPROVINCE,
+				SUPPORT_ADVANCE              SUPPORTADVANCE,
+				EDUCATION_DEGREE             EDUCATIONDEGREE,
+				JOB							 JOB,
+				MARRY_STATUS                 MARRYSTATUS,
+				LOCAL_REGISTRY               LOCALREGISTRY,
+				MOBILE                       MOBILE,
+				MOBILE_AUTH_IDENTITY         MOBILEAUTHIDENTITY,
+				MOBILE_AUTH_STATUS           MOBILEAUTHSTATUS,
+				MOBILE_AUTH_DATE             MOBILEAUTHDATE,
+				MOBILE_AUTH_FLAG             MOBILEAUTHFLAG,
+				MOBILE_REPEAT_APPLY          MOBILEREPEATAPPLY,
+				IDENTITY_RECOGNIZE_NAME      IDENTITYRECOGNIZENAME,
+				IDENTITY_RECOGNIZE_ADDRESS   IDENTITYRECOGNIZEADDRESS,
+				STATUS                       STATUS,
+				CUST_HEAD                    CUSTHEAD,
+				QUICK_LOAN_CUST              QUICKLOANCUST,
+				MONTHLY_INCOME				 MONTHLYINCOME,
+				CREATED_DATE                 CREATEDDATE,
+				UPDATED_DATE                 UPDATEDDATE
+		FROM T_DDQ_CUSTOMER
+		WHERE INVITE_ID = #{value}	
+	]]>
+	</select>
+	
+	<!-- 根据cust Id，查询待补资料/复核中/已放款/已逾期的所有订单 -->
+  	<select id="queryAllRelaSltAccountInfo" resultType="com.vcredit.ddcash.server.model.entity.transfer.SltAccountEntity" parameterType="String">
+  		<![CDATA[		
+				select 
+				slt.CARD_ID  cardId,
+                 slt.SLT_ACCOUNT_ID sltAccountId,
+                 slt.CLEAN_STATUS cleanStatus,
+                 slt.CLEAN_REMARKS cleanRemarks,
+                 slt.CUSTOMER_ID customerId,
+                 slt.DUE_AMOUNT dueAmount,
+                 slt.BEGIN_DATE beginDate,
+                 slt.END_DATE endDate,
+                 slt.GUID      guid,
+                 slt.LOAN_TYPE loanType,
+                 slt.OPERATE_FLAG operateFlag,
+                 slt.PAYMENT_TYPE paymentType,
+                 slt.SCHEDULE_AMOUNT scheduleAmount,
+                 slt.TRANS_STATUS transStatus,
+                 slt.VBS_BID  vbsBid,
+                 slt.OPERATE_FLAG operateFlag,
+                 slt.WITHDRAW_JSON withdrawJson,
+                 slt.WITHDRAW_FAIL_DESC withdrawFailDesc,
+                 slt.CREDIT_AUTH_ID creditAuthId,
+                 slt.CONTRACTNO contractNO,
+                 slt.UPDATED_DATE updatedDate,
+                 con.LOAN_AMOUNT  loanAmount,
+                 con.LOAN_DATE  loanDate,
+                 con.SERVICE_RATE serviceRate,
+                 con.SERVICE_RATE*con.LOAN_AMOUNT  as serviceAmount,
+                 con.INTEREST_RATE interestRate
+          FROM  t_ddq_customer  cus
+		        LEFT JOIN t_ddq_slt_account slt  ON cus.ID = slt.CUSTOMER_ID   
+		        LEFT JOIN t_ddq_contract_info con ON con.SLT_ACCOUNT_ID = slt.SLT_ACCOUNT_ID  
+		  WHERE cus.INVITE_ID=#{inviteId}
+		        AND slt.TRANS_STATUS IN('1','2','3','4')
+		        AND slt.LOAN_TYPE = '0' 
+            ]]>	
+	        <![CDATA[
+	          ORDER BY 	con.LOAN_DATE DESC
+	         ]]>		
+  	</select>
+  	
+  	<select id="selectReferralInfoByInviteId" parameterType="string" resultType="ReferralInfoEntity">
+	<![CDATA[
+		SELECT 
+			   ID			id,	
+			   INVITE_ID inviteId,
+		       IDENTITY_NO identityNo,
+		       MOBILE mobile,
+		       RATIO ratio,
+		       CUSTOMER_ID customerId,
+		       SOURCE source,
+		       REWARD_AMOUNT rewardAmount,
+		       CREATED_DATE createDate,
+		       UPDATED_DATE	updateDate
+		FROM T_DDQ_REFERRER
+		WHERE INVITE_ID = #{value}	
+	]]>
+	</select>
+	
+	<select id="getUserInviteCount" parameterType="string" resultType="int">
+		SELECT
+			COUNT(1)
+		FROM
+			t_ddq_referrer a
+		INNER JOIN t_ddq_customer b ON a.invite_id = b.INVITE_ID
+		WHERE
+			a.identity_no = #{value}
+		AND a.delete_flag = 1
+	</select>
+	
+	<select id="getUserInviteReward" parameterType="string" resultType="string">
+		SELECT
+			SUM(b.amount)
+		FROM
+			t_ddq_referrer a
+		INNER JOIN t_ddq_rewards_inflow b ON a.id = b.refer_id
+		WHERE
+			a.delete_flag = 1
+		AND a.identity_no = #{value}
+		AND b.delete_flag = 1
+	</select>
+	
+	<update id="updateReferInviteCodeByIdNo" parameterType="ReferralInfoEntity">
+		UPDATE t_ddq_referrer
+		SET invite_id = #{inviteId},
+			open_id = #{openId},
+			UPDATED_DATE = NOW()
+		WHERE
+			identity_no = #{identityNo}
+	</update>
+	
+	<update id="updateCustInviteCodeByInviteId" parameterType="string">
+		UPDATE t_ddq_customer
+		SET INVITE_ID = CONCAT('V', INVITE_ID),
+			UPDATED_DATE = NOW()
+		WHERE
+			INVITE_ID = #{value}
+	</update>
+	
+	<update id="updateReferOpenIdByIdNo" parameterType="ReferralInfoEntity">
+		UPDATE t_ddq_referrer
+		SET open_id = #{openId},
+		 UPDATED_DATE = NOW()
+		WHERE
+			identity_no = #{identityNo}
+		AND OPEN_ID IS NULL
+	</update>
+	
+	<select id="getReferByIdNoOrOpenId" parameterType="ReferralInfoEntity" resultType="ReferralInfoEntity">
+		SELECT id id,
+				 INVITE_ID inviteId,
+				OPEN_ID openId,
+		       IDENTITY_NO identityNo,
+		       MOBILE mobile,
+		       RATIO ratio,
+		       CUSTOMER_ID customerId,
+		       SOURCE source,
+		       CREATED_DATE createDate,
+		       UPDATED_DATE	updateDate
+		FROM
+			t_ddq_referrer t
+		WHERE
+			(
+				t.identity_no = #{identityNo}
+				OR t.open_id = #{openId}
+			)
+		AND t.delete_flag = 1
+	</select>
+	
+	<update id="updateReferById" parameterType="ReferralInfoEntity">
+		UPDATE t_ddq_referrer
+		SET open_id = #{openId},
+		invite_id=#{inviteId},
+		identity_no = #{identityNo},
+		 UPDATED_DATE = NOW()
+		WHERE
+			id = #{id}
+	</update>
+	
+	<select id="getReferByIdNo" parameterType="String" resultType="ReferralInfoEntity">
+		SELECT  id id,
+				 INVITE_ID inviteId,
+				OPEN_ID openId,
+		       IDENTITY_NO identityNo,
+		       MOBILE mobile,
+		       RATIO ratio,
+		       CUSTOMER_ID customerId,
+		       SOURCE source,
+		       CREATED_DATE createDate,
+		       UPDATED_DATE	updateDate
+		FROM
+			t_ddq_referrer t
+		WHERE
+			t.identity_no = #{idNo}
+			AND
+			t.delete_flag = 1
+	</select>
+	
+	<select id="getReferByOpenId" parameterType="String" resultType="ReferralInfoEntity">
+	SELECT  id id,
+				 INVITE_ID inviteId,
+				OPEN_ID openId,
+		       IDENTITY_NO identityNo,
+		       MOBILE mobile,
+		       RATIO ratio,
+		       CUSTOMER_ID customerId,
+		       SOURCE source,
+		       CREATED_DATE createDate,
+		       UPDATED_DATE	updateDate
+		FROM
+			t_ddq_referrer t
+		WHERE
+			t.open_id = #{openId}
+			AND
+			t.delete_flag = 1
+	</select>
+	
+</mapper>

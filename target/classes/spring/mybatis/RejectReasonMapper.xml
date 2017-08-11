@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- insert,select,selectByPK,count, delete, update,updateAll -->
+<mapper namespace="RejectReasonEntity">
+	<!-- 查询条件 -->
+	<sql id="QueryConditionSql">
+		<where>
+			<if test="customerId != null">
+				AND CUSTOMER_ID = #{customerId, jdbcType=BIGINT}
+			</if>
+			<if test="status != null">
+				AND STATUS = #{status, jdbcType=INTEGER}
+			</if>
+		</where>
+	</sql>
+
+	<!-- 插入 -->
+	<insert id="insert" parameterType="RejectReasonEntity">
+		<![CDATA[
+			INSERT INTO T_DDQ_REJECT_REASON (
+				CUSTOMER_ID,
+				RULE_NAME,
+				RULE_DESC,
+				STATUS,
+				CREATED_DATE,
+				UPDATED_DATE
+			)
+			VALUES
+			(
+				#{customerId, jdbcType=BIGINT}, 
+				#{ruleName, jdbcType=VARCHAR}, 
+				#{ruleDesc, jdbcType=VARCHAR}, 
+				#{status, jdbcType=INTEGER},
+				CURRENT_TIMESTAMP,
+				CURRENT_TIMESTAMP
+			)
+		]]>
+	</insert>
+
+	<!-- 批量插入 -->
+	<insert id="batchInsert" parameterType="java.util.List">
+		<![CDATA[
+			INSERT INTO T_DDQ_REJECT_REASON 
+			(
+				CUSTOMER_ID, 
+				RULE_NAME, 
+				RULE_DESC, 
+				STATUS, 
+				CREATED_DATE, 
+				UPDATED_DATE
+			) 
+			VALUES 
+		]]>
+		<foreach collection="list" item="item" index="index" separator=",">
+			(
+			#{item.customerId},
+			#{item.ruleName},
+			#{item.ruleDesc},
+			#{item.status},
+			CURRENT_TIMESTAMP,
+			CURRENT_TIMESTAMP
+			)
+		</foreach>
+	</insert>
+
+	<!-- 分页查询&过滤查询 -->
+	<select id="select" parameterType="RejectReasonEntity" resultType="RejectReasonEntity">
+		<![CDATA[
+			SELECT  ID                    ID,
+					CUSTOMER_ID           CUSTOMERID,
+					RULE_NAME             RULENAME,
+					RULE_DESC             RULEDESC,
+					STATUS                STATUS,
+					CREATED_DATE          CREATEDDATE,
+					UPDATED_DATE          UPDATEDDATE
+			FROM T_DDQ_REJECT_REASON
+		]]>
+		<include refid="QueryConditionSql" />
+		<![CDATA[
+			ORDER BY UPDATED_DATE DESC
+		]]>
+	</select>
+	
+	<select id="getRejectReason" parameterType="RejectReasonEntity" resultType="RejectReasonEntity">
+		<![CDATA[
+		SELECT  ID                    ID,
+					CUSTOMER_ID           CUSTOMERID,
+					RULE_NAME             RULENAME,
+					RULE_DESC             RULEDESC,
+					STATUS                STATUS,
+					CREATED_DATE          CREATEDDATE,
+					UPDATED_DATE          UPDATEDDATE
+			FROM T_DDQ_REJECT_REASON
+		]]>
+		<include refid="QueryConditionSql" />
+	</select>
+	<!-- 记录总数 -->
+	<select id="count" parameterType="RejectReasonEntity" resultType="Integer">
+		<![CDATA[
+			SELECT COUNT(1) FROM T_DDQ_REJECT_REASON
+		]]>
+		<include refid="QueryConditionSql" />
+	</select>
+
+	<!-- 更新历史原因记录 -->
+	<update id="updateHistoryReasons" parameterType="Long">
+		<![CDATA[
+			UPDATE T_DDQ_REJECT_REASON SET STATUS = 1 WHERE CUSTOMER_ID = #{value}
+		]]>
+	</update>
+</mapper> 

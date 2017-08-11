@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<!-- insert,select,selectByPK,count, delete, update,updateAll -->
+<mapper namespace="RewardsInFlowEntity">
+	<!-- 插入 -->
+	<insert id="insert" parameterType="com.vcredit.ddcash.server.model.entity.invitation.RewardsInFlowEntity" 
+		useGeneratedKeys="true" keyProperty="id">
+	<![CDATA[
+		INSERT INTO T_DDQ_REWARDS_INFLOW (
+		 	   REFER_ID,
+			   AMOUNT,
+		       CUSTOMER_ID,
+		       SLT_ACCOUNT_ID,
+		       LOAN_DATE,
+		       DELETE_FLAG,
+		       REWARD_TYPE,			       			       
+		       CREATED_DATE,
+		       UPDATED_DATE
+		)
+		VALUES
+		]]>
+		(
+			#{referId, jdbcType=BIGINT},
+			#{amount, jdbcType=DECIMAL},			
+			#{customerId, jdbcType=BIGINT},		
+			#{sltAccountId, jdbcType=BIGINT},
+			#{loanDate, jdbcType=VARCHAR},
+			#{deleteFlag,jdbcType=BIGINT},
+			#{rewardType,jdbcType=VARCHAR},
+			CURRENT_TIMESTAMP,
+			CURRENT_TIMESTAMP
+		)
+	</insert>
+	
+	<insert id="saveRewardsInFlow" parameterType="java.util.List">
+	<![CDATA[
+		INSERT INTO T_DDQ_REWARDS_INFLOW (
+		 	   REFER_ID,
+			   AMOUNT,
+		       CUSTOMER_ID,
+		       SLT_ACCOUNT_ID,
+		       LOAN_DATE,
+		       REWARD_TYPE,
+		       DELETE_FLAG,	
+		       CREATED_DATE,
+		       UPDATED_DATE			       			       
+		)
+		VALUES
+		]]>
+		<foreach collection="list" item="item" index="index" separator=",">
+			(
+				#{item.referId, jdbcType=BIGINT},
+				#{item.amount, jdbcType=DECIMAL},			
+				#{item.customerId, jdbcType=BIGINT},		
+				#{item.sltAccountId, jdbcType=BIGINT},
+				#{item.loanDate, jdbcType=VARCHAR},
+				#{item.rewardType, jdbcType=VARCHAR},
+				#{item.deleteFlag,jdbcType=BIGINT},
+				CURRENT_TIMESTAMP,
+				CURRENT_TIMESTAMP
+			)
+	   </foreach>
+	</insert>
+	<select id="selectRewardsInFlowlInfo" parameterType="Long" resultType="RewardsInFlowEntity">
+	<![CDATA[
+		SELECT REFER_ID referId,
+			   AMOUNT amount,
+		       CUSTOMER_ID customerId,
+		       SLT_ACCOUNT_ID sltAccountId,
+		       LOAN_DATE loanDate,
+		       DELETE_FLAG deleteFlag,
+		       REWARD_TYPE rewardType
+		FROM T_DDQ_REWARDS_INFLOW
+		WHERE REFER_ID = #{value}
+		AND DELETE_FLAG='1'
+		]]>
+	
+	</select>
+	
+	<select id="selectMonthOfRewards" parameterType="RewardsInFlowEntity" resultType="RewardsInFlowEntity">
+	<![CDATA[
+		SELECT rew.REFER_ID referId,
+			   SUM(rew.AMOUNT) amount,
+		       DATE_FORMAT(rew.LOAN_DATE,'%Y-%m') monthOfDate,
+		       rew.LOAN_DATE 		loanDate
+		FROM T_DDQ_REWARDS_INFLOW rew
+		WHERE rew.REFER_ID = #{referId} 
+		AND DATE_FORMAT(rew.LOAN_DATE,'%Y') = #{rewardYear}
+		AND DELETE_FLAG='1'
+		GROUP BY DATE_FORMAT(rew.LOAN_DATE,'%Y-%m')	
+		ORDER BY rew.LOAN_DATE DESC
+	]]>
+	</select>
+	
+	
+	<select id="selectMonthOfRewardsBeforeNow" parameterType="RewardsInFlowEntity" resultType="RewardsInFlowEntity">
+	<![CDATA[
+		SELECT rew.REFER_ID referId,
+			   SUM(rew.AMOUNT) amount,
+		       DATE_FORMAT(rew.LOAN_DATE,'%Y-%m') monthOfDate,
+		       rew.LOAN_DATE 		loanDate
+		FROM T_DDQ_REWARDS_INFLOW rew
+		WHERE rew.REFER_ID = #{referId} 
+		AND DATE_FORMAT(rew.LOAN_DATE,'%Y-%m') < #{monthOfDate}
+		AND DELETE_FLAG='1'
+		GROUP BY DATE_FORMAT(rew.LOAN_DATE,'%Y-%m')	
+		ORDER BY rew.LOAN_DATE DESC
+	]]>
+	</select>
+	
+	<select id="selectInviteeDetails" parameterType="RewardsInFlowEntity" resultType="RewardsInFlowEntity">
+	<![CDATA[
+		SELECT rew.REFER_ID referId,
+			   rew.AMOUNT amount,
+		       DATE_FORMAT(rew.LOAN_DATE,'%Y-%m-%d') monthOfDate
+		FROM T_DDQ_REWARDS_INFLOW rew
+		WHERE rew.REFER_ID = #{referId} 
+		AND DATE_FORMAT(rew.LOAN_DATE,'%Y-%m') = #{monthOfDate}
+		AND DELETE_FLAG='1'
+		ORDER BY rew.LOAN_DATE DESC
+	]]>
+	</select>
+	
+	
+	<!-- 查询条件 -->
+	<sql id="QueryConditionSql">
+		<where>
+			AND DELETE_FLAG='1'
+			<if test="referId != null">
+				AND REFER_ID = #{referId, jdbcType=VARCHAR}
+			</if>
+			<if test="customerId != null and customerId != 0">
+				AND CUSTOMER_ID = #{customerId, jdbcType=BIGINT}
+			</if>
+			<if test="rewardType != null">
+				AND REWARD_TYPE = #{rewardType, jdbcType=VARCHAR}
+			</if>
+		</where>
+	</sql>
+	
+	<!-- 记录总数 -->
+	<select id="count" parameterType="RewardsInFlowEntity" resultType="Integer">
+	<![CDATA[
+		SELECT COUNT(1) FROM T_DDQ_REWARDS_INFLOW
+	]]>
+		<include refid="QueryConditionSql" />
+	</select>
+	
+	<select id="select" parameterType="RewardsInFlowEntity" resultType="RewardsInFlowEntity">
+	<![CDATA[
+		SELECT REFER_ID				referId,
+			   AMOUNT				amount,
+		       CUSTOMER_ID			customerId,
+		       SLT_ACCOUNT_ID		sltAccountId,
+		       LOAN_DATE 			loanDate,
+		       DELETE_FLAG 			deleteFlag,
+		       REWARD_TYPE			rewardType
+		FROM T_DDQ_REWARDS_INFLOW
+	]]>
+		<include refid="QueryConditionSql" />
+	</select>
+	
+	<!--根据推荐人查询 奖金-->
+	<select id="queryRewardsByRefer" parameterType="java.util.Map" resultType="RewardsInflowEntity">
+		SELECT  ID                          rewardsInflowId,
+				REFER_ID                    referId,
+				AMOUNT                      amount,
+				CUSTOMER_ID                 customerId,
+				SLT_ACCOUNT_ID              sltAccountId,
+				LOAN_DATE                   loanDate,
+				REWARD_TYPE					rewardType,
+				CREATED_DATE                createdDate,
+				UPDATED_DATE                updatedDate
+		FROM t_ddq_rewards_inflow 
+		where  refer_id = #{referId}
+		      <if test="firstDayOfMoth != null and firstDayOfMoth != ''">
+	       	     AND loan_date >=#{firstDayOfMoth} 
+			   </if>
+		 AND delete_flag = '1'
+	</select>
+	
+	</mapper>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ContractInfoEntity">
+	
+	<!-- 查询 T_DDQ_TRANS_PASSWORD表 获取提现金额-->
+	<select id="selectByCustomerId" parameterType="String" resultType="com.vcredit.ddcash.server.model.entity.transfer.ContractInfoEntity">
+		<![CDATA[
+			SELECT  CUSTOMER_ID 					contractId,
+					SLT_ACCOUNT_ID					sltAccountId,
+					LOAN_AMOUNT						loanAmount,
+					LOAN_DATE						loanDate,
+					DEPOSIT_FEE						depositFee,
+					INTEREST_RATE					interestRate,
+					SERVICE_RATE					serviceRate,
+					PAYMENT_DUE_DATE				paymentDueDate,
+					CREATED_DATE					createdDate,
+					UPDATED_DATE					updatedDate
+			FROM 	T_DDQ_CONTRACT_INFO 
+			WHERE   CUSTOMER_ID = #{value}
+		]]>
+	</select>
+	
+</mapper> 

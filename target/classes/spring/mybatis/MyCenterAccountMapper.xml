@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="AccountEntity">
+	
+	<!-- 查询 T_DDQ_TRANS_PASSWORD表 获取提现状态-->
+	<select id="selectByCustomerId" parameterType="String" resultType="com.vcredit.ddcash.server.model.entity.myCenter.AccountEntity">
+		<![CDATA[
+			SELECT  SLT_ACCOUNT_ID 			id,
+					CUSTOMER_ID 			customerId,
+					TRANS_STATUS			transStatus,
+					VBS_BID					VBSBid,
+					PAYMENT_TYPE			paymentType,
+					SCHEDULE_DATE			scheduleDate,
+					SCHEDULE_AMOUNT			scheduleAmount,
+					GUID					Guid,
+					CLEAN_STATUS			cleanStatus,
+					CLEAN_REMARKS			cleanRemarks,
+					IS_DUE_STATUS			isDueStatus,
+					DUE_AMOUNT				dueAmount,
+					CARD_ID					cardId,
+					BEGIN_DATE				beginDate,
+					END_DATE				endDate,
+					LOAN_TYPE				loanType,
+					CREATED_DATE			createdDate,
+					UPDATED_DATE			updateDate
+			FROM 	T_DDQ_SLT_ACCOUNT 
+			WHERE   CUSTOMER_ID = #{value}
+		]]>
+	</select>
+	
+</mapper> 

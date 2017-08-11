@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- insert,select,selectByPK,count, delete, update,updateAll -->
+<mapper namespace="QuickLoanEntity">
+	<!-- 查询条件 -->
+	<sql id="QueryConditionSql">
+		<where>
+			<if test="id != null">
+				AND ID = #{id, jdbcType=BIGINT}
+			</if>
+			<if test="identityNo != null and identityNo != ''">
+				AND IDENTITY_NO = #{identityNo, jdbcType=VARCHAR}
+			</if>
+		</where>
+	</sql>
+
+	<!-- 插入 -->
+	<insert id="insert" parameterType="QuickLoanEntity">
+	<![CDATA[
+		INSERT INTO T_DDQ_QUICK_LOAN (
+			REAL_NAME,
+			IDENTITY_NO,
+			LOAN_AMOUNT,
+			LOAN_PERIOD,
+			MONTH_RATE,
+			MONTH_SERVICE_RATE,
+			CARD_NO,
+			CARD_BANK,
+			LOAN_DEAD_LINE,
+			LOAN_SIGN_DEAD_LINE,
+			MOBILE,
+			FEE_RATE,
+			CREATED_DATE,
+			UPDATED_DATE
+		)
+		VALUES
+		(
+			#{realName, jdbcType=VARCHAR}, 
+			#{identityNo, jdbcType=VARCHAR}, 
+			#{loanAmount, jdbcType=DECIMAL}, 
+			#{loanPeriod, jdbcType=VARCHAR},
+			#{monthRate, jdbcType=DECIMAL},
+			#{monthServiceRate, jdbcType=DECIMAL},
+			#{cardNo, jdbcType=VARCHAR},
+			#{cardBank, jdbcType=VARCHAR},
+			#{loanDeadLine, jdbcType=TIMESTAMP},
+			#{loanSignDeadLine, jdbcType=TIMESTAMP},
+			#{mobile, jdbcType=VARCHAR},
+			#{feeRate, jdbcType=DECIMAL},
+			CURRENT_TIMESTAMP,
+			CURRENT_TIMESTAMP
+		)
+	]]>
+		<selectKey resultType="Long" keyProperty="id" order="AFTER">
+		<![CDATA[ SELECT LAST_INSERT_ID()  AS id  ]]>
+		</selectKey>
+	</insert>
+
+	<!-- 分页查询&过滤查询 -->
+	<select id="select" parameterType="QuickLoanEntity" resultType="QuickLoanEntity">
+	<![CDATA[
+		SELECT  ID                           ID,
+				REAL_NAME                    REALNAME,
+				IDENTITY_NO                  IDENTITYNO,
+				LOAN_AMOUNT                  LOANAMOUNT,
+				LOAN_PERIOD                  LOANPERIOD,
+				MONTH_RATE                   MONTHRATE,
+				MONTH_SERVICE_RATE           MONTHSERVICERATE,
+				CARD_NO                      CARDNO,
+				CARD_BANK                    CARDBANK,
+				LOAN_DEAD_LINE               LOANDEADLINE,
+				LOAN_SIGN_DEAD_LINE          LOANSIGNDEADLINE,
+				MOBILE                       MOBILE,
+				FEE_RATE                     FEERATE,
+				CREATED_DATE                 CREATEDDATE,
+				UPDATED_DATE                 UPDATEDDATE
+		FROM T_DDQ_QUICK_LOAN
+	]]>
+		<include refid="QueryConditionSql" />
+	<![CDATA[
+		ORDER BY UPDATE_DATE DESC
+	]]>
+	</select>
+
+	<!-- 记录总数 -->
+	<select id="count" parameterType="QuickLoanEntity" resultType="Integer">
+	<![CDATA[
+		SELECT COUNT(1) FROM T_DDQ_QUICK_LOAN
+	]]>
+		<include refid="QueryConditionSql" />
+	</select>
+
+	<!-- 主键查询 -->
+	<select id="selectByPK" parameterType="Long" resultType="QuickLoanEntity">
+	<![CDATA[
+		SELECT  ID                           ID,
+				REAL_NAME                    REALNAME,
+				IDENTITY_NO                  IDENTITYNO,
+				LOAN_AMOUNT                  LOANAMOUNT,
+				LOAN_PERIOD                  LOANPERIOD,
+				MONTH_RATE                   MONTHRATE,
+				MONTH_SERVICE_RATE           MONTHSERVICERATE,
+				CARD_NO                      CARDNO,
+				CARD_BANK                    CARDBANK,
+				LOAN_DEAD_LINE               LOANDEADLINE,
+				LOAN_SIGN_DEAD_LINE          LOANSIGNDEADLINE,
+				MOBILE                       MOBILE,
+				FEE_RATE                     FEERATE,
+				CREATED_DATE                 CREATEDDATE,
+				UPDATED_DATE                 UPDATEDDATE
+		FROM T_DDQ_QUICK_LOAN WHERE ID = #{value}
+	]]>
+	</select>
+
+	<!-- 主键查询 -->
+	<select id="selectByIdentityNo" parameterType="String" resultType="QuickLoanEntity">
+	<![CDATA[
+		SELECT  ID                           ID,
+				REAL_NAME                    REALNAME,
+				IDENTITY_NO                  IDENTITYNO,
+				LOAN_AMOUNT                  LOANAMOUNT,
+				LOAN_PERIOD                  LOANPERIOD,
+				MONTH_RATE                   MONTHRATE,
+				MONTH_SERVICE_RATE           MONTHSERVICERATE,
+				CARD_NO                      CARDNO,
+				CARD_BANK                    CARDBANK,
+				LOAN_DEAD_LINE               LOANDEADLINE,
+				LOAN_SIGN_DEAD_LINE          LOANSIGNDEADLINE,
+				MOBILE                       MOBILE,
+				FEE_RATE                     FEERATE,
+				CREATED_DATE                 CREATEDDATE,
+				UPDATED_DATE                 UPDATEDDATE
+		FROM T_DDQ_QUICK_LOAN WHERE IDENTITY_NO = #{value}
+	]]>
+	</select>
+
+	<!-- 更新 -->
+	<update id="update" parameterType="QuickLoanEntity">
+	<![CDATA[
+		UPDATE T_DDQ_QUICK_LOAN 
+			SET
+				UPDATED_DATE                = CURRENT_TIMESTAMP,
+				REAL_NAME                   = #{realName, jdbcType=VARCHAR},
+				IDENTITY_NO                 = #{identityNo, jdbcType=VARCHAR},
+				LOAN_AMOUNT                 = #{loanAmount, jdbcType=DECIMAL}, 
+				LOAN_PERIOD                 = #{loanPeriod, jdbcType=VARCHAR},
+				MONTH_RATE                  = #{monthRate, jdbcType=DECIMAL},
+				MONTH_SERVICE_RATE          = #{monthServiceRate, jdbcType=DECIMAL},
+				CARD_NO                     = #{cardNo, jdbcType=VARCHAR},
+				CARD_BANK                   = #{cardBank, jdbcType=VARCHAR},
+				MOBILE                      = #{mobile, jdbcType=VARCHAR},
+				FEE_RATE                    = #{feeRate, jdbcType=DECIMAL},
+				LOAN_DEAD_LINE              = #{loanDeadLine, jdbcType=TIMESTAMP},
+				LOAN_SIGN_DEAD_LINE         = #{loanSignDeadLine, jdbcType=TIMESTAMP}
+			WHERE ID = #{id, jdbcType=BIGINT}
+	]]>
+	</update>
+</mapper> 

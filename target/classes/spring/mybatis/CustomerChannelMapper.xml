@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- insert,select,selectByPK,count, delete, update,updateAll -->
+<mapper namespace="ChannelEntity">
+	<!-- 插入新用户信息 -->
+	<insert id="insertChannel" parameterType="ChannelEntity"
+	        useGeneratedKeys="true" keyProperty="id">
+	<![CDATA[
+		INSERT INTO T_DDQ_CUSTOMER_CHANNEL (
+			        OPEN_ID,
+			        CHANNEL,
+			        ENABLE_FLAG,
+			        CREATE_DATE,
+			        UPDATE_DATE
+		)
+		VALUES
+		(
+			#{openId, jdbcType=VARCHAR}, 
+			#{channel, jdbcType=VARCHAR},
+			#{enableFlag, jdbcType=INTEGER},
+			CURRENT_TIMESTAMP,
+			CURRENT_TIMESTAMP
+		)
+	]]>
+	
+	
+		<selectKey resultType="Integer" keyProperty="id" order="AFTER">
+		<![CDATA[ SELECT LAST_INSERT_ID()  AS id  ]]>
+	    </selectKey>
+	</insert>
+
+
+	<!-- 查询用户是否存在 -->
+	<select id="isChannelCustomerExist" resultType="Integer"  parameterType="ChannelEntity">
+		<![CDATA[
+			SELECT  count(1)
+			FROM T_DDQ_CUSTOMER_CHANNEL
+			WHERE
+			OPEN_ID = #{openId}
+		]]>
+	</select>
+
+	
+
+	<!-- 更新用户状态 -->
+	<select id="updateCustomerChannel"   parameterType="java.lang.String">
+		<![CDATA[
+			UPDATE T_DDQ_CUSTOMER_CHANNEL
+			SET ENABLE_FLAG = 1
+			WHERE
+			OPEN_ID = #{openId}
+		]]>
+	</select>
+
+
+
+
+</mapper> 

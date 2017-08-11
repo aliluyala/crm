@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- insert,select,selectByPK,count, delete, update,updateAll -->
+<mapper namespace="AppUserEntity">
+	<!-- 查询条件 -->
+	<sql id="QueryConditionSql">
+		<where>
+			<if test="id != null">
+				AND ID = #{id, jdbcType=BIGINT}
+			</if>
+			<if test="account != null and account != ''">
+				AND ACCOUNT = #{account, jdbcType=VARCHAR}
+			</if>
+			<if test="identityNo != null and identityNo != ''">
+				AND IDENTITY_NO = #{identityNo, jdbcType=VARCHAR}
+			</if>
+			<if test="channel != null and channel != ''">
+				AND CHANNEL = #{channel, jdbcType=VARCHAR}
+			</if>
+			<if test="umengId != null and umengId != ''">
+				AND UMENG_ID = #{umengId, jdbcType=VARCHAR}
+			</if>
+		</where>
+	</sql>
+	
+	<!-- 插入 -->
+	<insert id="insert" parameterType="AppUserEntity">
+	<![CDATA[
+		INSERT INTO t_ddq_app_register_user (
+			AGENT,
+			ACCOUNT,
+			PASSWORD,
+			BAK_MOBILE,
+			CREATED_DATE,
+			UPDATED_DATE,
+			CHANNEL,
+			EXTERNALCHANNEL
+		)
+		VALUES
+		(
+			#{agent, jdbcType=VARCHAR}, 
+			#{account, jdbcType=VARCHAR}, 
+			#{password, jdbcType=VARCHAR}, 
+			#{bakMobile, jdbcType=VARCHAR}, 
+			CURRENT_TIMESTAMP,
+			CURRENT_TIMESTAMP,
+			#{channel, jdbcType=VARCHAR},
+			#{externalchannel, jdbcType=VARCHAR}
+		)
+	]]>
+		<selectKey resultType="Long" keyProperty="id" order="AFTER">
+		<![CDATA[ SELECT LAST_INSERT_ID()  AS id  ]]>
+		</selectKey>
+	</insert>
+	
+	<select id="selectByEntity" parameterType="AppUserEntity" resultType="AppUserEntity">
+	<![CDATA[
+		SELECT  ID                           id,
+				AGENT                        agent,
+				ACCOUNT                      account,
+				PASSWORD                     password,
+				HAND_PASSWORD                handPassword,
+				DEVICE_ID                    deviceId,
+				UMENG_ID                     umengId,
+				BAK_MOBILE                   bakMobile,
+				CHANNEL						 channel
+		FROM t_ddq_app_register_user 
+	]]>
+	<include refid="QueryConditionSql" />
+	</select>
+	
+	<!-- 根据360提供的掩码手机号，模糊匹配 -->
+	<select id="selectByMobile" parameterType="AppUserEntity" resultType="AppUserEntity">
+	<![CDATA[
+		SELECT  ID                           id,
+				AGENT                        agent,
+				ACCOUNT                      account,
+				PASSWORD                     password,
+				HAND_PASSWORD                handPassword,
+				DEVICE_ID                    deviceId,
+				UMENG_ID                     umengId,
+				BAK_MOBILE                   bakMobile,
+				CHANNEL						 channel
+		FROM t_ddq_app_register_user 
+		WHERE ACCOUNT LIKE #{account, jdbcType=VARCHAR}
+	]]>
+	</select>
+	
+	<select id="selectByPK" parameterType="java.lang.Long" resultType="AppUserEntity">
+	<![CDATA[
+		SELECT  ID                           id,
+				AGENT                        agent,
+				ACCOUNT                      account,
+				PASSWORD                     password,
+				HAND_PASSWORD                handPassword,
+				DEVICE_ID                    deviceId,
+				UMENG_ID                     umengId,
+				BAK_MOBILE                   bakMobile,
+				EXTERNALCHANNEL				 externalchannel
+		FROM t_ddq_app_register_user WHERE ID = #{value}
+	]]>
+	</select>
+
+	<!-- 用户登录：通过账号查询 -->
+	<select id="loginQuery" parameterType="String" resultType="AppUserEntity">
+	<![CDATA[
+		SELECT  ID                           id,
+				AGENT                        agent,
+				ACCOUNT                      account,
+				PASSWORD                     password,
+				HAND_PASSWORD                handPassword,
+				DEVICE_ID                    deviceId,
+				UMENG_ID                     umengId,
+				BAK_MOBILE                   bakMobile,
+				EXTERNALCHANNEL				 externalchannel
+		FROM t_ddq_app_register_user WHERE ACCOUNT = #{value}
+	]]>
+	</select>
+	
+	<!-- 通过注册手机号，判断是否已经为微信用户	-->
+	<select id="checkWeixin" parameterType="String" resultType="Long">
+	<![CDATA[
+		SELECT  ID  FROM t_ddq_customer WHERE AGENT = 'wechat' AND MOBILE = #{value}  
+	]]>
+	</select>
+	
+	<!-- 通过客户ID查询，APP用户最新设备号	-->
+	<select id="queryDeviceByCustId" parameterType="Long" resultType="AppUserEntity">
+	<![CDATA[
+		SELECT  tr.ID   			id,
+		        tr.ACCOUNT          account,
+		        tr.UMENG_ID		deviceId
+		FROM t_ddq_customer tc left join t_ddq_app_register_user tr
+	    ON tc.APP_ID = tr.ID
+	    WHERE tc.ID =   #{value}
+	]]>
+	</select>
+	
+	<!-- 通过注册手机号和身份证号，匹配是否已经为微信用户	-->
+	<select id="mapWeixinCust" parameterType="AppUserEntity" resultType="Long">
+	<![CDATA[
+		SELECT  ID  FROM t_ddq_customer 
+		WHERE MOBILE = #{account}
+		AND IDENTITY_NO = #{identityNo}
+	]]>
+	</select>
+	
+	<!-- 更新 -->
+	<update id="update" parameterType="AppUserEntity">
+	<![CDATA[
+		UPDATE t_ddq_app_register_user 
+	]]>
+		<set>
+		<![CDATA[
+			UPDATED_DATE = CURRENT_TIMESTAMP,
+		]]>
+			<if test="agent != null and agent != ''">
+				AGENT = #{agent, jdbcType=VARCHAR},
+			</if>
+			<if test="password != null and password != ''">
+				PASSWORD = #{password, jdbcType=VARCHAR},
+			</if>
+			<if test="deviceId != null">
+				DEVICE_ID = #{deviceId, jdbcType=VARCHAR},
+			</if>	
+			<if test="umengId != null and umengId != ''">
+			    UMENG_ID = #{umengId, jdbcType=VARCHAR}
+			</if>		
+		</set>
+	    <![CDATA[
+		   WHERE ID = #{id, jdbcType=BIGINT} 
+	     ]]>
+	</update>
+	
+	
+	
+	<!-- 更新备份手机号 add by guixiaofeng 2015-12-17 -->
+	<update id="updateBakMobile" parameterType="AppUserEntity">
+	<![CDATA[
+		UPDATE t_ddq_app_register_user set BAK_MOBILE = #{bakMobile, jdbcType=VARCHAR} WHERE ID = #{id, jdbcType=BIGINT} 
+	]]>
+	</update>
+	
+	<update id="updateIdentityNo" parameterType="AppUserEntity">
+	<![CDATA[
+		UPDATE t_ddq_app_register_user set identity_no = #{identityNo, jdbcType=VARCHAR} WHERE ID = #{id, jdbcType=BIGINT} 
+	]]>
+	</update>
+	
+	
+
+
+</mapper> 

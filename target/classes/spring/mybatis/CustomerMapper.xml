@@ -1,0 +1,673 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- insert,select,selectByPK,count, delete, update,updateAll -->
+<mapper namespace="CustomerEntity">
+	<!-- 查询条件 -->
+	<sql id="QueryConditionSql">
+		<where>
+			<if test="id != null">
+				AND ID = #{id, jdbcType=BIGINT}
+			</if>
+			<if test="openId != null and openId != ''">
+				AND OPEN_ID = #{openId, jdbcType=VARCHAR}
+			</if>
+			<if test="identityNo != null and identityNo != ''">
+				AND IDENTITY_NO = #{identityNo, jdbcType=VARCHAR}
+			</if>
+			<if test="status != null and status != ''">
+				AND STATUS = #{status, jdbcType=VARCHAR}
+			</if>
+		</where>
+	</sql>
+
+	<!-- 插入 -->
+	<insert id="insert" parameterType="CustomerEntity">
+	<![CDATA[
+		INSERT INTO T_DDQ_CUSTOMER (
+			OPEN_ID,
+			INVITE_ID,
+			AGENT,
+			IDENTITY_NO,
+			IDENTITY_EXPIRES,
+			IDENTITY_PERSON,
+			IDENTITY_STATUS,
+			REAL_NAME,
+			WORK_CITY,
+			WORK_PROVINCE,
+			SUPPORT_ADVANCE,
+			EDUCATION_DEGREE,
+			JOB,
+			MARRY_STATUS,
+			LOCAL_REGISTRY,
+			MOBILE,
+			MOBILE_AUTH_IDENTITY,
+			MOBILE_AUTH_NAME,
+			MOBILE_AUTH_STATUS,
+			MOBILE_AUTH_DATE,
+			MOBILE_AUTH_FLAG,
+			MOBILE_REPEAT_APPLY,
+			IDENTITY_RECOGNIZE_NAME,
+			IDENTITY_RECOGNIZE_ADDRESS,
+			STATUS,
+			QUICK_LOAN_CUST,
+			CREATED_DATE,
+			UPDATED_DATE,
+			MONTHLY_INCOME,
+			APP_ID
+		)
+		VALUES
+		(
+			#{openId, jdbcType=VARCHAR}, 
+			#{inviteId, jdbcType=VARCHAR}, 
+			#{agent, jdbcType=VARCHAR}, 
+			#{identityNo, jdbcType=VARCHAR}, 
+			#{identityExpires, jdbcType=VARCHAR},
+			#{identityPerson, jdbcType=VARCHAR},
+			#{identityStatus, jdbcType=INTEGER},
+			#{realName, jdbcType=VARCHAR},
+			#{workCity, jdbcType=VARCHAR},
+			#{workProvince, jdbcType=VARCHAR},
+			#{supportAdvance, jdbcType=VARCHAR},
+			#{educationDegree, jdbcType=VARCHAR},
+			#{job, jdbcType=VARCHAR},
+			#{marryStatus, jdbcType=VARCHAR},
+			#{localRegistry, jdbcType=VARCHAR},
+			#{mobile, jdbcType=VARCHAR},
+			#{mobileAuthIdentity, jdbcType=VARCHAR},
+			#{mobileAuthName, jdbcType=VARCHAR},
+			#{mobileAuthStatus, jdbcType=VARCHAR},
+			#{mobileAuthDate, jdbcType=VARCHAR},
+			#{mobileAuthFlag, jdbcType=VARCHAR},
+			#{mobileRepeatApply, jdbcType=VARCHAR},
+			#{identityRecognizeName, jdbcType=VARCHAR},
+			#{identityRecognizeAddress, jdbcType=VARCHAR},
+			#{status, jdbcType=VARCHAR},
+			#{quickLoanCust, jdbcType=VARCHAR},
+			CURRENT_TIMESTAMP,
+			CURRENT_TIMESTAMP,
+			#{monthlyIncome, jdbcType=INTEGER},
+			#{appId, jdbcType=BIGINT}
+		)
+	]]>
+		<selectKey resultType="Long" keyProperty="id" order="AFTER">
+		<![CDATA[ SELECT LAST_INSERT_ID()  AS id  ]]>
+		</selectKey>
+	</insert>
+
+	<!-- 分页查询&过滤查询 -->
+	<select id="select" parameterType="CustomerEntity" resultType="CustomerEntity">
+	<![CDATA[
+		SELECT  ID                           ID,
+				OPEN_ID                      OPENID,
+				INVITE_ID                    INVITEID,
+				AGENT                        AGENT,
+				IDENTITY_NO                  IDENTITYNO,
+				IDENTITY_EXPIRES             IDENTITYEXPIRES,
+				IDENTITY_PERSON              IDENTITYPERSON,
+				IDENTITY_STATUS              IDENTITYSTATUS,
+				REAL_NAME                    REALNAME,
+				WORK_CITY                    WORKCITY,
+				WORK_PROVINCE                WORKPROVINCE,
+				SUPPORT_ADVANCE              SUPPORTADVANCE,
+				EDUCATION_DEGREE             EDUCATIONDEGREE,
+				JOB							 JOB,
+				MARRY_STATUS                 MARRYSTATUS,
+				LOCAL_REGISTRY               LOCALREGISTRY,
+				MOBILE                       MOBILE,
+				MOBILE_AUTH_IDENTITY         MOBILEAUTHIDENTITY,
+				MOBILE_AUTH_STATUS           MOBILEAUTHSTATUS,
+				MOBILE_AUTH_DATE             MOBILEAUTHDATE,
+				MOBILE_AUTH_FLAG             MOBILEAUTHFLAG,
+				MOBILE_REPEAT_APPLY          MOBILEREPEATAPPLY,
+				IDENTITY_RECOGNIZE_NAME      IDENTITYRECOGNIZENAME,
+				IDENTITY_RECOGNIZE_ADDRESS   IDENTITYRECOGNIZEADDRESS,
+				STATUS                       STATUS,
+				CUST_HEAD                    CUSTHEAD,
+				QUICK_LOAN_CUST              QUICKLOANCUST,
+				MONTHLY_INCOME				 MONTHLYINCOME,
+				CREATED_DATE                 CREATEDDATE,
+				UPDATED_DATE                 UPDATEDDATE,
+				APP_ID					     appId,
+				industry					 industry,
+				bank_payroll				 bankPayroll,
+				cash_payment				 cashPayment,
+				MOBILE_APPLY_ID				 mobileApplyId
+		FROM T_DDQ_CUSTOMER
+	]]>
+		<include refid="QueryConditionSql" />
+	<![CDATA[
+		ORDER BY UPDATED_DATE DESC
+	]]>
+	</select>
+
+	<!-- 记录总数 -->
+	<select id="count" parameterType="CustomerEntity" resultType="Integer">
+	<![CDATA[
+		SELECT COUNT(1) FROM T_DDQ_CUSTOMER
+	]]>
+		<include refid="QueryConditionSql" />
+	</select>
+
+	<!-- 记录总数 -->
+	<select id="checkIdentityNoExist" parameterType="HashMap" resultType="Integer">
+	<![CDATA[
+		SELECT COUNT(1) FROM T_DDQ_CUSTOMER WHERE OPEN_ID <> #{openId, jdbcType=VARCHAR}
+		AND IDENTITY_NO = #{identityNo, jdbcType=VARCHAR}
+	]]>
+	</select>
+	
+	<!-- 记录总数 -->
+	<select id="checkMobileExist" parameterType="HashMap" resultType="Integer">
+	<![CDATA[
+		SELECT COUNT(1) FROM T_DDQ_CUSTOMER WHERE OPEN_ID <> #{openId, jdbcType=VARCHAR}
+		AND MOBILE = #{mobile, jdbcType=VARCHAR}
+	]]>
+	</select>
+	
+
+	<!-- 主键查询 -->
+	<select id="selectByPK" parameterType="Long" resultType="CustomerEntity">
+	<![CDATA[
+		SELECT  ID                           ID,
+				OPEN_ID                      OPENID,
+				INVITE_ID                    INVITEID,
+				AGENT                        AGENT,
+				IDENTITY_NO                  IDENTITYNO,
+				IDENTITY_EXPIRES             IDENTITYEXPIRES,
+				IDENTITY_PERSON              IDENTITYPERSON,
+				REAL_NAME                    REALNAME,
+				WORK_CITY                    WORKCITY,
+				WORK_PROVINCE                WORKPROVINCE,
+				SUPPORT_ADVANCE              SUPPORTADVANCE,
+				EDUCATION_DEGREE             EDUCATIONDEGREE,
+				JOB							 JOB,
+				MARRY_STATUS                 MARRYSTATUS,
+				LOCAL_REGISTRY               LOCALREGISTRY,
+				MOBILE                       MOBILE,
+				MOBILE_AUTH_IDENTITY         MOBILEAUTHIDENTITY,
+				MOBILE_AUTH_STATUS           MOBILEAUTHSTATUS,
+				MOBILE_AUTH_DATE             MOBILEAUTHDATE,
+				MOBILE_AUTH_FLAG             MOBILEAUTHFLAG,
+				MOBILE_REPEAT_APPLY          MOBILEREPEATAPPLY,
+				MOBILE_APPLY_ID				 mobileApplyId,
+				IDENTITY_RECOGNIZE_NAME      IDENTITYRECOGNIZENAME,
+				IDENTITY_RECOGNIZE_ADDRESS   IDENTITYRECOGNIZEADDRESS,
+				STATUS                       STATUS,
+				CUST_HEAD                    CUSTHEAD,
+				QUICK_LOAN_CUST              QUICKLOANCUST,
+				MONTHLY_INCOME				 MONTHLYINCOME,
+				CREATED_DATE                 CREATEDDATE,
+				UPDATED_DATE                 UPDATEDDATE,
+				MAILBOX						 MAILBOX,
+				APP_ID						 APPID,
+				industry					 industry,
+				bank_payroll				 bankPayroll,
+				cash_payment				 cashPayment
+		FROM T_DDQ_CUSTOMER WHERE ID = #{value}
+	]]>
+	</select>
+
+	<!-- 主键查询 -->
+	<select id="selectByOpenId" parameterType="String" resultType="CustomerEntity">
+	<![CDATA[
+		SELECT  ID                           ID,
+				OPEN_ID                      OPENID,
+				INVITE_ID                    INVITEID,
+				AGENT                        AGENT,
+				IDENTITY_NO                  IDENTITYNO,
+				IDENTITY_EXPIRES             IDENTITYEXPIRES,
+				IDENTITY_PERSON              IDENTITYPERSON,
+				REAL_NAME                    REALNAME,
+				WORK_CITY                    WORKCITY,
+				WORK_PROVINCE                WORKPROVINCE,
+				SUPPORT_ADVANCE              SUPPORTADVANCE,
+				EDUCATION_DEGREE             EDUCATIONDEGREE,
+				JOB							 JOB,
+				MARRY_STATUS                 MARRYSTATUS,
+				LOCAL_REGISTRY               LOCALREGISTRY,
+				MOBILE                       MOBILE,
+				MOBILE_AUTH_IDENTITY         MOBILEAUTHIDENTITY,
+				MOBILE_AUTH_STATUS           MOBILEAUTHSTATUS,
+				MOBILE_AUTH_DATE             MOBILEAUTHDATE,
+				MOBILE_AUTH_FLAG             MOBILEAUTHFLAG,
+				MOBILE_REPEAT_APPLY          MOBILEREPEATAPPLY,
+				IDENTITY_RECOGNIZE_NAME      IDENTITYRECOGNIZENAME,
+				IDENTITY_RECOGNIZE_ADDRESS   IDENTITYRECOGNIZEADDRESS,
+				STATUS                       STATUS,
+				CUST_HEAD                    CUSTHEAD,
+				QUICK_LOAN_CUST              QUICKLOANCUST,
+				MONTHLY_INCOME				 MONTHLYINCOME,
+				CREATED_DATE                 CREATEDDATE,
+				UPDATED_DATE                 UPDATEDDATE,
+				REMIND_REPAYMENT 			 remindRepayment,
+				MAILBOX			             mailbox,
+				APP_ID						 appId
+		FROM T_DDQ_CUSTOMER WHERE OPEN_ID = #{value}
+	]]>
+	</select>
+
+	<!-- 更新 -->
+	<update id="update" parameterType="CustomerEntity">
+	<![CDATA[
+		UPDATE T_DDQ_CUSTOMER 
+	]]>
+		<set>
+		<![CDATA[
+			UPDATED_DATE = CURRENT_TIMESTAMP,
+		]]>
+			<if test="inviteId != null">
+				INVITE_ID = #{inviteId, jdbcType=VARCHAR},
+			</if>
+			<if test="agent != null and agent != ''">
+				AGENT = #{agent, jdbcType=VARCHAR},
+			</if>
+			<if test="identityNo != null and identityNo != ''">
+				IDENTITY_NO = #{identityNo, jdbcType=VARCHAR},
+			</if>
+			<if test="identityExpires != null and identityExpires != ''">
+				IDENTITY_EXPIRES = #{identityExpires, jdbcType=VARCHAR},
+			</if>
+			<if test="identityPerson != null and identityPerson != ''">
+				IDENTITY_PERSON = #{identityPerson, jdbcType=VARCHAR},
+			</if>
+			<if test="identityStatus != null and identityStatus != ''">
+				IDENTITY_STATUS = #{identityStatus, jdbcType=INTEGER},
+			</if>
+			<if test="realName != null and realName != ''">
+				REAL_NAME = #{realName, jdbcType=VARCHAR},
+			</if>
+			<if test="workCity != null and workCity != ''">
+				WORK_CITY = #{workCity, jdbcType=VARCHAR},
+			</if>
+			<if test="workProvince != null and workProvince != ''">
+				WORK_PROVINCE = #{workProvince, jdbcType=VARCHAR},
+			</if>
+			<if test="supportAdvance != null and supportAdvance != ''">
+				SUPPORT_ADVANCE = #{supportAdvance, jdbcType=VARCHAR},
+			</if>
+			<if test="educationDegree != null and educationDegree != ''">
+				EDUCATION_DEGREE = #{educationDegree, jdbcType=VARCHAR},
+			</if>
+			<if test="job != null and job != ''">
+				JOB = #{job, jdbcType=VARCHAR},
+			</if>
+			<if test="marryStatus != null and marryStatus != ''">
+				MARRY_STATUS = #{marryStatus, jdbcType=VARCHAR},
+			</if>
+			<if test="mobile != null and mobile != ''">
+				MOBILE = #{mobile, jdbcType=VARCHAR},
+			</if>
+			<if test="localRegistry != null and localRegistry != ''">
+				LOCAL_REGISTRY = #{localRegistry, jdbcType=VARCHAR},
+			</if>
+			<if test="mobileAuthIdentity != null and mobileAuthIdentity != ''">
+				MOBILE_AUTH_IDENTITY = #{mobileAuthIdentity, jdbcType=VARCHAR},
+			</if>
+			<if test="mobileAuthStatus != null and mobileAuthStatus != ''">
+				MOBILE_AUTH_STATUS = #{mobileAuthStatus, jdbcType=VARCHAR},
+			</if>
+			<if test="mobileAuthDate != null">
+				MOBILE_AUTH_DATE = #{mobileAuthDate, jdbcType=TIMESTAMP},
+			</if>
+			<if test="mobileAuthFlag != null and mobileAuthFlag != ''">
+				MOBILE_AUTH_FLAG = #{mobileAuthFlag, jdbcType=VARCHAR},
+			</if>
+			<if test="mobileRepeatApply != null and mobileRepeatApply != ''">
+				MOBILE_REPEAT_APPLY = #{mobileRepeatApply, jdbcType=VARCHAR},
+			</if>
+			<if test="identityRecognizeName != null and identityRecognizeName != ''">
+				IDENTITY_RECOGNIZE_NAME = #{identityRecognizeName, jdbcType=VARCHAR},
+			</if>
+			<if test="identityRecognizeAddress != null and identityRecognizeAddress != ''">
+				IDENTITY_RECOGNIZE_ADDRESS = #{identityRecognizeAddress, jdbcType=VARCHAR},
+			</if>
+			<if test="status != null and status != ''">
+				STATUS = #{status, jdbcType=VARCHAR},
+			</if>
+			<if test="custHead != null and custHead != ''">
+				CUST_HEAD = #{custHead, jdbcType=VARCHAR},
+			</if>
+			<if test="quickLoanCust != null and quickLoanCust != ''">
+				QUICK_LOAN_CUST = #{quickLoanCust, jdbcType=VARCHAR},
+			</if>
+			<if test="baiduSimilarity != null">
+				BAIDU_SIMILARITY = #{baiduSimilarity, jdbcType=DECIMAL},
+			</if>
+			<if test="minshiSimilarity != null">
+				MINSHI_SIMILARITY = #{minshiSimilarity, jdbcType=DECIMAL},
+			</if>
+			<if test="monthlyIncome != null">
+				MONTHLY_INCOME = #{monthlyIncome, jdbcType=INTEGER},
+			</if>
+			<if test="mobileApplyId != null">
+				MOBILE_APPLY_ID = #{mobileApplyId, jdbcType=VARCHAR},
+			</if>
+			<if test="appId != null">
+				APP_ID = #{appId, jdbcType=BIGINT},
+			</if>
+		</set>
+	<![CDATA[
+		WHERE ID = #{id, jdbcType=BIGINT} 
+	]]>
+	</update>
+
+	<!-- update quick loan customer info -->
+	<update id="updateQuickLoanCustInfo" parameterType="CustomerEntity">
+		<![CDATA[
+		UPDATE T_DDQ_CUSTOMER 
+			SET UPDATED_DATE               = CURRENT_TIMESTAMP,
+				REAL_NAME                  = #{realName, jdbcType=VARCHAR},
+				WORK_CITY                  = #{workCity, jdbcType=VARCHAR},
+				WORK_PROVINCE              = #{workProvince, jdbcType=VARCHAR},
+				SUPPORT_ADVANCE            = #{supportAdvance, jdbcType=VARCHAR},
+				EDUCATION_DEGREE           = #{educationDegree, jdbcType=VARCHAR},
+				JOB						   = #{job, jdbcType=VARCHAR},	
+				MARRY_STATUS               = #{marryStatus, jdbcType=VARCHAR},
+				MOBILE                     = #{mobile, jdbcType=VARCHAR},
+				LOCAL_REGISTRY             = #{localRegistry, jdbcType=VARCHAR},
+				MOBILE_AUTH_IDENTITY       = #{mobileAuthIdentity, jdbcType=VARCHAR},
+				MOBILE_AUTH_STATUS         = #{mobileAuthStatus, jdbcType=VARCHAR},
+				MOBILE_AUTH_DATE           = #{mobileAuthDate, jdbcType=TIMESTAMP},
+				MOBILE_AUTH_FLAG           = #{mobileAuthFlag, jdbcType=VARCHAR},
+				MOBILE_REPEAT_APPLY        = #{mobileRepeatApply, jdbcType=VARCHAR},
+				IDENTITY_RECOGNIZE_NAME    = #{identityRecognizeName, jdbcType=VARCHAR},
+				IDENTITY_RECOGNIZE_ADDRESS = #{identityRecognizeAddress, jdbcType=VARCHAR},
+				STATUS                     = #{status, jdbcType=VARCHAR},
+				CUST_HEAD                  = #{custHead, jdbcType=VARCHAR},
+				QUICK_LOAN_CUST            = #{quickLoanCust, jdbcType=VARCHAR}
+		WHERE ID = #{id, jdbcType=BIGINT} 
+		]]>
+	</update>
+
+	<!-- 查询待同步数据 -->
+	<!-- 添加agent 方便判断甜橙渠道  -->
+	<select id="selectWaitMobileAuthList" resultType="CustomerEntity" parameterType="java.util.Date">
+	<![CDATA[
+		SELECT  T1.ID                    ID,
+				T1.REAL_NAME             REALNAME,
+				T1.OPEN_ID               OPENID,
+				T1.MOBILE                MOBILE,
+				T1.AGENT                 AGENT,
+				T1.MOBILE_AUTH_IDENTITY  	 MOBILEAUTHIDENTITY,
+				T1.MOBILE_APPLY_ID 	  	 MOBILEAPPLYID
+        FROM T_DDQ_CUSTOMER T1 WHERE T1.STATUS IN ('00', '01', '02','0201', '03','0102','0202','0103','0203','05') AND T1.MOBILE_AUTH_STATUS = '1'
+        AND T1.MOBILE_AUTH_FLAG = 'wait' AND T1.MOBILE_AUTH_DATE >= #{value} AND T1.MOBILE_APPLY_ID IS NOT NULL;
+
+	]]>
+	</select>
+	
+		<!-- 查询待同步数据 -->
+	<!-- 添加agent 方便判断甜橙渠道  -->
+	<select id="selectWaitMobileAuthListJxl" resultType="CustomerEntity" parameterType="java.util.Date">
+	<![CDATA[
+		SELECT  ID                    ID,
+				REAL_NAME             REALNAME,
+				OPEN_ID               OPENID,
+				MOBILE                MOBILE,
+				AGENT                 AGENT,
+				MOBILE_AUTH_IDENTITY  MOBILEAUTHIDENTITY
+		FROM T_DDQ_CUSTOMER WHERE STATUS IN ('00', '01', '02','0201', '03') AND MOBILE_AUTH_STATUS = '1'
+		     AND MOBILE_AUTH_FLAG = 'wait' AND MOBILE_AUTH_DATE >= #{value}  AND MOBILE_APPLY_ID IS NULL;
+	]]>
+	</select>
+
+	<!-- Reset Customer Info for ReCredit -->
+	<update id="reset" parameterType="Long">
+	<![CDATA[
+		UPDATE T_DDQ_CUSTOMER 
+			SET UPDATED_DATE       = CURRENT_TIMESTAMP,
+				STATUS             = '00',
+				QUICK_LOAN_CUST    = '0',
+				MOBILE_AUTH_FLAG   = NULL,
+				MOBILE_AUTH_STATUS = NULL,
+				MOBILE_AUTH_DATE   = NULL,
+				MOBILE_REPEAT_APPLY= NULL,
+				MOBILE_APPLY_ID= NULL
+		WHERE ID = #{value} 
+	]]>
+	</update>
+	
+	<!-- 更新客户的是否提醒还款日的消息 -->
+	<update id="updateStatus" parameterType="CustomerEntity">
+	<![CDATA[
+		UPDATE T_DDQ_CUSTOMER 
+			set remind_repayment=#{remindRepayment,jdbcType=INTEGER}
+		WHERE ID = #{id, jdbcType=BIGINT} 
+	]]>
+	</update>
+	
+	
+<!-- 获得逾期的或者还款日是今天的订单的所属客户信息 -->
+	<select id="getAllRelaCustomerInfoForBatch" resultType="CustomerEntity" parameterType="CustomerEntity">
+	<![CDATA[
+		
+		      select DISTINCT(id) FROM (
+                  SELECT t1.ID 
+                    FROM t_ddq_customer t1,
+	                     t_ddq_slt_account t2
+                   WHERE t1.id = t2.CUSTOMER_ID
+                     AND t2.TRANS_STATUS = '3'  
+                   UNION  
+	              SELECT t1.id
+	                FROM t_ddq_customer t1,
+		                 t_ddq_slt_account t2
+	               WHERE t1.id = t2.CUSTOMER_ID
+ 	                AND  DATE_FORMAT(t2.BEGIN_DATE, '%d') = #{dateStr} 
+                    AND  t2.BEGIN_DATE<=#{batchDate}
+                    AND  t2.TRANS_STATUS in ('1')  
+              ) as customerId  ORDER BY id
+		
+	]]>
+	</select>
+	
+	<!-- 根据customerId查询App的账号 -->
+	<select id="getAppAccountByCustomerId" parameterType="String" resultType="String">
+	<![CDATA[
+			    select t1.ACCOUNT 
+			    from t_ddq_app_register_user  t1,
+                     t_ddq_customer t2
+               where t2.APP_ID=t1.ID
+                 and t2.id=#{value} ;
+	]]>
+	</select>
+	
+	<!-- 根据customerId查询客户的工作城市 -->
+	<select id="getWorkCityByCustomerId" parameterType="java.lang.Long" resultType="String">
+	<![CDATA[			 
+		SELECT 	CONCAT(t3.PROVINCE,' ',t2.CITY,' ',t2.DISTRICT) as CITY 
+		FROM 	T_DDQ_CUSTOMER t1
+		LEFT JOIN t_ddq_work_city t2 ON t1.WORK_CITY=t2.CODE
+		LEFT JOIN t_ddq_work_city t3 ON t2.PARENT=t3.ID
+		WHERE t1.ID = #{value};
+	]]>
+	</select>
+	<!-- 更新客户详细住址 -->
+	<update id="updateCustomerAddress" parameterType="CustomerEntity">
+	<![CDATA[
+		UPDATE T_DDQ_CUSTOMER 
+			set IDENTITY_RECOGNIZE_ADDRESS=#{identityRecognizeAddress, jdbcType=VARCHAR}
+		WHERE ID = #{id, jdbcType=BIGINT} 
+	]]>
+	</update>	
+	
+	<!-- 根据identityNo检查是否是APP用户 -->
+	<select id="checkIsAPPcustomer" parameterType="String" resultType="CustomerEntity">
+	<![CDATA[			 
+		SELECT 	AGENT agent, APP_ID appId
+		FROM 	T_DDQ_CUSTOMER
+		WHERE IDENTITY_NO = #{value};
+	]]>
+	</select>
+	
+	<!-- 根据身份证号获得用户信息-->
+	<select id="getCustInfoByIdenNo" parameterType="String" resultType="CustomerEntity">
+	<![CDATA[		
+	    SELECT t.ID id,
+	           t.OPEN_ID openId, 
+	    	   CASE t.AGENT WHEN 'wechat' THEN '微信' WHEN 'kuaiqian' THEN '快钱' WHEN 'APP' THEN 'APP' WHEN 'orgloan' THEN '翼支付' END agent,
+	    	   t.IDENTITY_NO identityNo, 
+	    	   t.APP_ID appId, 
+	    	   t1.BAK_MOBILE appAccount 
+	    FROM t_ddq_customer t 
+	    LEFT JOIN t_ddq_app_register_user t1 ON t.APP_ID = t1.ID
+		WHERE t.IDENTITY_NO = #{value}; 
+	]]>
+	</select>
+	
+	<update id="syncAPPCustomerInfo" parameterType="CustomerEntity">
+	<![CDATA[
+		UPDATE T_DDQ_CUSTOMER
+		SET OPEN_ID = #{openId},
+		    UPDATED_DATE = CURRENT_TIMESTAMP
+		WHERE IDENTITY_NO = #{identityNo}
+	]]>
+	</update>
+	
+	<update id="syncAPPCustomerInfoByAppId" parameterType="CustomerEntity">
+	<![CDATA[
+		UPDATE T_DDQ_CUSTOMER
+		SET OPEN_ID = #{openId},
+		    UPDATED_DATE = CURRENT_TIMESTAMP
+		WHERE APP_ID = #{appId}
+	]]>
+	</update>
+	
+	<update id="updateMailbox" parameterType="CustomerEntity">
+	<![CDATA[
+		UPDATE T_DDQ_CUSTOMER
+		SET MAILBOX = #{mailbox},
+		    UPDATED_DATE = CURRENT_TIMESTAMP
+		WHERE IDENTITY_NO = #{identityNo}
+	]]>
+	</update>
+	
+	<!-- 豆豆钱向手机贷引流规则-->
+	<select id="isDecisionRejectCustForO2O" parameterType="Long" resultType="int">
+	<![CDATA[
+		SELECT COUNT(1) FROM
+		(SELECT * FROM t_ddq_decision_info WHERE CUSTOMER_ID = #{value} ORDER BY ID DESC LIMIT 1) t1,
+		(SELECT CUSTOMER_ID, count(CASE WHEN RULE_NAME NOT IN  ('不足最低放款额','负债过高','评分等级限制','信用卡使用率','征信报告查询次数') THEN 1 END) total 
+		FROM t_ddq_reject_reason WHERE `STATUS` = 0 AND CUSTOMER_ID = #{value}) t2
+		WHERE t1.CREDIT_grade >= 480 
+		AND t1.CREDIT_grade <= 700 
+		AND t1.Mobile_Score >= 480 
+		AND t1.Mobile_Score <= 700 
+	  AND t2.total = 0
+	  AND t1.CUSTOMER_ID = t2.CUSTOMER_ID;
+		
+	]]>
+	</select>
+	
+	<select id="selectCountByIdNo" parameterType="string" resultType="integer">
+		SELECT 	COUNT(1)
+		FROM	t_ddq_customer
+		WHERE	IDENTITY_NO = #{identityNo}
+	</select>
+	
+	<!--根据邀请码，统计注册的人数 -->	
+	<select id="selectCountByInviteId" parameterType="String" resultType="Integer">
+	<![CDATA[
+		SELECT COUNT(1) FROM T_DDQ_CUSTOMER
+		WHERE  INVITE_ID = #{inviteId}
+	]]>
+	</select>
+	
+	<!-- 根据appId查询customer的账号 -->
+	<select id="getCustomerByAppId" parameterType="Long" resultType="CustomerEntity">
+	<![CDATA[
+		 SELECT ID                           ID,
+				OPEN_ID                      OPENID,
+				INVITE_ID                    INVITEID,
+				AGENT                        AGENT,
+				IDENTITY_NO                  IDENTITYNO,
+				REAL_NAME					 realName,
+				APP_ID						 appId
+		 FROM T_DDQ_CUSTOMER
+         WHERE APP_ID = #{value} ;
+	]]>
+    </select>
+    
+    <!-- 更新身份证认证状态 -->
+    <update id="updateIdentityStatus" parameterType="CustomerEntity">
+    <![CDATA[
+        UPDATE T_DDQ_CUSTOMER
+        SET IDENTITY_STATUS = #{identityStatus},
+            UPDATED_DATE = CURRENT_TIMESTAMP
+        WHERE ID = #{id, jdbcType=BIGINT}
+    ]]>
+    </update>
+    
+    <!-- 根据identityNo查询customer的账号 -->
+	<select id="getCustomerByIdentityNo" parameterType="String" resultType="CustomerEntity">
+	<![CDATA[
+		 SELECT ID                           id,
+				OPEN_ID                      openId,
+				AGENT                        agent,
+				IDENTITY_NO                  identityNo,
+				APP_ID						 appId
+		 FROM T_DDQ_CUSTOMER
+         WHERE IDENTITY_NO = #{identityNo} ;
+	]]>
+	</select>
+	
+	<update id="updateOpenIdByIdNo" parameterType="CustomerEntity">
+		UPDATE t_ddq_customer
+		SET OPEN_ID = #{openId},
+		 UPDATED_DATE = NOW()
+		WHERE
+			IDENTITY_NO = #{identityNo}
+		AND OPEN_ID IS NULL
+	</update>
+	
+	<select id="getCustByIdNoOrOpenId" parameterType="CustomerEntity" resultType="CustomerEntity">
+		SELECT  ID                           ID,
+				OPEN_ID                      OPENID,
+				INVITE_ID                    INVITEID,
+				AGENT                        AGENT,
+				IDENTITY_NO                  IDENTITYNO,
+				IDENTITY_EXPIRES             IDENTITYEXPIRES,
+				IDENTITY_PERSON              IDENTITYPERSON,
+				REAL_NAME                    REALNAME,
+				WORK_CITY                    WORKCITY,
+				WORK_PROVINCE                WORKPROVINCE,
+				SUPPORT_ADVANCE              SUPPORTADVANCE,
+				EDUCATION_DEGREE             EDUCATIONDEGREE,
+				JOB							 JOB,
+				MARRY_STATUS                 MARRYSTATUS,
+				LOCAL_REGISTRY               LOCALREGISTRY,
+				MOBILE                       MOBILE,
+				MOBILE_AUTH_IDENTITY         MOBILEAUTHIDENTITY,
+				MOBILE_AUTH_STATUS           MOBILEAUTHSTATUS,
+				MOBILE_AUTH_DATE             MOBILEAUTHDATE,
+				MOBILE_AUTH_FLAG             MOBILEAUTHFLAG,
+				MOBILE_REPEAT_APPLY          MOBILEREPEATAPPLY,
+				IDENTITY_RECOGNIZE_NAME      IDENTITYRECOGNIZENAME,
+				IDENTITY_RECOGNIZE_ADDRESS   IDENTITYRECOGNIZEADDRESS,
+				STATUS                       STATUS,
+				CUST_HEAD                    CUSTHEAD,
+				QUICK_LOAN_CUST              QUICKLOANCUST,
+				MONTHLY_INCOME				 MONTHLYINCOME,
+				CREATED_DATE                 CREATEDDATE,
+				UPDATED_DATE                 UPDATEDDATE,
+				REMIND_REPAYMENT 			 remindRepayment,
+				MAILBOX			             mailbox,
+				APP_ID						 appId
+		FROM T_DDQ_CUSTOMER
+		WHERE OPEN_ID = #{openId}
+		OR IDENTITY_NO = #{identityNo}
+	</select>
+	
+	<!-- 修改用户的 银行代发月工资和现金发放月工资-->
+    <update id="updateCustomerForIncome" parameterType="CustomerEntity">
+    <![CDATA[
+        UPDATE T_DDQ_CUSTOMER
+        SET bank_payroll = #{bankPayroll},
+        	cash_payment=#{cashPayment},
+        	industry = #{industry},
+            UPDATED_DATE = CURRENT_TIMESTAMP
+        WHERE ID = #{id, jdbcType=BIGINT}
+    ]]>
+    </update>
+</mapper> 

@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- insert,select,selectByPK,count, delete, update,updateAll -->
+<mapper namespace="MbeanInflowEntity">
+
+	<!-- 累计魔豆数 -->
+	<select id="selectTotalAmtByCustomerId" resultType="Integer"
+		parameterType="long">
+		SELECT IFNULL(SUM(AMOUNT),0)
+		FROM t_ddq_mbean_inflow
+		WHERE	CUSTOMER_ID = #{customerId}
+				AND
+				STATUS = 0
+	</select>
+
+	<!-- 可用魔豆数 -->
+	<select id="selectAvailAmtByCustomerId" parameterType="long"
+		resultType="Integer">
+		<![CDATA[
+			SELECT 
+			IFNULL((SELECT SUM(AMOUNT) FROM t_ddq_mbean_inflow WHERE CUSTOMER_ID = #{customerId} AND STATUS = 0),0)
+			-
+			IFNULL((SELECT SUM(AMOUNT) FROM t_ddq_mbean_outflow WHERE CUSTOMER_ID = #{customerId} AND STATUS < 0),0)
+		]]>
+	</select>
+
+	<!-- 获取记录 -->
+	<select id="selectInflowListByCustomerId" resultType="MbeanInflowEntity"
+		parameterType="long">
+		SELECT
+		t1.ID 				id,
+		t1.SOURCE 			source,
+		t1.AMOUNT 			amount,
+		t1.STATUS 			status,
+		t1.CUSTOMER_ID 		customerId,
+		t1.REF_ID 			refId,
+		t1.EXPIRE_DATE 		expireDate,
+		t1.ENABLE_FLAG 		enableFlag,
+		t1.CREATED_DATE		createdDate,
+		t1.UPDATED_DATE 	updatedDate,
+		t2.SOURCE_NAME 		displayChannel
+		FROM t_ddq_mbean_inflow t1, t_ddq_mbean_source t2
+		WHERE 	t1.SOURCE = t2.ID
+				AND
+				CUSTOMER_ID = #{customerId}
+	</select>
+
+	<!-- 插入新纪录 -->
+	<insert id="insert" parameterType="MbeanInflowEntity"
+		useGeneratedKeys="true" keyProperty="ID">
+		INSERT INTO t_ddq_mbean_inflow
+		VALUES(
+			NULL,
+			#{source},
+			#{amount},
+			#{status},
+			#{customerId},
+			#{refId},
+			#{expireDate},
+			#{enableFlag},
+			NOW(),
+			NOW()
+		)
+	</insert>
+
+	<!-- 更新纪录 -->
+	<update id="update" parameterType="MbeanInflowEntity">
+		UPDATE t_ddq_mbean_inflow t
+		<set>
+			<if test="source != null">
+				t.SOURCE = #{source},
+			</if>
+			<if test="amount != null">
+				t.AMOUNT = #{amount},
+			</if>
+			<if test="status != null">
+				t.STATUS = #{status},
+			</if>
+			<if test="refId != null">
+				t.REF_ID = #{refId},
+			</if>
+			<if test="expireDate != null">
+				t.EXPIRE_DATE = #{expireDate},
+			</if>
+			<if test="enableFlag != null">
+				t.ENABLE_FLAG = #{enableFlag},
+			</if>
+			<if test="1==1">
+				t.UPDATED_DATE=NOW(),
+			</if>
+		</set>
+		WHERE ID = #{id} AND CUSTOMER_ID = #{customerId}
+	</update>
+</mapper> 

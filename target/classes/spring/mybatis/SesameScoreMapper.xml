@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- insert,select,selectByPK,count, delete, update,updateAll -->
+<mapper namespace="SesameScoreEntity">
+
+    <!-- 插入 -->
+	<insert id="insert" parameterType="SesameScoreEntity" useGeneratedKeys="true" keyProperty="ID">
+	<![CDATA[
+		INSERT INTO t_ddq_sesame_score (
+			        CUSTOMER_ID,
+			        OPERATE_STATUS,
+			        AUTHORIZE_RESULT,
+			        SCORE,
+			        ERROR_MESSAGE,
+			        ENABLE_FLAG,
+			        CREATED_DATE,
+			        UPDATED_DATE  )
+		VALUES
+		(	#{customerId}, 
+			#{operateStatus},
+			#{authorizeResult},
+			#{score},
+			#{errorMsg},
+			#{enableFlag},
+			CURRENT_TIMESTAMP,
+			CURRENT_TIMESTAMP
+		)
+	]]>
+	</insert>	
+	
+    <select id="getSesameScoreInfo" parameterType="java.lang.Long" resultType="SesameScoreEntity">
+        SELECT  
+             ID                          id,
+             CUSTOMER_ID                 customerId ,
+             OPERATE_STATUS              operateStatus,
+             AUTHORIZE_RESULT            authorizeResult,
+             SCORE                       score,
+             ERROR_MESSAGE               errorMsg,
+             ENABLE_FLAG                 enableFlag, 
+             fail_mark                   failMark,
+             CREATED_DATE                createdDate,
+             UPDATED_DATE                updatedDate
+        FROM t_ddq_sesame_score
+        where CUSTOMER_ID =#{value} and   ENABLE_FLAG='1'  limit 1 
+    </select>
+    
+    
+    <update id="update" parameterType="SesameScoreEntity">
+        UPDATE t_ddq_sesame_score 
+         <set>
+            <![CDATA[
+                UPDATED_DATE = CURRENT_TIMESTAMP,
+            ]]>
+            <if test="creditAuthId != null and creditAuthId != ''">
+                CREDIT_AUTH_ID = #{creditAuthId},
+            </if>
+            <if test="operateStatus != null and operateStatus != ''">
+                OPERATE_STATUS = #{operateStatus},
+            </if>
+            <if test="authorizeResult != null and authorizeResult != ''">
+                AUTHORIZE_RESULT = #{authorizeResult, jdbcType=VARCHAR},
+            </if>
+            <if test="score != null and score != ''">
+                SCORE = #{score, jdbcType=VARCHAR},
+            </if>
+            <if test="errorMsg != null and errorMsg != ''">
+                ERROR_MESSAGE = #{errorMsg, jdbcType=VARCHAR},
+            </if>
+            <if test="enableFlag != null and enableFlag != ''">
+                ENABLE_FLAG = #{enableFlag, jdbcType=VARCHAR},
+            </if>
+            <if test="needReport != null">
+                NEED_REPORT = #{needReport, jdbcType=INTEGER},
+            </if>
+            <if test="failMark != null">
+                fail_mark = #{failMark, jdbcType=VARCHAR},
+            </if>
+         </set>
+            
+         WHERE CUSTOMER_ID  = #{customerId} AND ENABLE_FLAG='1'
+    </update>
+
+	<!-- 
+	<select id="getSesameScoreInfo" parameterType="java.util.Map" resultType="SesameScoreEntity">
+		SELECT  
+		     ID                          id,
+		     CUSTOMER_ID                 customerId ,
+		     OPERATE_STATUS              operateStatus,
+		     AUTHORIZE_RESULT            authorizeResult,
+		     SCORE                       score,
+		     ERROR_MESSAGE             errorMsg,
+		     ENABLE_FLAG              enableFlag, 
+		     CREATED_DATE                createdDate,
+		     UPDATED_DATE                updatedDate
+		FROM t_ddq_sesame_score
+		where CUSTOMER_ID =#{customerId}
+		    and   ENABLE_FLAG='1'
+		    limit 1 
+	</select>
+	
+	
+	<update id="update" parameterType="SesameScoreEntity">
+	    UPDATE t_ddq_sesame_score 
+		 <set>
+		   <if test="operateStatus != null and operateStatus != ''">
+				OPERATE_STATUS = #{operateStatus},
+			</if>
+            <if test="authorizeResult != null and authorizeResult != ''">
+                AUTHORIZE_RESULT = #{authorizeResult, jdbcType=VARCHAR},
+            </if>
+            <if test="score != null and score != ''">
+                SCORE = #{score, jdbcType=VARCHAR},
+            </if>
+            <if test="errorMsg != null and errorMsg != ''">
+                ERROR_MESSAGE = #{errorMsg, jdbcType=VARCHAR},
+            </if>
+            <if test="enableFlag != null and enableFlag != ''">
+                ENABLE_FLAG = #{enableFlag, jdbcType=VARCHAR},
+            </if>
+            <if test="true">
+               UPDATED_DATE =CURRENT_TIMESTAMP
+            </if>
+		 </set>
+			
+	     WHERE CUSTOMER_ID  = #{customerId} 
+	</update>
+    -->
+	
+</mapper> 

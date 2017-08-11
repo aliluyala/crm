@@ -1,0 +1,294 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- insert,select,selectByPK,count, delete, update,updateAll -->
+<mapper namespace="CreditAuthEntity">
+	<!-- 查询条件 -->
+	<sql id="QueryConditionSql">
+		<where>
+			<if test="customerId != null">
+				AND CUSTOMER_ID = #{customerId, jdbcType=BIGINT}
+			</if>
+			<if test="id != null">
+				AND ID = #{id, jdbcType=BIGINT}
+			</if>
+			<if test="enableFlag != null and enableFlag != ''">
+				AND ENABLE_FLAG = #{enableFlag, jdbcType=VARCHAR}
+			</if>
+		</where>
+	</sql>
+
+	<!-- 插入 -->
+	<insert id="insert" parameterType="CreditAuthEntity">
+	<![CDATA[
+		INSERT INTO T_DDQ_CREDIT_AUTH (
+			CUSTOMER_ID,
+			ADVANCE_FLAG,
+			ADVANCE_DATE,
+			ADVANCE_AMOUNT,
+			ADVANCE_RATE,
+			TOTAL_AMOUNT,
+			AVAILABLE_AMOUNT,
+			CREDIT_DATE,
+			EXPIRE_DATE,
+			FORMALITIES_PURSE,
+			FORMALITIES_STAGE,
+			MONTHLY_INTEREST_RATE_PURSE,
+			MONTHLY_INTEREST_RATE_STAGE,
+			MONTHLY_SERVICE_RATE_PURSE,
+			MONTHLY_SERVICE_RATE_STAGE,
+			ENABLE_FLAG,
+			CREDIT_LEVEL,
+			CREATED_DATE,
+			UPDATED_DATE
+		)
+		VALUES
+		(
+			#{customerId, jdbcType=BIGINT}, 
+			#{advanceFlag, jdbcType=VARCHAR}, 
+			#{advanceDate, jdbcType=DATE}, 
+			#{advanceAmount, jdbcType=DECIMAL}, 
+			#{advanceRate, jdbcType=DECIMAL}, 
+			#{totalAmount, jdbcType=DECIMAL},
+			#{availableAmount, jdbcType=DECIMAL},
+			#{creditDate, jdbcType=DATE},
+			#{expireDate, jdbcType=DATE},
+			#{formalitiesPurse, jdbcType=DECIMAL},
+			#{formalitiesStage, jdbcType=DECIMAL},
+			#{monthlyInterestRatePurse, jdbcType=DECIMAL},
+			#{monthlyInterestRateStage, jdbcType=DECIMAL},
+			#{monthlyServiceRatePurse, jdbcType=DECIMAL},
+			#{monthlyServiceRateStage, jdbcType=DECIMAL},
+			#{enableFlag, jdbcType=VARCHAR},
+			#{creditLevel, jdbcType=VARCHAR},
+			CURRENT_TIMESTAMP,
+			CURRENT_TIMESTAMP
+		)
+	]]>
+	</insert>
+
+	<!-- 分页查询&过滤查询 -->
+	<select id="select" parameterType="CreditAuthEntity" resultType="CreditAuthEntity">
+	<![CDATA[
+		SELECT  ID                                ID,
+				CUSTOMER_ID                       CUSTOMERID,
+				ADVANCE_FLAG                      ADVANCEFLAG,
+				ADVANCE_DATE                      ADVANCEDATE,
+				ADVANCE_AMOUNT                    ADVANCEAMOUNT,
+				ADVANCE_RATE                      ADVANCERATE,
+				TOTAL_AMOUNT                      TOTALAMOUNT,
+				AVAILABLE_AMOUNT                  AVAILABLEAMOUNT,
+				CREDIT_DATE                       CREDITDATE,
+				EXPIRE_DATE                       EXPIREDATE,
+				FORMALITIES_PURSE                 FORMALITIESPURSE,
+				OTHER_FORMALITIES_STAGE           OTHERFORMALITIESSTAGE,
+				FEE_LOWEST_LIMIT                  FEELOWERLIMIT,
+				FORMALITIES_STAGE                 FORMALITIESSTAGE,
+				MONTHLY_INTEREST_RATE_PURSE       MONTHLYINTERESTRATEPURSE,
+				MONTHLY_INTEREST_RATE_STAGE       MONTHLYINTERESTRATESTAGE,
+				MONTHLY_SERVICE_RATE_PURSE        MONTHLYSERVICERATEPURSE,
+				MONTHLY_SERVICE_RATE_STAGE        MONTHLYSERVICERATESTAGE,
+				ENABLE_FLAG                       ENABLEFLAG,
+				CREDIT_LEVEL                      CREDITLEVEL,
+				CREATED_DATE                      CREATEDDATE,
+				UPDATED_DATE                      UPDATEDDATE
+		FROM T_DDQ_CREDIT_AUTH
+	]]>
+		<include refid="QueryConditionSql" />
+	<![CDATA[
+		ORDER BY UPDATED_DATE DESC
+	]]>
+	</select>
+
+	<!-- 记录总数 -->
+	<select id="count" parameterType="CreditAuthEntity" resultType="Integer">
+	<![CDATA[
+		SELECT COUNT(1) FROM T_DDQ_CREDIT_AUTH
+	]]>
+		<include refid="QueryConditionSql" />
+	</select>
+	
+	<!-- 统计TopRank -->
+	<select id="countCreditAuthByAmount" parameterType="java.util.Map" resultType="Integer">
+	<![CDATA[
+		SELECT COUNT(1) FROM T_DDQ_CREDIT_AUTH 
+	]]>
+		<where>
+			TOTAL_AMOUNT > 0 
+			<if test="amount != null">
+				<![CDATA[
+					AND TOTAL_AMOUNT >= #{amount, jdbcType=DECIMAL}
+				]]>
+			</if>
+		</where>
+	</select>
+
+	<!-- 主键查询 -->
+	<select id="selectByCustomerId" parameterType="Long" resultType="CreditAuthEntity">
+	<![CDATA[
+		SELECT  ID                                ID,
+				CUSTOMER_ID                       CUSTOMERID,
+				ADVANCE_FLAG                      ADVANCEFLAG,
+				ADVANCE_DATE                      ADVANCEDATE,
+				ADVANCE_AMOUNT                    ADVANCEAMOUNT,
+				ADVANCE_RATE                      ADVANCERATE,
+				TOTAL_AMOUNT                      TOTALAMOUNT,
+				AVAILABLE_AMOUNT                  AVAILABLEAMOUNT,
+				CREDIT_DATE                       CREDITDATE,
+				EXPIRE_DATE                       EXPIREDATE,
+				FORMALITIES_PURSE                 FORMALITIESPURSE,
+				FORMALITIES_STAGE                 FORMALITIESSTAGE,
+				OTHER_FORMALITIES_STAGE           OTHERFORMALITIESSTAGE,
+                FEE_LOWEST_LIMIT                  FEELOWERLIMIT,				
+				MONTHLY_INTEREST_RATE_PURSE       MONTHLYINTERESTRATEPURSE,
+				MONTHLY_INTEREST_RATE_STAGE       MONTHLYINTERESTRATESTAGE,
+				MONTHLY_SERVICE_RATE_PURSE        MONTHLYSERVICERATEPURSE,
+				MONTHLY_SERVICE_RATE_STAGE        MONTHLYSERVICERATESTAGE,
+				ENABLE_FLAG                       ENABLEFLAG,
+				CREDIT_LEVEL                      CREDITLEVEL,
+				CREATED_DATE                      CREATEDDATE,
+				UPDATED_DATE                      UPDATEDDATE
+		    FROM T_DDQ_CREDIT_AUTH 
+		   WHERE ENABLE_FLAG='1'
+             AND CUSTOMER_ID = #{value}
+	]]>
+	</select>
+	
+	<!-- 更新 -->
+	<update id="update" parameterType="CreditAuthEntity">
+	<![CDATA[
+		UPDATE T_DDQ_CREDIT_AUTH 
+	]]>
+		<set>
+		<![CDATA[
+			UPDATED_DATE = CURRENT_TIMESTAMP,
+		]]>
+			<if test="advanceFlag != null and advanceFlag != ''">
+				ADVANCE_FLAG = #{advanceFlag, jdbcType=VARCHAR},
+			</if>
+			<if test="advanceDate != null">
+				ADVANCE_DATE = #{advanceDate, jdbcType=DATE},
+			</if>
+			<if test="advanceAmount != null">
+				ADVANCE_AMOUNT = #{advanceAmount, jdbcType=DECIMAL},
+			</if>
+			<if test="advanceRate != null">
+				ADVANCE_RATE = #{advanceRate, jdbcType=DECIMAL},
+			</if>
+			<if test="totalAmount != null">
+				TOTAL_AMOUNT = #{totalAmount, jdbcType=DECIMAL},
+			</if>
+			<if test="availableAmount != null">
+				AVAILABLE_AMOUNT = #{availableAmount, jdbcType=DECIMAL},
+			</if>
+			<if test="creditDate != null">
+				CREDIT_DATE = #{creditDate, jdbcType=DATE},
+			</if>
+			<if test="expireDate != null">
+				EXPIRE_DATE = #{expireDate, jdbcType=DATE},
+			</if>
+			<if test="formalitiesPurse != null">
+				FORMALITIES_PURSE = #{formalitiesPurse, jdbcType=DECIMAL},
+			</if>
+			<if test="formalitiesStage != null">
+				FORMALITIES_STAGE = #{formalitiesStage, jdbcType=DECIMAL},
+			</if>
+			<if test="otherFormalitiesStage != null">
+				OTHER_FORMALITIES_STAGE = #{otherFormalitiesStage, jdbcType=DECIMAL},
+			</if>
+			<if test="monthlyInterestRatePurse != null">
+				MONTHLY_INTEREST_RATE_PURSE = #{monthlyInterestRatePurse, jdbcType=DECIMAL},
+			</if>
+			<if test="monthlyInterestRateStage != null">
+				MONTHLY_INTEREST_RATE_STAGE = #{monthlyInterestRateStage, jdbcType=DECIMAL},
+			</if>
+			<if test="monthlyServiceRatePurse != null">
+				MONTHLY_SERVICE_RATE_PURSE = #{monthlyServiceRatePurse, jdbcType=DECIMAL},
+			</if>
+			<if test="monthlyServiceRateStage != null">
+				MONTHLY_SERVICE_RATE_STAGE = #{monthlyServiceRateStage, jdbcType=DECIMAL},
+			</if>
+			<if test="enableFlag != null and enableFlag != ''">
+				ENABLE_FLAG = #{enableFlag, jdbcType=VARCHAR},
+			</if>
+			<if test="creditLevel != null and creditLevel != ''">
+				CREDIT_LEVEL = #{creditLevel, jdbcType=VARCHAR},
+			</if>
+		</set>
+	<![CDATA[
+		WHERE ID = #{id, jdbcType=BIGINT} 
+	]]>
+	</update>
+
+	<!-- 更新 -->
+	<update id="reset" parameterType="Long">
+	<![CDATA[
+		UPDATE T_DDQ_CREDIT_AUTH 
+			SET UPDATED_DATE                = CURRENT_TIMESTAMP,
+			ENABLE_FLAG                     = '0'
+		WHERE CUSTOMER_ID = #{value} AND ENABLE_FLAG = '1'
+	]]>
+	</update>
+	<!-- 查询所有可用的额度 -->
+	<select id="selectWaitMobileAuthList"  resultType="CreditAuthEntity">
+	<![CDATA[
+		SELECT  ID                                ID,
+				CUSTOMER_ID                       CUSTOMERID,
+				ADVANCE_FLAG                      ADVANCEFLAG,
+				ADVANCE_DATE                      ADVANCEDATE,
+				ADVANCE_AMOUNT                    ADVANCEAMOUNT,
+				ADVANCE_RATE                      ADVANCERATE,
+				TOTAL_AMOUNT                      TOTALAMOUNT,
+				AVAILABLE_AMOUNT                  AVAILABLEAMOUNT,
+				CREDIT_DATE                       CREDITDATE,
+				EXPIRE_DATE                       EXPIREDATE,
+				FORMALITIES_PURSE                 FORMALITIESPURSE,
+				FORMALITIES_STAGE                 FORMALITIESSTAGE,
+				OTHER_FORMALITIES_STAGE           OTHERFORMALITIESSTAGE,
+                FEE_LOWEST_LIMIT                  FEELOWERLIMIT,				
+				MONTHLY_INTEREST_RATE_PURSE       MONTHLYINTERESTRATEPURSE,
+				MONTHLY_INTEREST_RATE_STAGE       MONTHLYINTERESTRATESTAGE,
+				MONTHLY_SERVICE_RATE_PURSE        MONTHLYSERVICERATEPURSE,
+				MONTHLY_SERVICE_RATE_STAGE        MONTHLYSERVICERATESTAGE,
+				ENABLE_FLAG                       ENABLEFLAG,
+				CREDIT_LEVEL                      CREDITLEVEL,
+				CREATED_DATE                      CREATEDDATE,
+				UPDATED_DATE                      UPDATEDDATE
+		    FROM T_DDQ_CREDIT_AUTH 
+		   	WHERE ENABLE_FLAG='1' and TOTAL_AMOUNT > 0
+		   		  ORDER BY UPDATED_DATE DESC	
+	]]>
+	</select>
+	
+	
+	<select id="selectByCustId" parameterType="Long" resultType="CreditAuthEntity">
+	<![CDATA[
+		SELECT  ID                                ID,
+				CUSTOMER_ID                       CUSTOMERID,
+				ADVANCE_FLAG                      ADVANCEFLAG,
+				ADVANCE_DATE                      ADVANCEDATE,
+				ADVANCE_AMOUNT                    ADVANCEAMOUNT,
+				ADVANCE_RATE                      ADVANCERATE,
+				TOTAL_AMOUNT                      TOTALAMOUNT,
+				AVAILABLE_AMOUNT                  AVAILABLEAMOUNT,
+				CREDIT_DATE                       CREDITDATE,
+				EXPIRE_DATE                       EXPIREDATE,
+				FORMALITIES_PURSE                 FORMALITIESPURSE,
+				FORMALITIES_STAGE                 FORMALITIESSTAGE,
+				OTHER_FORMALITIES_STAGE           OTHERFORMALITIESSTAGE,
+				FEE_LOWEST_LIMIT                  FEELOWERLIMIT,
+				MONTHLY_INTEREST_RATE_PURSE       MONTHLYINTERESTRATEPURSE,
+				MONTHLY_INTEREST_RATE_STAGE       MONTHLYINTERESTRATESTAGE,
+				MONTHLY_SERVICE_RATE_PURSE        MONTHLYSERVICERATEPURSE,
+				MONTHLY_SERVICE_RATE_STAGE        MONTHLYSERVICERATESTAGE,
+				ENABLE_FLAG                       ENABLEFLAG,
+				CREDIT_LEVEL                      CREDITLEVEL,
+				CREATED_DATE                      CREATEDDATE,
+				UPDATED_DATE                      UPDATEDDATE
+		    FROM T_DDQ_CREDIT_AUTH 
+		   WHERE CUSTOMER_ID = #{value}
+		   ORDER BY CREDIT_DATE ASC
+	]]>
+	</select>
+</mapper> 

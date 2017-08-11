@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- insert,select,selectByPK,count, delete, update,updateAll -->
+<mapper namespace="GreyListEntity">
+	<!-- 查询条件 -->
+	<sql id="QueryConditionSql">
+		<if test="identityNo != null and identityNo != ''">
+			AND t1.IDENTITY_NO = '${identityNo}'
+		</if>
+
+		<if test="name != null and name != ''">
+			AND t1.NAME = '${name}'
+		</if>
+
+		<if test="operateDateFrom != null and operateDateFrom != ''">
+			<![CDATA[ AND t.OPERATE_DATE >= '${dataType}']]>
+		</if>
+		
+		<if test="operateDateTo != null and operateDateTo != ''">
+			<![CDATA[ AND t.OPERATE_DATE <= '${auditStatus}']]>
+		</if>
+	</sql>
+
+	<!-- 分页查询&过滤查询 -->
+	<select id="select" parameterType="GreyListEntity" resultType="GreyListEntity">
+		<![CDATA[
+			SELECT
+				t.NAME			         name, 
+				t.IDENTITY_NO			 identityNo, 
+				t.MOBILE				 mobile,
+				t.ID				     id,
+				t.STATUS                 status,
+				t.REMARK                 remark,
+				t.OPERATE_USER           operateUser,
+				DATE_FORMAT(t.OPERATE_DATE,'%Y-%m-%d %T')           operateDate,
+				DATE_FORMAT(t.CREATED_DATE,'%Y-%m-%d %T') 			createdDate,
+				DATE_FORMAT(t.UPDATED_DATE,'%Y-%m-%d %T') 			updateDate,
+				DELETE_FLAG   deleteFlag
+			FROM t_ddq_grey_list t 
+			WHERE t.DELETE_FLAG = 0
+		]]>
+		<include refid="QueryConditionSql" />
+		<![CDATA[
+			ORDER BY t.CREATED_DATE asc
+			LIMIT #{page, jdbcType=INTEGER},#{limit, jdbcType=INTEGER};
+		]]>
+		
+	</select>
+	
+	<!-- 记录总数 -->
+	<select id="count" parameterType="GreyListEntity" resultType="Integer">
+		<![CDATA[
+		SELECT  COUNT(1)
+		FROM t_ddq_grey_list t 
+			WHERE t.DELETE_FLAG = 0
+	]]>
+		<include refid="QueryConditionSql" />
+	</select>
+	
+	<!-- 查询 -->
+	<select id="selectById" parameterType="java.lang.String" resultType="GreyListEntity">
+		<![CDATA[
+			SELECT
+				t.NAME			         name, 
+				t.IDENTITY_NO			 identityNo, 
+				t.MOBILE				 mobile,
+				t.ID				     id,
+				t.STATUS                 status,
+				t.REMARK                 remark,
+				t.OPERATE_USER           operateUser,
+				DATE_FORMAT(t.OPERATE_DATE,'%Y-%m-%d %T')           operateDate,
+				DATE_FORMAT(t.CREATED_DATE,'%Y-%m-%d %T') 			createdDate,
+				DATE_FORMAT(t.UPDATED_DATE,'%Y-%m-%d %T') 			updateDate,
+				DELETE_FLAG   deleteFlag
+			FROM t_ddq_grey_list t 
+			WHERE t.ID = #{value} AND t.DELETE_FLAG = 0
+		]]>		
+	</select>
+	
+	<!-- 历史明细 -->
+	<select id="getGreyListsByIdNo" parameterType="java.lang.Long" resultType="GreyListEntity">
+		<![CDATA[
+			SELECT
+				t.NAME			         name, 
+				t.IDENTITY_NO			 identityNo, 
+				t.MOBILE				 mobile,
+				t.ID				     id,
+				t.STATUS                 status
+				t.REMARK                 remark,
+				t.OPERATE_USER           operateUser,
+				DATE_FORMAT(t.OPERATE_DATE,'%Y-%m-%d %T')           operateDate,
+				DATE_FORMAT(t.CREATED_DATE,'%Y-%m-%d %T') 			createdDate,
+				DATE_FORMAT(t.UPDATED_DATE,'%Y-%m-%d %T') 			updateDate,
+				DELETE_FLAG   deleteFlag
+			FROM t_ddq_grey_list t 
+			WHERE t.IDENTITY_NO = #{identityNo}
+		]]>		
+	</select>
+	<!-- 插入信息 -->
+	<insert id="insert" parameterType="GreyListEntity" useGeneratedKeys="true" keyProperty="id">
+	<![CDATA[
+		INSERT INTO t_ddq_grey_list(
+		NAME,
+		IDENTITY_NO,
+		MOBILE,
+		STATUS,
+		REMARK,
+		OPERATE_USER,
+		OPERATE_DATE,
+		CREATED_DATE,
+		UPDATED_DATE,
+		DELETE_FLAG
+		)
+		VALUES
+		(
+		#{name},
+		#{identityNo},
+		#{mobile},
+		#{status},
+		#{remark},
+		#{operateUser},
+		CURRENT_TIMESTAMP,
+		CURRENT_TIMESTAMP,
+		CURRENT_TIMESTAMP,
+		#{deleteFlag}
+		)
+	]]>
+		<selectKey resultType="Long" keyProperty="id" order="AFTER">
+			<![CDATA[ SELECT LAST_INSERT_ID()  AS id  ]]>
+	    </selectKey>
+	</insert>
+	
+   <update id="update" parameterType="GreyListEntity">
+		update t_ddq_grey_list
+		set STATUS=#{status},DELETE_FLAG=#{deleteFlag} 
+		where ID = #{id}
+	</update> 
+	
+	   <!-- 通过身份id号查询灰名单用户 -->
+    <select id="getByIdentityNo" parameterType="java.lang.String" resultType="GreyListEntity">
+        <![CDATA[
+            SELECT
+                t.NAME                   name, 
+                t.IDENTITY_NO            identityNo, 
+                t.MOBILE                 mobile,
+                t.ID                     id,
+                t.REMARK                 remark,
+                t.OPERATE_USER           operateUser,
+                DATE_FORMAT(t.OPERATE_DATE,'%Y-%m-%d %T')           operateDate,
+                DATE_FORMAT(t.CREATED_DATE,'%Y-%m-%d %T')           createdDate,
+                DATE_FORMAT(t.UPDATED_DATE,'%Y-%m-%d %T')           updateDate,
+                DELETE_FLAG   deleteFlag
+            FROM t_ddq_grey_list t 
+            WHERE t.IDENTITY_NO = #{identityNo} and t.STATUS = '0' AND DELETE_FLAG='0'
+        ]]>     
+    </select>
+</mapper> 

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="UseticketCreditPromotionEntity">
+
+	<!-- 插入 -->
+	<insert id="insert" parameterType="UseticketCreditPromotionEntity"
+		useGeneratedKeys="true" keyProperty="ID">
+	<![CDATA[
+		INSERT INTO t_ddq_useticket_credit_promotion (
+			        CUSTOMER_ID,
+			        TICKET_ID,
+			        AUTH_ID,
+			        AMT_PROMOTED,
+			        AMT_BEFORE_PROMOTION,
+			        AMT_AFTER_PROMOTION,
+			        CREATED_DATE,
+			        UPDATED_DATE
+		)
+		VALUES
+		(
+			#{customerId}, 
+			#{ticketId},
+			#{authId}, 
+			#{amtPromoted}, 
+			#{amtBeforePromotion},
+			#{amtAfterPromotion},
+			CURRENT_TIMESTAMP,
+			CURRENT_TIMESTAMP
+		)
+	]]>
+	</insert>
+
+</mapper> 

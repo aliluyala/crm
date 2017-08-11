@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="R360RejectEntity">
+	<!-- 插入insert -->
+	<insert id="insert" parameterType="R360RejectEntity">
+		<![CDATA[
+			INSERT INTO t_ddq_r360_reject_customer(
+				360_MOBILE,
+				APP_NAME,
+				APP_MOBILE,
+				APP_IDENTITY,
+				360_IDENTITY,
+				CUSTOMER_NAME,
+				CUSTOMER_MOBILE,
+				CUSTOMER_IDENTITY,
+				CREATE_TIME,
+				UPDATE_TIME
+			)
+			VALUES
+				(
+				#{r360Mobile,jdbcType=VARCHAR},
+				#{appName,jdbcType=VARCHAR},
+				#{appMobile,jdbcType=VARCHAR},
+				#{appIdentity,jdbcType=VARCHAR},
+				#{r360Identity,jdbcType=VARCHAR},
+				#{customerName,jdbcType=VARCHAR},
+				#{customerMobile,jdbcType=VARCHAR},
+				#{customerIdentity,jdbcType=VARCHAR},
+				CURRENT_TIMESTAMP,
+				CURRENT_TIMESTAMP
+				)
+		]]>
+	</insert>
+</mapper>

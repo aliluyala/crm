@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- insert,select,selectByPK,count, delete, update,updateAll -->
+<mapper namespace="AutoBatchDetailEntity">
+
+<!-- 插入 -->
+	<insert id="insert" parameterType="com.vcredit.ddcash.server.model.entity.vbsAuto.AutoBatchDetailEntity"
+		 useGeneratedKeys="true" keyProperty="batchId">
+	<![CDATA[
+		INSERT INTO t_ddq_auto_batch_detail (
+			        CUSTOMER_IDS,
+			        PERIOD_NO,
+			        FAIL_CUSTOMER_IDS,
+			        IS_SUCCESS,
+			        CREATED_DATE,
+			        UPDATED_DATE
+		)
+		VALUES
+		(
+			#{customerIds, jdbcType=VARCHAR}, 
+			#{periodNo, jdbcType=VARCHAR}, 
+			#{failCustomerIds, jdbcType=VARCHAR}, 
+			#{isSuccess, jdbcType=VARCHAR}, 
+			CURRENT_TIMESTAMP,
+			CURRENT_TIMESTAMP
+		)
+	]]>
+	   <selectKey resultType="Long" keyProperty="batchId" order="AFTER">
+		<![CDATA[ SELECT LAST_INSERT_ID()  AS batchId  ]]>
+	    </selectKey>
+	</insert>
+
+     <update id="update" parameterType="com.vcredit.ddcash.server.model.entity.vbsAuto.AutoBatchDetailEntity">
+	<![CDATA[
+		UPDATE t_ddq_auto_batch_detail 
+	]]>
+		<set>
+		<![CDATA[
+			UPDATED_DATE = CURRENT_TIMESTAMP,
+		]]>
+			<if test="customerIds != null">
+				CUSTOMER_IDS = #{customerIds, jdbcType=VARCHAR},
+			</if>
+			<if test="periodNo != null">
+				PERIOD_NO = #{periodNo, jdbcType=VARCHAR},
+			</if>
+			<if test="failCustomerIds != null">
+				FAIL_CUSTOMER_IDS = #{failCustomerIds, jdbcType=VARCHAR},
+			</if>
+			<if test="isSuccess != null">
+				IS_SUCCESS = #{isSuccess, jdbcType=VARCHAR},
+			</if>
+		</set>
+	     <![CDATA[
+		WHERE BATCH_ID = #{batchId, jdbcType=VARCHAR} 
+	     ]]>
+	  </update>
+	  
+	<!-- 通过客户号查询 -->
+	<select id="selectByPK" parameterType="Long" resultType="com.vcredit.ddcash.server.model.entity.vbsAuto.AutoBatchDetailEntity">
+	   <![CDATA[
+		  SELECT  t.BATCH_ID             batchId,
+	              t.CUSTOMER_IDS         customerIds,
+	              t.PERIOD_NO            periodNo,
+	              t.FAIL_CUSTOMER_IDS    failCustomerIds,
+	              t.IS_SUCCESS           isSuccess,
+	              t.CREATED_DATE         createDate,
+	              t.UPDATED_DATE         updateDate
+            FROM  t_ddq_auto_batch_detail t
+            WHERE t.BATCH_ID = #{batchId}
+	]]>
+	</select>
+	
+	
+</mapper> 

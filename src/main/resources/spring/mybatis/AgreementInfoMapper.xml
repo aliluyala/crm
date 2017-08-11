@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- insert,select,selectByPK,count, delete, update,updateAll -->
+<mapper namespace="AgreementInfoEntity">
+	<!-- 插入 -->
+	<insert id="insert" parameterType="com.vcredit.ddcash.server.model.entity.transfer.AgreementInfoEntity"
+	        useGeneratedKeys="true" keyProperty="agreementId">
+	<![CDATA[
+		INSERT INTO T_DDQ_AGREEMENT_INFO (
+			        CUSTOMER_ID,
+			        SLT_ACCOUNT_ID,
+			        AGREEMENT_CODE,
+			        AGREEMENT_DESC,
+			        SIGNATURE_64,
+			        CREATED_DATE,
+			        UPDATED_DATE
+		)
+		VALUES
+		(
+			#{customerId, jdbcType=BIGINT}, 
+			#{sltAccountId, jdbcType=BIGINT}, 
+			#{agreeMentCode, jdbcType=VARCHAR}, 
+			#{agreeMentDesc, jdbcType=VARCHAR},
+			#{signature64, jdbcType=VARCHAR}, 
+			CURRENT_TIMESTAMP,
+			CURRENT_TIMESTAMP
+		)
+	]]>
+	</insert>
+
+<update id="update" parameterType="AgreementInfoEntity">
+	<![CDATA[
+	 UPDATE T_DDQ_AGREEMENT_INFO 
+		set CUSTOMER_ID   = #{customerId},
+			SLT_ACCOUNT_ID= #{sltAccountId},
+			AGREEMENT_CODE= #{agreeMentCode},
+			AGREEMENT_DESC= #{agreeMentDesc},
+			SIGNATURE_64 = #{signature64},
+			UPDATED_DATE  = CURRENT_TIMESTAMP
+	  WHERE AGREEMENT_ID  = #{agreementId, jdbcType=BIGINT} 
+	]]>
+	</update>
+
+	<!-- 分页查询&过滤查询 -->
+	<select id="select" parameterType="AgreementInfoEntity" resultType="AgreementInfoEntity">
+	<![CDATA[
+		SELECT  AGREEMENT_ID          agreementId,
+				CUSTOMER_ID           customerId,
+				SLT_ACCOUNT_ID        sltAccountId,
+				AGREEMENT_CODE        agreeMentCode,
+				AGREEMENT_DESC        agreeMentDesc,
+				SIGNATURE_64		  signature64,
+				CREATED_DATE          createDate,
+				UPDATED_DATE          updateDate
+		FROM T_DDQ_AGREEMENT_INFO
+	]]>
+		<where>
+		<if test="agreementId != null">
+			AND AGREEMENT_ID = #{agreementId, jdbcType=BIGINT}
+		</if>
+		<if test="customerId != null and customerId != ''">
+			AND CUSTOMER_ID = #{customerId, jdbcType=BIGINT}
+		</if>
+		<if test="sltAccountId != null and sltAccountId != ''">
+			AND SLT_ACCOUNT_ID = #{sltAccountId, jdbcType=BIGINT}
+		</if>
+	   </where>
+	<![CDATA[
+		ORDER BY UPDATED_DATE DESC
+	]]>
+	</select>
+	
+	<!-- 主键查询 -->
+	<select id="selectByPK" parameterType="Long" resultType="AgreementInfoEntity">
+	<![CDATA[
+		SELECT  AGREEMENT_ID          agreementId,
+				CUSTOMER_ID           customerId,
+				SLT_ACCOUNT_ID        sltAccountId,
+				AGREEMENT_CODE        agreeMentCode,
+				AGREEMENT_DESC        agreeMentDesc,
+				SIGNATURE_64		  signature64,
+				CREATED_DATE          createDate,
+				UPDATED_DATE          updateDate
+		   FROM T_DDQ_AGREEMENT_INFO
+		  WHERE AGREEMENT_ID = #{value}
+	]]>
+	</select>
+	
+	
+	<!-- 订单号 -->
+	<select id="selectBySlt" parameterType="String" resultType="AgreementInfoEntity">
+	<![CDATA[
+		SELECT  AGREEMENT_ID          agreementId,
+				CUSTOMER_ID           customerId,
+				SLT_ACCOUNT_ID        sltAccountId,
+				AGREEMENT_CODE        agreeMentCode,
+				AGREEMENT_DESC        agreeMentDesc,
+				SIGNATURE_64		  signature64,
+				CREATED_DATE          createDate,
+				UPDATED_DATE          updateDate
+		   FROM T_DDQ_AGREEMENT_INFO
+		  WHERE SLT_ACCOUNT_ID = #{value}
+	]]>
+	</select>
+	
+	<!-- 通过客户号和协议类型查询协议信息-->
+	<select id="getAgreementTime" parameterType="AgreementInfoEntity" resultType="AgreementInfoEntity">
+	<![CDATA[
+		SELECT  AGREEMENT_ID          agreementId,
+				CUSTOMER_ID           customerId,
+				SLT_ACCOUNT_ID        sltAccountId,
+				AGREEMENT_CODE        agreeMentCode,
+				AGREEMENT_DESC        agreeMentDesc,
+				SIGNATURE_64		  signature64,
+				CREATED_DATE          createDate,
+				UPDATED_DATE          updateDate
+		FROM T_DDQ_AGREEMENT_INFO
+	]]>
+		<where>
+		<if test="agreementId != null">
+			AND AGREEMENT_ID = #{agreementId, jdbcType=BIGINT}
+		</if>
+		<if test="customerId != null and customerId != ''">
+			AND CUSTOMER_ID = #{customerId, jdbcType=BIGINT}
+		</if>
+		<if test="sltAccountId != null and sltAccountId != ''">
+			AND SLT_ACCOUNT_ID = #{sltAccountId, jdbcType=BIGINT}
+		</if>
+		<if test="agreeMentCode != null and agreeMentCode != ''">
+			AND AGREEMENT_CODE = #{agreeMentCode, jdbcType=BIGINT}
+		</if>
+	   </where>
+	<![CDATA[
+		ORDER BY UPDATED_DATE DESC
+	]]>
+	</select>
+
+	<!-- 删除 -->
+	<delete id="delete" parameterType="Long">
+	<![CDATA[
+		DELETE FROM T_DDQ_AGREEMENT_INFO WHERE AGREEMENT_ID = #{value}
+	]]>
+	</delete>
+
+	<select id="getSignature" parameterType="Long" resultType="String">
+	<![CDATA[
+		select t.SIGNATURE_64 
+		from t_ddq_agreement_info t, t_ddq_slt_account t1
+		where t.SLT_ACCOUNT_ID = t1.SLT_ACCOUNT_ID 
+		and t1.TRANS_STATUS in ('1','2','3','4')
+		and t1.CUSTOMER_ID = #{value} 		
+	]]>
+	<![CDATA[
+		ORDER BY t1.SLT_ACCOUNT_ID DESC LIMIT 1
+	]]>
+	</select>
+	
+	<select id="selectAllSignature" parameterType="Long" resultType="AgreementInfoEntity">
+		<![CDATA[
+			SELECT  AGREEMENT_ID          agreementId,
+					CUSTOMER_ID           customerId,
+					SLT_ACCOUNT_ID        sltAccountId,
+					AGREEMENT_CODE        agreeMentCode,
+					AGREEMENT_DESC        agreeMentDesc,
+					SIGNATURE_64		  signature64,
+					CREATED_DATE          createDate,
+					UPDATED_DATE          updateDate
+			   FROM T_DDQ_AGREEMENT_INFO
+			  WHERE CUSTOMER_ID = #{value}
+		]]>
+	</select>
+	
+</mapper> 

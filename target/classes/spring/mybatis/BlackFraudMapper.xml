@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="BlackFraudEntity">	
+    <!-- 插入信息 -->
+    <insert id="insert" parameterType="BlackFraudEntity" useGeneratedKeys="true" keyProperty="id">
+    <![CDATA[
+        INSERT INTO t_ddq_black_fraud_info(
+        CUSTOMER_ID,
+        SLT_ACCOUNT_ID,
+        NAME,
+        IDENTITY_NO,
+        MOBILE,
+        CONTENT,
+        REMARK,
+        CREATED_DATE,
+        UPDATED_DATE
+        )
+        VALUES
+        (
+        #{customerId},
+        #{sltAccountId},
+        #{name},
+        #{identityNo},
+        #{mobile},
+        #{content},
+        #{remark},
+        CURRENT_TIMESTAMP,
+        CURRENT_TIMESTAMP
+        )
+    ]]>
+        <selectKey resultType="Long" keyProperty="id" order="AFTER">
+            <![CDATA[ SELECT LAST_INSERT_ID()  AS id  ]]>
+        </selectKey>
+    </insert>
+    
+        <!-- 更新 -->
+    <update id="update" parameterType="BlackFraudEntity">
+    <![CDATA[
+        UPDATE t_ddq_black_fraud_info 
+    ]]>
+        <set>
+        <![CDATA[
+            UPDATED_DATE = CURRENT_TIMESTAMP,
+        ]]>
+            <if test="customerId != null and customerId != ''">
+                CUSTOMER_ID = #{customerId, jdbcType=BIGINT},
+            </if>
+            <if test="name != null and name != ''">
+                NAME = #{name, jdbcType=VARCHAR},
+            </if>
+            <if test="identityNo != null and identityNo != ''">
+                IDENTITY_NO = #{identityNo, jdbcType=VARCHAR},
+            </if>
+            <if test="mobile != null and mobile != ''">
+                MOBILE = #{mobile, jdbcType=VARCHAR},
+            </if>   
+            <if test="content != null and content != ''">
+                CONTENT = #{content, jdbcType=VARCHAR},
+            </if>       
+            <if test="remark != null and remark != ''">
+                REMARK = #{remark, jdbcType=VARCHAR},
+            </if>
+        </set>
+        <![CDATA[
+           WHERE SLT_ACCOUNT_ID = #{sltAccountId, jdbcType=BIGINT}
+         ]]>
+    </update>
+    
+        <!-- 历史记录 -->
+    <select id="getByIdAndSltId" parameterType="BlackFraudEntity" resultType="BlackFraudEntity">
+        <![CDATA[
+            SELECT 
+                    ID            id,
+                    CUSTOMER_ID   customerId,
+                   SLT_ACCOUNT_ID sltAccountId,
+                    NAME          name,      
+                    IDENTITY_NO   identityNo,
+                    MOBILE        mobile,    
+                    CONTENT       content,   
+                    REMARK        remark,    
+                    DATE_FORMAT(CREATED_DATE,'%Y-%m-%d %T')  createdDate,
+                    DATE_FORMAT(UPDATED_DATE,'%Y-%m-%d %T')   updatedDate
+            FROM t_ddq_black_fraud_info t
+            WHERE SLT_ACCOUNT_ID = #{sltAccountId, jdbcType=BIGINT}
+        ]]>     
+    </select>
+</mapper> 

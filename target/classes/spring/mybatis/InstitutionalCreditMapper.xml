@@ -1,0 +1,272 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- insert,select,selectByPK,count, delete, update,updateAll -->
+<mapper namespace="InstitutionalCreditEntity">
+	
+	<resultMap id="BaseResultMap" type="InstitutionalCreditEntity">
+		<id column="id" property="id" />
+		<result column="customer_id" property="customerId" />
+		<result column="auth_account_id" property="authAccountId" />
+		<result column="identity_no" property="identityNo" />
+		<result column="credit_type"      property="creditType" />
+		<result column="status" property="status" />
+		<result column="vbs_apply_id" property="vbsApplyId" />
+		<result column="remark" property="remark" />
+		<result column="enable_flag" property="enableFlag" />
+		<result column="status_init_date" property="statusInitDate" />
+		<result column="signature_date" property="signatureDate" />
+		<result column="created_date" property="createdDate" />
+		<result column="updated_date" property="updatedDate" />
+	</resultMap>
+	
+	<sql id="table_columns_without_id">
+  		customer_id,
+  		auth_account_id,
+  		identity_no,
+  		name,
+  		credit_type,
+  		status,
+  		vbs_apply_id,
+  		remark,
+  		enable_flag,
+  		status_init_date,
+  		signature_date,
+  		created_date,
+  		updated_date
+	</sql>
+  
+	<sql id="columns" >
+		id,<include refid="table_columns_without_id"/>
+	</sql>
+
+	<sql id="table_name" >
+  		t_ddq_Institutional_credit
+	</sql>
+	
+	<sql id="update_set_clause">
+		<trim prefix="set" suffixOverrides=",">  
+  			updated_date = now(),
+			<if test="status !=null and status !=''">  
+	            status = #{status},
+			</if>
+			<if test="vbsApplyId !=null and vbsApplyId !=''">  
+	            vbs_apply_id = #{vbsApplyId},
+			</if>
+			<if test="remark !=null and remark !=''">  
+	            remark = #{remark},
+			</if>
+			<if test="statusInitDate !=null and statusInitDate !=''">  
+	            status_init_date = #{statusInitDate},
+			</if>
+			<if test="signatureDate !=null and signatureDate !=''">  
+	            signature_date = #{signatureDate},
+			</if>
+			<if test="enableFlag !=null and enableFlag !=''">  
+	            enable_flag = #{enableFlag},
+			</if>
+		</trim>
+	</sql>
+	
+	<sql id="update_where_clause">
+		<trim prefix="where" prefixOverrides="and|or"> 
+			<if test="customerId !=null ">  
+	            customer_id = #{customerId}
+			</if>
+			<if test="id !=null ">  
+	            and id = #{id}
+			</if> 
+		</trim>
+	</sql>
+	
+	<!-- 插入 -->
+	<insert id="insert" parameterType="InstitutionalCreditEntity" useGeneratedKeys="true" keyProperty="id">
+	<![CDATA[
+		INSERT INTO t_ddq_Institutional_credit (
+			customer_id,
+	  		auth_account_id,
+	  		identity_no,
+	  		name,
+	  		credit_type,
+	  		status,
+	  		vbs_apply_id,
+	  		remark,
+	  		enable_flag,
+	  		status_init_date,
+	  		signature_date,
+	  		need_sesame_score,
+	  		created_date,
+	  		updated_date
+		)
+		VALUES
+		(
+			#{customerId, jdbcType=BIGINT}, 
+			#{authAccountId, jdbcType=BIGINT},
+			#{identityNo, jdbcType=VARCHAR}, 
+			#{name, jdbcType=VARCHAR}, 
+			#{creditType, jdbcType=VARCHAR}, 
+			#{status, jdbcType=VARCHAR}, 
+			#{vbsApplyId, jdbcType=BIGINT},			
+			#{remark, jdbcType=VARCHAR}, 
+			#{enableFlag, jdbcType=VARCHAR},  
+			CURRENT_TIMESTAMP,
+			CURRENT_TIMESTAMP,
+			#{needSesameScore,jdbcType=TINYINT},
+			CURRENT_TIMESTAMP,
+			CURRENT_TIMESTAMP
+		)
+	]]>
+	</insert>
+	
+	<update id="update" parameterType="InstitutionalCreditEntity">
+		update <include refid="table_name" /> 
+		<include refid="update_set_clause"/>
+		<include refid="update_where_clause"/>
+	</update>
+	
+	<select id="getUnclosedInsCreditInfo" parameterType="java.lang.Long" resultMap="BaseResultMap">
+		select  <include refid="columns" /> 
+		from <include refid="table_name" /> 
+		where customer_id = #{value}
+		and enable_flag = 1
+	</select>
+	
+	<select id="getInsCreditInfo" parameterType="java.lang.Long" resultMap="BaseResultMap">
+		select  <include refid="columns" /> 
+		from <include refid="table_name" /> 
+		where customer_id = #{value}
+		order by CREATED_DATE desc
+		limit 1 
+	</select>
+	
+	<select id="getScriptOneInsCreditInfo" resultMap="BaseResultMap"> 
+		select  <include refid="columns" /> 
+		from <include refid="table_name" /> 
+		where status in('init','wait_info_submit')
+		and enable_flag = 1
+		and credit_type = 'DBC'
+	</select>
+	
+		<select id="getScriptOneInsCreditInfo2" resultMap="BaseResultMap"> 
+		select  <include refid="columns" /> 
+		from <include refid="table_name" /> 
+		where status = 'init'
+		and enable_flag = 1
+		and credit_type = 'DBC'
+	</select>
+
+	<select id="countScriptTwoInsCreditInfo" resultType="java.lang.Integer">
+		select  count(1) 
+		from <include refid="table_name" /> 
+		where status = 'wait_info_upload'
+		and enable_flag = 1
+		and credit_type = 'DBC'
+	</select>
+	
+	<select id="getScriptTwoInsCreditInfo" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+		select  <include refid="columns" /> 
+		from <include refid="table_name" /> 
+		where status = 'wait_info_upload'
+		and enable_flag = 1
+		and credit_type = 'DBC'
+		limit #{value}
+	</select>
+	
+	<select id="countScriptThreeInsCreditInfo" resultType="java.lang.Integer">
+		select  count(1) 
+		from <include refid="table_name" /> 
+		where status = 'wait_info_query'
+		and enable_flag = 1
+		and credit_type = 'DBC'
+	</select>
+	
+	<select id="getScriptThreeInsCreditInfo" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+		select  <include refid="columns" /> 
+		from <include refid="table_name" /> 
+		where status = 'wait_info_query'
+		and enable_flag = 1
+		and credit_type = 'DBC'
+		limit #{value}
+	</select>
+	
+	<select id="getVaildInsCreditInfo" parameterType="java.lang.Long" resultMap="BaseResultMap">
+		select  <include refid="columns" /> 
+		from <include refid="table_name" /> 
+		where customer_id = #{value}
+		and enable_flag = 1
+		order by CREATED_DATE desc
+		limit 1 
+	</select>
+	
+	<!-- 查询r360客户走征信查询失败的用户 -->
+	<select id="getCreditStatusForFail" resultMap="BaseResultMap">
+		select 
+		t.id				 id,
+		t.customer_id        customerId,
+  		t.auth_account_id    authAccountId,
+  		t.identity_no        identityNo,
+  		t.name               name,
+  		t.credit_type        creditType,
+  		t.status			 status,
+  		t.vbs_apply_id 		 vbsApplyId,
+  		t.remark			 remark,
+  		t.enable_flag		 enableFlag,
+  		t.status_init_date	 statusInitDate,
+  		t.signature_date	 signatureDate,
+  		t.created_date	  	 createdDate,
+  		t.updated_date       updatedDate,
+  		t1.order_no			 orderNo
+		from t_ddq_Institutional_credit t 
+		LEFT JOIN t_ddq_r360_order t1   on (t.customer_id = t1.customer_id)
+		where t.enable_flag = '1'  
+		and t1.enable_flag = '1' 
+		and t.status in ('fail_query_status','fail_info_query','fail_submit')
+		AND NOT EXISTS (
+		SELECT customer_id
+		FROM
+		t_ddq_r360_creditpush 
+		WHERE
+		order_no = t1.order_no AND
+		enable_flag = '1' AND
+		push_status = '3'
+		)
+		UNION ALL
+		SELECT
+		t.id id,
+		t.customer_id customerId,
+		t.auth_account_id authAccountId,
+		t.identity_no identityNo,
+		t.NAME NAME,
+		t.credit_type creditType,
+		t.STATUS STATUS,
+		t.vbs_apply_id vbsApplyId,
+		t.remark remark,
+		t.enable_flag enableFlag,
+		t.status_init_date statusInitDate,
+		t.signature_date signatureDate,
+		t.created_date createdDate,
+		t.updated_date updatedDate,
+		t1.order_no orderNo
+		FROM
+			t_ddq_Institutional_credit t
+		LEFT JOIN t_ddq_r360_order t1 ON (
+			t.customer_id = t1.customer_id
+		)
+		WHERE
+			t.enable_flag = '0'
+		AND t1.enable_flag = '1'
+		AND t.STATUS = 'complete'
+		AND  NOT exists  (
+			SELECT
+				order_no
+			FROM
+				t_ddq_r360_creditpush 
+			WHERE
+			order_no = t1.order_no AND
+			enable_flag = '1'
+			AND push_status = '2'
+		)
+		
+	</select>
+</mapper> 

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="CreditEntity">
+	
+	<!-- 查询 T_DDQ_TRANS_PASSWORD表 获取金额时间-->
+	<select id="selectByCustomerId" parameterType="String" resultType="com.vcredit.ddcash.server.model.entity.myCenter.CreditEntity">
+		<![CDATA[
+			SELECT  ID 								id,
+					CUSTOMER_ID 					customerId,
+					ADVANCE_FLAG					advanceFlag,
+					ADVANCE_DATE					advanceDate,
+					ADVANCE_AMOUNT					advanceAmount,
+					TOTAL_AMOUNT					updatedDate,
+					AVAILABLE_AMOUNT				availableAmount,
+					CREDIT_DATE						creditDate,
+					EXPIRE_DATE						expireDate,
+					FORMALITIES_PURSE				formalitiesPurse,
+					FORMALITIES_STAGE				formalitiesStage,
+					MONTHLY_INTEREST_RATE_PURSE		monthlyInterestRatePurse,
+					MONTHLY_INTEREST_RATE_STAGE		monthlyInterestRateStage,
+					MONTHLY_SERVICE_RATE_PURSE		monthlyServiceRatePurse,
+					MONTHLY_SERVICE_RATE_STAGE		monthlyServiceRateStage,
+					CREATED_DATE					createdDate,
+					UPDATED_DATE					updatedDate
+			FROM 	T_DDQ_CREDIT_AUTH 
+			WHERE   CUSTOMER_ID = #{value}
+		]]>
+	</select>
+	
+</mapper> 

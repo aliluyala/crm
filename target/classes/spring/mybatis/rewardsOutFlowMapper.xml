@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<!-- insert,select,selectByPK,count, delete, update,updateAll -->
+<mapper namespace="RewardsOutFlowEntity">
+	<select id="selectOutRewards" parameterType="Long" resultType="String">
+	<![CDATA[
+		SELECT SUM(AMOUNT)
+		FROM T_DDQ_REWARDS_OUTFLOW
+		WHERE REFER_ID = #{value} 
+		AND DELETE_FLAG = 1 
+	]]>
+	</select>
+	<select id="selectRewardsByRefId" parameterType="RewardsOutFlowEntity" resultType="com.vcredit.ddcash.server.model.entity.invitation.RewardsOutFlowEntity">
+	<![CDATA[
+		SELECT REFER_ID refer_id,
+		AMOUNT amount,
+		REWARDMONTH rewardMonth
+		FROM T_DDQ_REWARDS_OUTFLOW
+		WHERE REFER_ID = #{refer_id} 
+		AND REWARDMONTH like CONCAT('%',#{rewardYear},'-%') 
+		AND DELETE_FLAG = 1 
+		ORDER BY rewardMonth DESC
+	]]>
+	</select>
+	
+	
+	<insert id="inserRewardsOutflow" parameterType="RewardsOutFlowEntity">
+		<![CDATA[
+			INSERT INTO t_ddq_rewards_outflow(
+			refer_id,
+			amount,
+			rewardMonth,
+			operator,
+			created_date,
+			updated_date
+			)
+			VALUES
+			(
+			#{refer_id},
+			#{amount},
+			#{rewardMonth},
+			#{operator},
+			CURRENT_TIMESTAMP,
+			CURRENT_TIMESTAMP
+			)
+		]]>
+			
+	</insert>
+	
+	<select id="selectOutRewardsBeforeNow" parameterType="RewardsOutFlowEntity" resultType="RewardsOutFlowEntity">
+	<![CDATA[
+		SELECT REFER_ID refer_id,
+		AMOUNT amount,
+		REWARDMONTH rewardMonth
+		FROM T_DDQ_REWARDS_OUTFLOW
+		WHERE REFER_ID = #{refer_id} 
+		AND STR_TO_DATE(REWARDMONTH,'%Y-%m') <= #{rewardMonth} 
+		AND DELETE_FLAG = 1 
+		ORDER BY rewardMonth DESC
+	]]>
+	</select>
+	
+	</mapper>

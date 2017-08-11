@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- insert,select,selectByPK,count, delete, update,updateAll -->
+<mapper namespace="IQOrderDepressEntity">
+
+    <!-- 插入修改信息 -->
+    <insert id="insert" parameterType="IQOrderDepressEntity" useGeneratedKeys="true" keyProperty="id">
+        <![CDATA[
+        INSERT INTO `t_ddq_slt_account_depress` (
+          `SLT_ACCOUNT_ID`,
+          `CUSTOMER_ID`,
+          `ORG_LOAN_AMOUNT`,
+          `ORG_PAYMENT_TYPE`,
+          `ORG_poundage`,
+          `ORG_schedule_Amount`,
+          `LOAN_AMOUNT`,
+          `depress_REMARKS`,
+          `OPERATOR`,
+          `depress_STATUS`,
+          `CREATED_DATE`
+        ) 
+        VALUES
+          (#{sltAccountId},
+          #{customerId},
+          #{orgLoanAmount},
+          #{orgPaymentType},
+          #{orgPoundage},
+          #{orgScheduleAmount},
+          #{loanAmount},
+          #{depressRemarks},
+          #{operator},
+          #{depressStatus},
+          #{createdDate})
+        ]]>  
+    </insert>
+	<!-- 详情 修改信息 -->
+	<select id="select" parameterType="java.lang.Long" resultType="IQOrderDepressEntity">
+	<![CDATA[
+		SELECT 
+          `id` id ,
+          `SLT_ACCOUNT_ID` sltAccountId,
+          `CUSTOMER_ID` customerId,
+          `ORG_LOAN_AMOUNT` orgLoanAmount,
+          `ORG_PAYMENT_TYPE` orgPaymentType,
+          `ORG_poundage` orgPoundage,
+          `ORG_schedule_Amount` orgScheduleAmount,
+          `LOAN_AMOUNT` loanAmount,
+          `PAYMENT_TYPE` paymentType,
+          `poundage` poundage,
+          `schedule_Amount` scheduleAmount,
+          `depress_REMARKS` depressRemarks,
+          `OPERATOR` operator,
+          `depress_STATUS` depressStatus,
+          `CREATED_DATE` createdDate,
+          `REFRESH_DATE` refreshDate
+    FROM `t_ddq_slt_account_depress` 
+    where id = #{value}
+	]]>
+	</select>
+	
+	      <!-- 详情 修改信息 -->
+    <select id="selectBysltAccountId" parameterType="IQOrderDepressEntity" resultType="IQOrderDepressEntity">
+    <![CDATA[
+        SELECT 
+          `id` id ,
+          `SLT_ACCOUNT_ID` sltAccountId,
+          `CUSTOMER_ID` customerId,
+          `ORG_LOAN_AMOUNT` orgLoanAmount,
+          `ORG_PAYMENT_TYPE` orgPaymentType,
+          `ORG_poundage` orgPoundage,
+          `ORG_schedule_Amount` orgScheduleAmount,
+          `LOAN_AMOUNT` loanAmount,
+          `PAYMENT_TYPE` paymentType,
+          `poundage` poundage,
+          `schedule_Amount` scheduleAmount,
+          `depress_REMARKS` depressRemarks,
+          `OPERATOR` operator,
+          `depress_STATUS` depressStatus,
+          `CREATED_DATE` createdDate,
+          `REFRESH_DATE` refreshDate
+    FROM `t_ddq_slt_account_depress` 
+    where SLT_ACCOUNT_ID = #{sltAccountId, jdbcType=BIGINT}
+    ]]>
+    </select>
+    
+	   <!-- 详情 修改信息 -->
+    <select id="selectOrderDepress" parameterType="IQOrderDepressEntity" resultType="IQOrderDepressEntity">
+    <![CDATA[
+        SELECT 
+          `id` id ,
+          `SLT_ACCOUNT_ID` sltAccountId,
+          `CUSTOMER_ID` customerId,
+          `ORG_LOAN_AMOUNT` orgLoanAmount,
+          `ORG_PAYMENT_TYPE` orgPaymentType,
+          `ORG_poundage` orgPoundage,
+          `ORG_schedule_Amount` orgScheduleAmount,
+          `LOAN_AMOUNT` loanAmount,
+          `PAYMENT_TYPE` paymentType,
+          `poundage` poundage,
+          `schedule_Amount` scheduleAmount,
+          `depress_REMARKS` depressRemarks,
+          `OPERATOR` operator,
+          `depress_STATUS` depressStatus,
+          `CREATED_DATE` createdDate,
+          `REFRESH_DATE` refreshDate
+    FROM `t_ddq_slt_account_depress` 
+    ]]>
+       <where>
+        <if test="id != null">
+            ID = #{id, jdbcType=BIGINT}
+        </if>
+        <if test="customerId != null ">
+            AND CUSTOMER_ID = #{customerId, jdbcType=BIGINT}
+        </if>
+        <if test="sltAccountId != null ">
+            AND SLT_ACCOUNT_ID = #{sltAccountId, jdbcType=BIGINT}
+        </if>
+       </where>
+    </select>
+	
+	<update id="updateModifyBysltAccountId" parameterType="IQOrderDepressEntity">
+	    <![CDATA[
+	    UPDATE `t_ddq_slt_account_depress` 
+            SET
+              `LOAN_AMOUNT` = #{loanAmount},
+              `PAYMENT_TYPE` = #{paymentType},
+              `poundage` = #{poundage},
+              `schedule_Amount` = #{scheduleAmount},
+              `depress_STATUS` = #{depressStatus},
+              `REFRESH_DATE` = #{refreshDate} 
+              where SLT_ACCOUNT_ID = #{sltAccountId, jdbcType=BIGINT}
+	    ]]>
+	</update>
+</mapper> 

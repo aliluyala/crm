@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- insert,select,selectByPK,count, delete, update,updateAll -->
+<mapper namespace="CaiShenParticipantEntity">
+
+	<select id="isFirstEnter" parameterType="string" resultType="boolean">
+		<![CDATA[
+			SELECT  
+			CASE 
+			WHEN 
+			(
+				(
+					SELECT  count(1) 
+					FROM    t_ddq_activities_caishen_participant
+					WHERE   OPEN_ID=#{openId}
+				)=0
+			)
+			THEN true ELSE false
+			END
+		]]>
+	</select>
+
+	<insert id="insertNew" parameterType="CaiShenParticipantEntity"
+		useGeneratedKeys="true" keyProperty="id">
+		<![CDATA[
+			INSERT INTO t_ddq_activities_caishen_participant (
+				ID,
+			    OPEN_ID,
+				REMAIN_CHANCES,
+				HAS_EXCHANGE_COUPON,
+				IS_OLD_WX_CUSTOMER,
+				SUCCESS_TIME,
+				FIRST_SHARE_FLAG,
+				CREATED_DATE,
+				UPDATED_DATE
+			)
+			VALUES
+			(
+			    #{id},
+				#{openId},
+				#{remainChances},
+				#{hasExchangeCoupon},
+				#{isOldWXCustomer},
+				#{successTime},
+				#{firstShareFlag},
+				NOW(),
+				NOW()
+			)
+		]]>
+	</insert>
+
+	<update id="addOneChance" parameterType="string">
+		<![CDATA[
+			UPDATE  t_ddq_activities_caishen_participant
+			SET  	REMAIN_CHANCES=REMAIN_CHANCES+1,
+ 					UPDATED_DATE=NOW()
+			WHERE 	OPEN_ID=#{openId}
+		]]>
+	</update>
+
+	<select id="selectByOpenId" parameterType="string"
+		resultType="CaiShenParticipantEntity">
+		<![CDATA[
+			SELECT  ID						id,
+					OPEN_ID 				openId,
+					REMAIN_CHANCES   		remainChances,
+					HAS_EXCHANGE_COUPON 	hasExchangeCoupon,
+					IS_OLD_WX_CUSTOMER  	isOldWXCustomer,
+					SUCCESS_TIME   		    successTime,
+					FIRST_SHARE_FLAG    	firstShareFlag,
+					CREATED_DATE      		createdDate,
+					UPDATED_DATE     		updatedDate
+			FROM	t_ddq_activities_caishen_participant
+			WHERE  	OPEN_ID = #{openId}
+		]]>
+	</select>
+
+	<select id="isOldWXCustomer" parameterType="string" resultType="boolean">
+		<![CDATA[
+			SELECT  
+			CASE 
+			WHEN 
+			(
+				(
+					SELECT  count(1) 
+					FROM    t_ddq_customer
+					WHERE   OPEN_ID != ''
+							AND
+							OPEN_ID=#{openId}
+				)!=0
+			)
+			THEN true ELSE false
+			END
+		]]>
+	</select>
+
+	<select id="selectSuccessTimeByOpenId" parameterType="string"
+		resultType="integer">
+		<![CDATA[
+			SELECT  SUCCESS_TIME  successTime
+			FROM  	t_ddq_activities_caishen_participant
+			WHERE   OPEN_ID = #{openId}
+		]]>
+	</select>
+
+	<select id="hasRemainChances" parameterType="string"
+		resultType="boolean">
+		<![CDATA[
+			SELECT  
+			CASE 
+			WHEN 
+			(
+				(
+					SELECT  REMAIN_CHANCES
+					FROM    t_ddq_activities_caishen_participant
+					WHERE   OPEN_ID=#{openId}
+				)>0
+			)
+			THEN true ELSE false
+			END
+		]]>
+	</select>
+
+	<update id="updateParticipant" parameterType="CaiShenParticipantEntity">
+		UPDATE t_ddq_activities_caishen_participant
+		<set>
+			<if test="remainChances != null">
+				REMAIN_CHANCES=#{remainChances},
+			</if>
+			<if test="hasExchangeCoupon != null">
+				HAS_EXCHANGE_COUPON=#{hasExchangeCoupon},
+			</if>
+			<if test="isOldWXCustomer != null">
+				IS_OLD_WX_CUSTOMER=#{isOldWXCustomer},
+			</if>
+			<if test="successTime != null">
+				SUCCESS_TIME=#{successTime},
+			</if>
+			<if test="firstShareFlag != null">
+				FIRST_SHARE_FLAG=#{firstShareFlag},
+			</if>
+			<if test="couponId != null">
+				COUPON_ID=#{couponId},
+			</if>
+			<if test="1==1">
+				UPDATED_DATE=NOW(),
+			</if>
+		</set>
+		WHERE OPEN_ID=#{openId}
+	</update>
+	
+	<select id="selectWinnerCandidate" parameterType="string"
+		resultType="list">
+		<![CDATA[
+			SELECT  ID						id,
+					OPEN_ID 				openId,
+					REMAIN_CHANCES   		remainChances,
+					HAS_EXCHANGE_COUPON 	hasExchangeCoupon,
+					IS_OLD_WX_CUSTOMER  	isOldWXCustomer,
+					SUCCESS_TIME   		    successTime,
+					FIRST_SHARE_FLAG    	firstShareFlag,
+					CREATED_DATE      		createdDate,
+					UPDATED_DATE     		updatedDate
+			FROM	t_ddq_activities_caishen_participant
+			WHERE   SUCCESS_TIME = 5
+					AND
+					IS_OLD_WX_CUSTOMER = TRUE
+		]]>
+	</select>
+	
+	<select id="selectCountOfCoupon" resultType="integer">
+		<![CDATA[
+			SELECT  COUNT(1)
+			FROM	t_ddq_activities_caishen_participant
+			WHERE   HAS_EXCHANGE_COUPON = TRUE
+					AND
+					COUPON_ID IS NOT NULL
+		]]>
+	</select>
+	
+	<select id="selectCountOfCouponOfOld" resultType="integer">
+		<![CDATA[
+			SELECT  COUNT(1)
+			FROM	t_ddq_activities_caishen_participant
+			WHERE   HAS_EXCHANGE_COUPON = TRUE
+					AND
+					COUPON_ID IS NOT NULL
+					AND
+					IS_OLD_WX_CUSTOMER = TRUE
+		]]>
+	</select>
+	
+	<select id="selectCountOfCouponOfUsedOfOld" resultType="integer">
+		<![CDATA[
+			SELECT  COUNT(t1.COUPON_ID)
+			FROM	t_ddq_activities_caishen_participant t1,
+					t_ddq_mycoupon t2
+			WHERE   t1.COUPON_ID = t2.ID
+					AND
+					t1.HAS_EXCHANGE_COUPON = TRUE
+					AND
+					t1.IS_OLD_WX_CUSTOMER = TRUE
+					AND
+					t2.STATUS = 1
+		]]>
+	</select>
+	
+	<select id="selectCountOfCouponOfUsed" resultType="integer">
+		<![CDATA[
+			SELECT  COUNT(t1.COUPON_ID)
+			FROM	t_ddq_activities_caishen_participant t1,
+					t_ddq_mycoupon t2
+			WHERE   t1.COUPON_ID = t2.ID
+					AND
+					t1.HAS_EXCHANGE_COUPON = TRUE
+					AND
+					t2.STATUS = 1
+		]]>
+	</select>
+	
+	<select id="selectCountOfShared" resultType="integer">
+		<![CDATA[
+			SELECT  COUNT(1)
+			FROM	t_ddq_activities_caishen_participant
+			WHERE   FIRST_SHARE_FLAG = TRUE
+		]]>
+	</select>
+	
+	<select id="selectTotalCount" resultType="integer">
+		<![CDATA[
+			SELECT  COUNT(1)
+			FROM	t_ddq_activities_caishen_participant
+		]]>
+	</select>
+	
+	<select id="selectTotalOldCount" resultType="integer">
+		<![CDATA[
+			SELECT  COUNT(1)
+			FROM	t_ddq_activities_caishen_participant
+			WHERE	IS_OLD_WX_CUSTOMER = TRUE
+		]]>
+	</select>
+</mapper>

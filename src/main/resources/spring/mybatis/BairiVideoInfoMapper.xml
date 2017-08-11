@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- insert,select,selectByPK,count, delete, update,updateAll -->
+<mapper namespace="VideoInfoEntity">
+
+	<update id="updateLikeCount" parameterType="String">
+	<![CDATA[
+	 UPDATE T_DDQ_ACTIVITIES_BAIRI_VIDEO_INFO 
+		set LIKED   = LIKED+1,
+			UPDATE_DATE = CURRENT_TIMESTAMP
+	  WHERE OPEN_ID  = #{authorOpenId, jdbcType=VARCHAR} 
+	]]>
+	</update>
+	
+	
+	
+	<select id="getAllList"  resultType="VideoInfoEntity">
+	<![CDATA[
+		SELECT  ID  			id,
+				FILE_SRC		fileSrc,
+				OPEN_ID			openId,
+				AUTHOR_NAME		authorName,
+				VIDEO_NAME		videoName,
+				LIKED			liked ,
+				SCREEN_SHOT		screenShot
+        FROM T_DDQ_ACTIVITIES_BAIRI_VIDEO_INFO t
+       	ORDER BY T.LIKED DESC
+	]]>
+	</select>
+</mapper>

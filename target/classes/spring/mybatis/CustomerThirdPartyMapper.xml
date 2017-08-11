@@ -1,0 +1,293 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="CustomerThirdPartyEntity">
+	<insert id="saveCustomerKQ" parameterType="CustomerThirdPartyEntity">
+		<![CDATA[
+			INSERT INTO T_DDQ_CUSTOMER_KUAIQIAN(
+				USER_ID,
+				SOURCE,
+				TIME_STAMP,
+				SIGNATURE,
+				CREATE_DATE,
+				UPDATE_DATE
+			)
+			VALUES
+			(
+				#{userId, jdbcType=VARCHAR},
+				#{source, jdbcType=VARCHAR},
+				#{timeStamp, jdbcType=VARCHAR},
+				#{signature, jdbcType=VARCHAR},
+				CURRENT_TIMESTAMP,
+				CURRENT_TIMESTAMP
+			)
+		]]>
+	</insert>
+
+	<select id="findCustomerKQ" parameterType="CustomerThirdPartyEntity" resultType="Integer">
+		<![CDATA[
+			SELECT COUNT(1) 
+			FROM T_DDQ_CUSTOMER_KUAIQIAN
+			WHERE USER_ID = #{userId, jdbcType=VARCHAR}
+		]]>
+	</select>
+	
+	<!-- 根据userId查询快钱用户信息 -->
+	<select id="findCustomerKQInfo" parameterType="String" resultType="CustomerThirdPartyEntity">
+		<![CDATA[
+			SELECT 
+			USER_ID			userId,
+			SOURCE			source,
+			CUSTOMER_ID 	customerId
+			FROM T_DDQ_CUSTOMER_KUAIQIAN
+			WHERE USER_ID = #{userId, jdbcType=VARCHAR}
+		]]>
+	</select>
+	
+	<!-- 填充快钱customer_id -->
+	<select id="updateCustomerKQByUserId" parameterType="CustomerThirdPartyEntity">
+		<![CDATA[
+			UPDATE t_ddq_customer_kuaiqian SET CUSTOMER_ID = #{customerId, jdbcType=VARCHAR}
+			WHERE USER_ID = #{userId, jdbcType=VARCHAR}
+		]]>
+	</select>
+	
+	<insert id="saveCustomerP2P" parameterType="CustomerThirdPartyEntity">
+		<![CDATA[
+			INSERT INTO T_DDQ_CUSTOMER_P2P(
+				USER_ID,
+				SOURCE,
+				TIME_STAMP,
+				SIGNATURE,
+				CREATE_DATE,
+				UPDATE_DATE
+			)
+			VALUES
+			(
+				#{userId, jdbcType=VARCHAR},
+				#{source, jdbcType=VARCHAR},
+				#{timeStamp, jdbcType=VARCHAR},
+				#{signature, jdbcType=VARCHAR},
+				CURRENT_TIMESTAMP,
+				CURRENT_TIMESTAMP
+			)
+		]]>
+	</insert>
+
+	<select id="findCustomerP2P" parameterType="CustomerThirdPartyEntity" resultType="Integer">
+		<![CDATA[
+			SELECT COUNT(1) 
+			FROM T_DDQ_CUSTOMER_P2P
+			WHERE USER_ID = #{userId, jdbcType=VARCHAR}
+		]]>
+	</select>
+
+
+
+	<insert id="saveCustomerRZJ" parameterType="CustomerThirdPartyEntity">
+		<![CDATA[
+			INSERT INTO T_DDQ_CUSTOMER_RZJ(
+				USER_ID,
+				SOURCE,
+				TIME_STAMP,
+				SIGNATURE,
+				CREATE_DATE,
+				UPDATE_DATE
+			)
+			VALUES
+			(
+				#{userId, jdbcType=VARCHAR},
+				#{source, jdbcType=VARCHAR},
+				#{timeStamp, jdbcType=VARCHAR},
+				#{signature, jdbcType=VARCHAR},
+				CURRENT_TIMESTAMP,
+				CURRENT_TIMESTAMP
+			)
+		]]>
+	</insert>
+
+	<select id="findCustomerRZJ" parameterType="CustomerThirdPartyEntity" resultType="Integer">
+		<![CDATA[
+			SELECT COUNT(1) 
+			FROM T_DDQ_CUSTOMER_RZJ
+			WHERE USER_ID = #{userId, jdbcType=VARCHAR}
+		]]>
+	</select>
+	
+	<!-- 根据userId查询融之家用户信息 -->
+	<select id="findCustomerRZJInfo" parameterType="String" resultType="CustomerThirdPartyEntity">
+		<![CDATA[
+			SELECT 
+			USER_ID			userId,
+			SOURCE			source,
+			CUSTOMER_ID 	customerId
+			FROM T_DDQ_CUSTOMER_RZJ
+			WHERE USER_ID = #{userId, jdbcType=VARCHAR}
+		]]>
+	</select>
+
+	<!-- 填充融之家customer_id -->
+	<select id="updateCustomerRZJByUserId" parameterType="CustomerThirdPartyEntity">
+		<![CDATA[
+			UPDATE T_DDQ_CUSTOMER_RZJ SET CUSTOMER_ID = #{customerId, jdbcType=VARCHAR}
+			WHERE USER_ID = #{userId, jdbcType=VARCHAR}
+		]]>
+	</select>
+	
+	<insert id="saveCustomerChinapnr" parameterType="CustomerThirdPartyEntity">
+		<![CDATA[
+			INSERT INTO 
+		]]>
+		<include refid="table_name" />
+		<![CDATA[
+			(
+				USER_ID,
+				SOURCE,
+				TIME_STAMP,
+				SIGNATURE,
+				CREATE_DATE,
+				UPDATE_DATE
+			)
+			VALUES
+			(
+				#{userId, jdbcType=VARCHAR},
+				#{source, jdbcType=VARCHAR},
+				#{timeStamp, jdbcType=VARCHAR},
+				#{signature, jdbcType=VARCHAR},
+				CURRENT_TIMESTAMP,
+				CURRENT_TIMESTAMP
+			)
+		]]>
+	</insert>
+	
+	<sql id="table_name">
+		<if test="source == 'chinapnr'">
+			t_ddq_customer_chinapnr
+		</if>
+		<if test="source == 'huifusdb'">
+			t_ddq_customer_shandianbao
+		</if>
+	</sql>
+	
+	<select id="findCustomerChinapnr" parameterType="CustomerThirdPartyEntity" resultType="Integer">
+		<![CDATA[
+			SELECT COUNT(1) 
+			FROM 
+		]]>
+		<include refid="table_name" />
+		<![CDATA[
+			WHERE USER_ID = #{userId, jdbcType=VARCHAR}
+		]]>
+	</select>
+	
+	<!-- 根据userId查询汇付用户信息 -->
+	<select id="findCustomerChinapnrInfo" parameterType="String" resultType="CustomerThirdPartyEntity">
+		<![CDATA[
+			SELECT 
+			USER_ID			userId,
+			SOURCE			source,
+			CUSTOMER_ID 	customerId
+			FROM 
+		]]>
+		<include refid="table_name" />
+		<![CDATA[
+			WHERE USER_ID = #{userId, jdbcType=VARCHAR}
+		]]>
+	</select>
+
+	<!-- 填充汇付customer_id -->
+	<select id="updateCustomerChinapnrByUserId" parameterType="CustomerThirdPartyEntity">
+		<![CDATA[
+			UPDATE 
+			]]>
+		<include refid="table_name" />
+		<![CDATA[
+			SET CUSTOMER_ID = #{customerId, jdbcType=VARCHAR}
+			WHERE USER_ID = #{userId, jdbcType=VARCHAR}
+		]]>
+	</select>
+	
+	<!-- 保存银联数据 -->
+	<insert id="saveCustomerChinaums" parameterType="CustomerThirdPartyEntity">
+		<![CDATA[
+			INSERT INTO T_DDQ_CUSTOMER_CHINAUMS(
+				USER_ID,
+				SOURCE,
+				TIME_STAMP,
+				SIGNATURE,
+				CREATE_DATE,
+				UPDATE_DATE
+			)
+			VALUES
+			(
+				#{userId, jdbcType=VARCHAR},
+				#{source, jdbcType=VARCHAR},
+				#{timeStamp, jdbcType=VARCHAR},
+				#{signature, jdbcType=VARCHAR},
+				CURRENT_TIMESTAMP,
+				CURRENT_TIMESTAMP
+			)
+		]]>
+	</insert>
+	
+	<!-- 根据userId和source查询银联渠道用户数据 -->
+	<select id="findCustomerChinaums" parameterType="CustomerThirdPartyEntity" resultType="Integer">
+		<![CDATA[
+			SELECT COUNT(1) 
+			FROM T_DDQ_CUSTOMER_CHINAUMS
+			WHERE USER_ID = #{userId, jdbcType=VARCHAR}
+			AND SOURCE = #{source, jdbcType=VARCHAR}
+		]]>
+	</select>
+	
+	<!-- 填充银联customer_id -->
+	<select id="updateCustomerChinaumsByUserId" parameterType="CustomerThirdPartyEntity">
+		<![CDATA[
+			UPDATE T_DDQ_CUSTOMER_CHINAUMS SET CUSTOMER_ID = #{customerId, jdbcType=VARCHAR}
+			WHERE USER_ID = #{userId, jdbcType=VARCHAR}
+		]]>
+	</select>
+	
+	<!-- 保存分期乐数据 -->
+	<insert id="saveCustomerFQL" parameterType="CustomerThirdPartyEntity">
+		<![CDATA[
+			INSERT INTO t_ddq_customer_fenqile(
+				USER_ID,
+				SOURCE,
+				TIME_STAMP,
+				SIGNATURE,
+				CREATE_DATE,
+				UPDATE_DATE
+			)
+			VALUES
+			(
+				#{userId, jdbcType=VARCHAR},
+				#{source, jdbcType=VARCHAR},
+				#{timeStamp, jdbcType=VARCHAR},
+				#{signature, jdbcType=VARCHAR},
+				CURRENT_TIMESTAMP,
+				CURRENT_TIMESTAMP
+			)
+		]]>
+	</insert>
+	
+	<!-- 根据userId和source查询分期乐渠道用户数据 -->
+	<select id="findCustomerFQL" parameterType="CustomerThirdPartyEntity" resultType="Integer">
+		<![CDATA[
+			SELECT COUNT(1) 
+			FROM t_ddq_customer_fenqile
+			WHERE USER_ID = #{userId, jdbcType=VARCHAR}
+			AND SOURCE = #{source, jdbcType=VARCHAR}
+		]]>
+	</select>
+	
+	<!-- 填充分期乐customer_id -->
+	<select id="updateCustomerFQLByUserId" parameterType="CustomerThirdPartyEntity">
+		<![CDATA[
+			UPDATE t_ddq_customer_fenqile SET CUSTOMER_ID = #{customerId, jdbcType=VARCHAR}
+			WHERE USER_ID = #{userId, jdbcType=VARCHAR}
+		]]>
+	</select>
+	
+</mapper>

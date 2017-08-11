@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- insert,select,selectByPK,count, delete, update,updateAll -->
+<mapper namespace="CustomerFileEntity">
+	<!-- 插入 -->
+	<insert id="insert"
+		parameterType="com.vcredit.ddcash.server.model.entity.common.CustomerFileEntity"
+		useGeneratedKeys="true" keyProperty="id">
+	<![CDATA[
+		INSERT INTO T_DDQ_CUSTOMER_FILE (
+			          CUSTOMER_ID,
+					  NEW_FILE_NAME,
+					  AUDIT_STATUS,
+					  DELETE_FLAG,
+					  CREATED_DATE,
+					  UPDATED_DATE,
+					  DATA_TYPE
+		)
+		VALUES
+		(
+			#{customerId, jdbcType=BIGINT}, 
+			#{newFileName, jdbcType=VARCHAR}, 
+			#{auditStatus, jdbcType=VARCHAR},
+			#{deleteFlag, jdbcType=VARCHAR},  
+			CURRENT_TIMESTAMP,
+			CURRENT_TIMESTAMP,
+			#{dataType, jdbcType=VARCHAR}
+		)
+	]]>
+	</insert>
+
+	<!-- 查询条件 -->
+	<sql id="query_where_clause">
+		<where>
+			<if test="id != null">
+				AND ID = #{id, jdbcType=BIGINT}
+			</if>
+			<if test="customerId != null">
+				AND CUSTOMER_ID = #{customerId, jdbcType=VARCHAR}
+			</if>
+			<if test="auditStatus != null">
+				AND AUDIT_STATUS = #{auditStatus, jdbcType=VARCHAR}
+			</if>
+			<if test="deleteFlag != null">
+				AND DELETE_FLAG = #{deleteFlag, jdbcType=VARCHAR}
+			</if>
+			<if test="dataType != null">
+				AND DATA_TYPE = #{dataType, jdbcType=VARCHAR}
+			</if>
+		</where>
+	</sql>
+	
+	<!-- 分页查询&过滤查询 -->
+	<select id="select" parameterType="CustomerFileEntity"
+		resultType="CustomerFileEntity">
+		SELECT  t1.id				     id,
+				t1.CUSTOMER_ID           customerId,
+				t1.NEW_FILE_NAME         newFileName,
+				t1.AUDIT_STATUS 		 auditStatus,
+				t1.CREATED_DATE			 createdDate,
+				t1.UPLOAD_DATE           uploadDate,
+				t1.DATA_TYPE 			 dataType	
+		FROM T_DDQ_CUSTOMER_FILE T1	
+		<include refid="query_where_clause" />
+	</select>
+
+	<!-- 删除 -->
+	<delete id="delete" parameterType="Long">
+	<![CDATA[
+		DELETE FROM T_DDQ_CUSTOMER_FILE WHERE ID = #{value}
+	]]>
+	</delete>
+
+	<!-- 查询最新的审核状态中的数据 -->
+	<select id="queryLastAudit" parameterType="java.lang.Long" resultType="CustomerFileEntity">
+	<![CDATA[
+		SELECT 
+			ID id,
+			CUSTOMER_ID customerId,
+			new_file_name newFileName,
+			AUDIT_STATUS auditStatus,
+			OPERATOR     operator,
+			DATA_TYPE    dataType, 
+			CREATED_DATE createdDate,
+			UPDATED_DATE updatedDate
+		FROM t_ddq_customer_file
+		WHERE CUSTOMER_ID = #{value}
+	    AND AUDIT_STATUS = '0'
+		AND DELETE_FLAG = '1'
+		AND DATA_TYPE ='0'
+		order by CREATED_DATE desc
+		limit 1
+	]]>	
+	</select>
+	
+	 <!-- 查询最新的审核状态中的数据 -->
+	<select id="getLastAuditInfo" parameterType="CustomerFileEntity" resultType="CustomerFileEntity">
+	<![CDATA[
+		SELECT 
+			ID id,
+			CUSTOMER_ID customerId,
+			new_file_name newFileName,
+			AUDIT_STATUS auditStatus,
+			OPERATOR     operator,
+			DATA_TYPE    dataType, 
+			REJECT_RESON rejectReson,
+			CREATED_DATE createdDate,
+			UPDATED_DATE updatedDate
+		FROM t_ddq_customer_file
+		WHERE CUSTOMER_ID = #{customerId}
+	    AND DATA_TYPE = #{dataType}
+		AND DELETE_FLAG = '1'		
+		order by CREATED_DATE desc
+		limit 1
+	]]>	
+	</select>
+	
+	<update id="updateAuditFileInfo" parameterType="CustomerFileEntity">
+		update T_DDQ_CUSTOMER_FILE
+		<trim prefix="set" suffixOverrides=",">
+			updated_date = now(),
+		  <if test="auditStatus!=null">
+		  	AUDIT_STATUS = #{auditStatus},
+		  </if>
+		  <if test="operator!=null">
+		  	OPERATOR = #{operator},
+		  </if>
+		  <if test="rejectReson!=null">
+		  	REJECT_RESON=#{rejectReson},
+		  </if>
+		  <if test="remark!=null">
+		  	REMARK=#{remark},
+		  </if>
+		</trim>
+		where 
+		ID = #{id}
+	</update>
+
+</mapper> 

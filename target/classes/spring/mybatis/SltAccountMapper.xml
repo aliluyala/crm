@@ -1,0 +1,712 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- insert,select,selectByPK,count, delete, update,updateAll -->
+<mapper namespace="SltAccountEntity">
+	
+	<resultMap id="BaseResultMap" type="com.vcredit.ddcash.server.model.entity.transfer.SltAccountEntity">
+		<id column="SLT_ACCOUNT_ID" property="sltAccountId" />
+		<result column="CUSTOMER_ID" property="customerId" />
+		<result column="TRANS_STATUS" property="transStatus" />
+		<result column="VBS_BID"      property="vbsBid" />
+		<result column="PAYMENT_TYPE" property="paymentType" />
+		<result column="SCHEDULE_AMOUNT" property="scheduleAmount" />
+		<result column="GUID" property="guid" />
+		<result column="CLEAN_STATUS" property="cleanStatus" />
+		<result column="CLEAN_REMARKS" property="cleanRemarks" />
+		<result column="LOAN_TYPE" property="loanType" />
+		<result column="DUE_AMOUNT" property="dueAmount" />
+		<result column="CARD_ID" property="cardId" />
+		<result column="BEGIN_DATE" property="beginDate" />
+		<result column="END_DATE" property="endDate" />
+		<result column="CREATED_DATE" property="createdDate" />
+		<result column="UPDATED_DATE" property="updatedDate" />
+		<result column="OPERATE_FLAG" property="operateFlag" />
+		<result column="WITHDRAW_JSON" property="withdrawJson" />
+		<result column="WITHDRAW_FAIL_DESC" property="withdrawFailDesc" />
+		<result column="CREDIT_AUTH_ID" property="creditAuthId" />
+		<result column="CONTRACTNO"     property="contractNO" />
+		<!-- 添加了甜橙小贷的订单号 -->
+		<result column="ORGLOAN_ORDER_ID"     property="orgloanOrderId" />
+		<result column="SUB_TRANS_STATUS"     property="subTransStatus" />
+		<result column="LOAN_SIDE"     property="loanSide" />
+		
+		<!-- 重新上传资料状态 -->
+		<result column="RE_IDENTITY_STATUS"     property="reIdentityStatus" />
+		<result column="RE_BACK_STATUS"     property="reBackStatus" />
+		<result column="RE_HAND_STATUS"     property="reHandStatus" />
+		<result column="RE_SIGNATURE_STATUS"     property="reSignatureStatus" />
+		<result column="MODIFY_AMOUNT_STATUS"     property="modifyAmountStatus" />
+	</resultMap>
+	
+	<sql id="table_columns_without_id">
+  		CUSTOMER_ID,
+  		TRANS_STATUS,
+  		VBS_BID,
+  		PAYMENT_TYPE,
+  		LOAN_TYPE,
+  		SCHEDULE_AMOUNT,
+  		GUID,
+  		CLEAN_STATUS,
+  		CLEAN_REMARKS,
+  		DUE_AMOUNT,
+  		CARD_ID,
+  		CREATED_DATE,
+  		UPDATED_DATE,
+  		BEGIN_DATE,
+  		END_DATE,
+  		WITHDRAW_JSON,
+        WITHDRAW_FAIL_DESC,
+        CREDIT_AUTH_ID,
+        <!-- 添加了甜橙小贷的订单号 -->
+        ORGLOAN_ORDER_ID,
+  		OPERATE_FLAG,
+  		CONTRACTNO,
+  		SUB_TRANS_STATUS,
+  		LOAN_SIDE,
+  		<!-- 重新上传资料状态 -->
+  		RE_IDENTITY_STATUS,
+  		RE_BACK_STATUS,
+  		RE_HAND_STATUS,
+  		RE_SIGNATURE_STATUS,
+  		IS_NEW_SIGNATURE,
+  		MODIFY_AMOUNT_STATUS
+	</sql>
+  
+	<sql id="columns" >
+		SLT_ACCOUNT_ID,<include refid="table_columns_without_id"/>
+	</sql>
+
+	<sql id="table_name" >
+  		T_DDQ_SLT_ACCOUNT
+	</sql>
+  	
+	<insert id="insert" parameterType="com.vcredit.ddcash.server.model.entity.transfer.SltAccountEntity"
+		useGeneratedKeys="true" keyProperty="sltAccountId">
+		<![CDATA[
+		INSERT INTO T_DDQ_SLT_ACCOUNT (
+		CUSTOMER_ID,
+  		TRANS_STATUS,
+  		VBS_BID,
+  		PAYMENT_TYPE,
+  		SCHEDULE_AMOUNT,
+  		GUID,
+  		CLEAN_STATUS,
+  		CLEAN_REMARKS,
+  		DUE_AMOUNT,
+  		CARD_ID,
+  		BEGIN_DATE,
+  		END_DATE,
+  		LOAN_TYPE,
+  		CREATED_DATE,
+  		UPDATED_DATE,
+  		OPERATE_FLAG,
+  		WITHDRAW_JSON,
+        WITHDRAW_FAIL_DESC,
+        CREDIT_AUTH_ID,
+        CONTRACTNO,
+        LOAN_SIDE,
+        CREDIT_LEVEL,
+        IS_NEW_SIGNATURE
+		)
+		VALUES (
+		#{customerId},
+		#{transStatus},
+		#{vbsBid},
+		#{paymentType},
+		#{scheduleAmount},
+		#{guid},
+		#{cleanStatus},
+		#{cleanRemarks},
+		#{dueAmount},
+		#{cardId},
+		#{beginDate},
+		#{endDate},
+		#{loanType},
+		#{createdDate},
+		#{updatedDate},
+		#{operateFlag},
+		#{withdrawJson},
+		#{withdrawFailDesc},
+		#{creditAuthId},
+		#{contractNO},
+		#{loanSide},
+		#{creditLevel},
+		#{isNewSignature}
+		)
+		]]>
+		<selectKey resultType="Long" keyProperty="sltAccountId" order="AFTER">
+		<![CDATA[ SELECT LAST_INSERT_ID()  AS sltAccountId  ]]>
+	    </selectKey>
+	</insert>
+	
+	<sql id="query_where_clause">
+		<trim prefix="where" prefixOverrides="and|or"> 
+		    TRANS_STATUS != -1
+			<if test="sltAccountId !=null ">  
+	           and SLT_ACCOUNT_ID = #{sltAccountId}
+			</if> 
+			<if test="customerId != null">  
+	            and CUSTOMER_ID = #{customerId}
+			</if> 
+			<if test="transStatus != null and nonTransStatus == null">  
+	           and TRANS_STATUS = #{transStatus}
+			</if> 
+			<if test="nonTransStatus != null">  
+	          <!--  and TRANS_STATUS != #{nonTransStatus} -->
+	          and TRANS_STATUS not in 
+	          <foreach collection="nonTransStatus" item="item" index="index" 
+	          open="(" separator="," close=")">
+	         	 #{item}
+	          </foreach>
+			</if>
+			<if test="vbsBid != null">  
+	           and VBS_BID = #{vbsBid}
+			</if> 
+			<if test="cleanStatus != null">  
+	           and CLEAN_STATUS = #{cleanStatus}
+			</if> 
+		</trim> 
+	</sql>
+  	
+	<sql id="update_where_clause">
+		<trim prefix="where" prefixOverrides="and|or"> 
+			<if test="sltAccountId !=null ">  
+	            SLT_ACCOUNT_ID = #{sltAccountId}
+			</if>
+			<if test="vbsBid !=null ">  
+	            and VBS_BID = #{vbsBid}
+			</if> 
+		</trim>
+	</sql>
+   	
+	<sql id="update_set_clause">
+		<trim prefix="set" suffixOverrides=",">  
+  			UPDATED_DATE = now(),
+			<if test="transStatus !=null">  
+	            TRANS_STATUS = #{transStatus},
+			</if>
+			<if test="guid !=null">  
+	            GUID = #{guid},
+			</if>
+			<if test="cleanStatus !=null">  
+	            CLEAN_STATUS = #{cleanStatus},
+			</if>
+			<if test="cardId != null">
+				CARD_ID = #{cardId},
+			</if>
+			<if test="cleanRemarks !=null">  
+	            CLEAN_REMARKS = #{cleanRemarks},
+			</if>
+			<if test="operateFlag !=null">  
+	            OPERATE_FLAG = #{operateFlag},
+			</if>
+			<if test="subTransStatus !=null">  
+	            SUB_TRANS_STATUS = #{subTransStatus},
+			</if>
+			
+			<if test="payInstructionCode !=null">  
+	            PAY_INSTRUCTION_CODE = #{payInstructionCode},
+			</if>
+			<if test="reIdentityStatus !=null and reIdentityStatus !=0">  
+	            RE_IDENTITY_STATUS = #{reIdentityStatus},
+			</if>
+			<if test="reBackStatus != null and reBackStatus !=0">  
+	            RE_BACK_STATUS = #{reBackStatus},
+			</if>
+			<if test="reHandStatus != null and reHandStatus !=0">  
+	            RE_HAND_STATUS = #{reHandStatus},
+			</if>
+			
+			<if test="reIdentityDate !=null">  
+	            RE_IDENTITY_DATE = CURRENT_TIMESTAMP,
+			</if>
+			<if test="reBackDate != null">  
+	            RE_BACK_DATE = CURRENT_TIMESTAMP,
+			</if>
+			<if test="reHandDate != null">  
+	            RE_HAND_DATE = CURRENT_TIMESTAMP,
+			</if>
+			
+			<if test="reSignatureStatus != null and reSignatureStatus !=0">  
+	            RE_SIGNATURE_STATUS = #{reSignatureStatus},
+			</if>
+			
+			
+			<if test="isNewSignature != null">  
+	            IS_NEW_SIGNATURE = #{isNewSignature},
+			</if>
+			<if test="modifyAmountStatus != null and modifyAmountStatus !=0">  
+	            MODIFY_AMOUNT_STATUS = #{modifyAmountStatus},
+			</if>
+			<if test="prePactNo != null">  
+	            PREPACTNO = #{prePactNo},
+			</if>
+		</trim>
+	</sql>
+  	
+	<select id="count" resultType="java.lang.Integer" parameterType="com.vcredit.ddcash.server.model.entity.transfer.SltAccountEntity">
+  		select count(1)
+		from <include refid="table_name" />  
+		<include refid="query_where_clause"/>
+	</select>
+  	
+	<select id="list" resultMap="BaseResultMap" parameterType="com.vcredit.ddcash.server.model.entity.transfer.SltAccountEntity">
+		select  <include refid="columns" /> 
+		from <include refid="table_name" /> 
+		<include refid="query_where_clause"/>
+	</select>
+   	<select id="existSltlist" resultMap="BaseResultMap" parameterType="com.vcredit.ddcash.server.model.entity.transfer.SltAccountEntity">
+		select * from t_ddq_slt_account t1, 
+				t_ddq_credit_auth t2 
+				where t1.CUSTOMER_ID = #{customerId}
+				and t1.TRANS_STATUS in (1,2,3,4) 
+				and t1.CREDIT_AUTH_ID = t2.id and t2.ENABLE_FLAG = 1;
+	</select>
+   	<update id="updateBySltAccountId" parameterType="com.vcredit.ddcash.server.model.entity.transfer.SltAccountEntity">
+		     update T_DDQ_SLT_ACCOUNT t 
+                SET t.CARD_ID=#{cardId},
+                    t.CLEAN_STATUS=#{cleanStatus},
+                    t.CLEAN_REMARKS=#{cleanRemarks},
+                    t.CUSTOMER_ID=#{customerId},
+                    t.DUE_AMOUNT=#{dueAmount},
+                    t.BEGIN_DATE=#{beginDate},
+                    t.END_DATE=#{endDate},
+                    t.GUID=#{guid},
+                    t.LOAN_TYPE=#{loanType},
+                    t.OPERATE_FLAG=#{operateFlag},
+                    t.PAYMENT_TYPE=#{paymentType},
+                    t.SCHEDULE_AMOUNT=#{scheduleAmount},
+                    t.TRANS_STATUS=#{transStatus},
+                    t.VBS_BID =#{vbsBid},
+                    t.OPERATE_FLAG=#{operateFlag},
+                    t.WITHDRAW_JSON=#{withdrawJson},
+                    t.WITHDRAW_FAIL_DESC=#{withdrawFailDesc},
+                    t.CREDIT_AUTH_ID=#{creditAuthId},
+                    t.CONTRACTNO=#{contractNO},
+                    t.UPDATED_DATE=SYSDATE()
+                    where t.SLT_ACCOUNT_ID=#{sltAccountId}
+	</update>
+   	
+   	<select id="getAllSltAccountInfo" resultMap="BaseResultMap" parameterType="java.lang.Long">
+   		<![CDATA[
+		          SELECT  t.CARD_ID  cardId,
+                    t.SLT_ACCOUNT_ID sltAccountId,
+                    t.CLEAN_STATUS cleanStatus,
+                    t.CLEAN_REMARKS cleanRemarks,
+                    t.CUSTOMER_ID customerId,
+                    t.DUE_AMOUNT dueAmount,
+                    t.BEGIN_DATE beginDate,
+                    t.END_DATE endDate,
+                    t.GUID      guid,
+                    t.LOAN_TYPE loanType,
+                    t.OPERATE_FLAG operateFlag,
+                    t.PAYMENT_TYPE paymentType,
+                    t.SCHEDULE_AMOUNT scheduleAmount,
+                    t.TRANS_STATUS transStatus,
+                    t.VBS_BID  vbsBid,
+                    t.OPERATE_FLAG operateFlag,
+                    t.WITHDRAW_JSON withdrawJson,
+                    t.WITHDRAW_FAIL_DESC withdrawFailDesc,
+                    t.CREDIT_AUTH_ID creditAuthId,
+                    t.CONTRACTNO contractNO,
+                    t.UPDATED_DATE updatedDate
+               from T_DDQ_SLT_ACCOUNT t 
+              where t.CUSTOMER_ID=#{value}
+                    ]]>
+	</select>
+   	
+	<update id="update" parameterType="com.vcredit.ddcash.server.model.entity.transfer.SltAccountEntity">
+		update <include refid="table_name" /> 
+		<include refid="update_set_clause"/>
+		<include refid="update_where_clause"/>
+	</update>
+	
+	<update id="updateById" parameterType="com.vcredit.ddcash.server.model.entity.transfer.SltAccountEntity">
+		update <include refid="table_name" /> 
+		<include refid="update_set_clause"/>
+        where SLT_ACCOUNT_ID = #{sltAccountId}
+	</update>
+   	
+	<update id="updateByGuid" parameterType="com.vcredit.ddcash.server.model.entity.transfer.SltAccountEntity">
+		update <include refid="table_name" /> 
+		<include refid="update_set_clause"/>
+        where GUID = #{guid}
+	</update>
+	
+	<update id="updateByPayInstructionCode" parameterType="com.vcredit.ddcash.server.model.entity.transfer.SltAccountEntity">
+		update <include refid="table_name" /> 
+		<include refid="update_set_clause"/>
+        where PAY_INSTRUCTION_CODE = #{payInstructionCode}
+        and SLT_ACCOUNT_ID = #{sltAccountId}
+	</update>
+  	
+	<select id="selectByPK" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+		select <include refid="columns" /> 
+		from <include refid="table_name" /> 
+  		where SLT_ACCOUNT_ID = #{sltAccountId} 
+	</select>
+  	
+	<select id="getByCustomerId" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+		select <include refid="columns" /> 
+		from <include refid="table_name" /> 
+  		where CUSTOMER_ID = #{value} and  TRANS_STATUS >= 0
+	</select>
+	<!--  &lt;-->
+	<select id="getAllByCustomerId" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+		select <include refid="columns" /> 
+		from <include refid="table_name" /> 
+  		where CUSTOMER_ID = #{value} and TRANS_STATUS != 4 and TRANS_STATUS != 5 and TRANS_STATUS != -1
+	</select>
+  	
+  	<select id="getByVbsBid" resultMap="BaseResultMap" parameterType="java.lang.String" >
+  		select <include refid="columns" /> 
+  		from <include refid="table_name" /> 
+  		where VBS_BID = #{value}
+  	</select>
+  	
+  	<select id="listApplyingSlt" resultMap="BaseResultMap" parameterType="java.lang.Long">
+  		select <include refid="columns" /> 
+  		from <include refid="table_name" /> 
+  		where CUSTOMER_ID = #{value} and
+  		(TRANS_STATUS = 0 or TRANS_STATUS = -2 or TRANS_STATUS = -3 or TRANS_STATUS = -4 or TRANS_STATUS = -5)
+  	</select>
+  	
+	<select id="listAllLoaningAccount" resultMap="BaseResultMap">
+		select <include refid="columns" /> 
+		from <include refid="table_name" /> 
+  		where TRANS_STATUS != 0 and TRANS_STATUS != 4 and  TRANS_STATUS >= 0
+	</select>
+	
+	<select id="queryListByCustomerId" resultMap="BaseResultMap" parameterType="java.lang.Long">
+		select <include refid="columns" /> 
+		from <include refid="table_name" /> 
+  		where TRANS_STATUS in ('1','3')
+  		and CUSTOMER_ID = #{value}
+	</select>
+	
+	<select id="getByGuid" resultMap="BaseResultMap" parameterType="String" >
+		select <include refid="columns" /> 
+		from <include refid="table_name" /> 
+  		where GUID = #{guid}
+	</select>
+	
+  	
+
+  	
+	<select id="getByPayInstructionCode" resultMap="BaseResultMap" parameterType="String" >
+		select <include refid="columns" /> 
+		from <include refid="table_name" /> 
+  		where PAY_INSTRUCTION_CODE = #{payInstructionCode}
+  		 
+	</select>
+	
+  	<select id="listLoaningSltByCustomerId" resultMap="BaseResultMap" parameterType="java.lang.Long">
+  		select <include refid="columns" /> 
+  		from <include refid="table_name" /> 
+  		where CUSTOMER_ID = #{value} and TRANS_STATUS != 0 and TRANS_STATUS != 4 and TRANS_STATUS != 5 and TRANS_STATUS >= 0
+  	</select>
+  	
+  	<!-- 查询某个用户下的提现成功的且未还清的,提现申请中和复核中的 -->
+  	<select id="allLoaningSltByCustomerId" resultMap="BaseResultMap" parameterType="java.lang.Long">
+  		select <include refid="columns" /> 
+  		from <include refid="table_name" /> 
+  		where CUSTOMER_ID = #{value} and TRANS_STATUS != -3 and TRANS_STATUS != -1 and TRANS_STATUS != 4 and TRANS_STATUS != 5
+  	</select>
+  	
+  	<!-- 查出当前用户已放款和已逾期的订单 -->
+  	<select id="listUnionPaySltByCustomerId" resultMap="BaseResultMap" parameterType="java.lang.Long">
+  		select <include refid="columns" /> 
+  		from <include refid="table_name" /> 
+  		where CUSTOMER_ID = #{value} and TRANS_STATUS != 2 and TRANS_STATUS != 4 and TRANS_STATUS != 5 and TRANS_STATUS >0
+  	</select>
+  	
+  	<!-- 判断用户的所有借款记录是否都已还清 -->
+  	<select id="isAllHasClear" resultType="java.lang.Boolean" parameterType="java.lang.Long">
+  		SELECT case  when ((select count(*) from <include refid="table_name" /> 
+  		where TRANS_STATUS != 0 and  TRANS_STATUS >= 0 and customer_id = #{value})  =
+        (select count(*) from <include refid="table_name" />  where (TRANS_STATUS = 4 or TRANS_STATUS = 5) and customer_id = #{value}))
+         then 'true' else 'false' end 
+  	</select>
+  	
+  	<!-- 根据cust id查询是否有类型为30或90的拒单 -->
+  	<select id="querySltRejectList" resultType="com.vcredit.ddcash.server.model.dto.transfer.RejectReasonDto" parameterType="java.lang.Long">
+  		<![CDATA[
+  			select te.id rejectId,
+  				   te.SLT_ACCOUNT_ID sltAccountId,
+  				   ts.LOAN_TYPE  loanType,
+  				   te.review_date reviewDate,
+  				   te.reject_time_limit rejectTimeLimit,
+  				   te.reject_reson rejectReason 
+  		    from t_ddq_credit_auth ta, t_ddq_slt_account ts, t_ddq_slt_examine te
+  		    where ta.CUSTOMER_ID = #{value}
+  		    and ta.ENABLE_FLAG = '1'
+  		    and ta.CUSTOMER_ID = ts.CUSTOMER_ID
+  		    and ta.ID = ts.CREDIT_AUTH_ID
+  		    and ts.SLT_ACCOUNT_ID = te.SLT_ACCOUNT_ID
+  		    and ts.TRANS_STATUS = '-1'
+  		    and (te.reject_time_limit = '30' or te.reject_time_limit = '90')
+  		    ORDER BY te.id DESC
+  		]]>	
+  	</select>
+  	
+  	<!-- 根据cust Id，查询待补资料/复核中/已放款/已逾期的所有订单 -->
+  	<select id="queryRelaSltAccountInfo" resultType="com.vcredit.ddcash.server.model.entity.transfer.SltAccountEntity" parameterType="java.lang.Long">
+  		<![CDATA[
+  		
+  					select 
+  					slt.CARD_ID  cardId,
+                    slt.SLT_ACCOUNT_ID sltAccountId,
+                    slt.CLEAN_STATUS cleanStatus,
+                    slt.CLEAN_REMARKS cleanRemarks,
+                    slt.CUSTOMER_ID customerId,
+                    slt.DUE_AMOUNT dueAmount,
+                    slt.BEGIN_DATE beginDate,
+                    slt.END_DATE endDate,
+                    slt.GUID      guid,
+                    slt.LOAN_TYPE loanType,
+                    slt.OPERATE_FLAG operateFlag,
+                    slt.PAYMENT_TYPE paymentType,
+                    slt.SCHEDULE_AMOUNT scheduleAmount,
+                    slt.TRANS_STATUS transStatus,
+                    slt.VBS_BID  vbsBid,
+                    slt.OPERATE_FLAG operateFlag,
+                    slt.WITHDRAW_JSON withdrawJson,
+                    slt.WITHDRAW_FAIL_DESC withdrawFailDesc,
+                    slt.CREDIT_AUTH_ID creditAuthId,
+                    slt.CONTRACTNO contractNO,
+                    slt.UPDATED_DATE updatedDate,
+                    con.LOAN_AMOUNT  loanAmount,
+                    con.SERVICE_RATE serviceRate,
+                    con.SERVICE_RATE*con.LOAN_AMOUNT  as serviceAmount,
+                    con.INTEREST_RATE interestRate,
+                    agr.CREATED_DATE   contratDateStr,
+                    slt.LOAN_SIDE  loanSide
+             froM  t_ddq_slt_account slt ,
+                   t_ddq_agreement_info agr,
+                   t_ddq_contract_info con
+             WHERE slt.SLT_ACCOUNT_ID=con.SLT_ACCOUNT_ID
+               and agr.AGREEMENT_ID =con.AGREEMENT_ID
+               and slt.TRANS_STATUS in('1','3','-3','-2')
+               and slt.CUSTOMER_ID=#{value}
+  		    
+  		]]>	
+  	</select>
+ <!-- 根据cust Id，查询待补资料/复核中/已放款/已逾期的所有订单 -->
+  	<select id="queryAllRelaSltAccountInfo" resultType="com.vcredit.ddcash.server.model.entity.transfer.SltAccountEntity" parameterType="java.lang.Long">
+  		<![CDATA[
+  		
+  					select 
+  					slt.CARD_ID  cardId,
+                    slt.SLT_ACCOUNT_ID sltAccountId,
+                    slt.CLEAN_STATUS cleanStatus,
+                    slt.CLEAN_REMARKS cleanRemarks,
+                    slt.CUSTOMER_ID customerId,
+                    slt.DUE_AMOUNT dueAmount,
+                    slt.BEGIN_DATE beginDate,
+                    slt.END_DATE endDate,
+                    slt.GUID      guid,
+                    slt.LOAN_TYPE loanType,
+                    slt.OPERATE_FLAG operateFlag,
+                    slt.PAYMENT_TYPE paymentType,
+                    slt.SCHEDULE_AMOUNT scheduleAmount,
+                    slt.TRANS_STATUS transStatus,
+                    slt.VBS_BID  vbsBid,
+                    slt.OPERATE_FLAG operateFlag,
+                    slt.WITHDRAW_JSON withdrawJson,
+                    slt.WITHDRAW_FAIL_DESC withdrawFailDesc,
+                    slt.CREDIT_AUTH_ID creditAuthId,
+                    slt.CONTRACTNO contractNO,
+                    slt.UPDATED_DATE updatedDate,
+                    con.LOAN_AMOUNT  loanAmount,
+                    con.SERVICE_RATE serviceRate,
+                    con.SERVICE_RATE*con.LOAN_AMOUNT  as serviceAmount,
+                    con.INTEREST_RATE interestRate,
+                    agr.CREATED_DATE   contratDateStr
+             froM  t_ddq_slt_account slt ,
+                   t_ddq_agreement_info agr,
+                   t_ddq_contract_info con
+             WHERE slt.SLT_ACCOUNT_ID=con.SLT_ACCOUNT_ID
+               and agr.AGREEMENT_ID =con.AGREEMENT_ID
+               and slt.TRANS_STATUS in('1','2','3','-2','0')
+               and slt.CUSTOMER_ID=#{value}
+  		    
+  		]]>	
+  	</select>
+ 	<select id="queryPreContractNo" resultType="java.lang.String" parameterType="com.vcredit.ddcash.server.model.entity.transfer.SltAccountEntity">
+		<![CDATA[
+			SELECT	t1.CONTRACTNO 
+			FROM    t_ddq_slt_account t1, 
+			        t_ddq_contract_info t3 
+			WHERE   t1.CUSTOMER_ID = #{customerId}  
+			AND t1.SLT_ACCOUNT_ID = t3.SLT_ACCOUNT_ID 
+			AND t3.LOAN_DATE IS NOT NULL 
+			AND t1.SLT_ACCOUNT_ID<#{sltAccountId} 
+			ORDER BY t1.SLT_ACCOUNT_ID DESC
+			LIMIT 1;
+		]]>	
+	</select>
+	
+	<select id="getPreContractNo" resultType="java.lang.String" parameterType="java.lang.Long">
+		<![CDATA[
+			SELECT	CONTRACTNO 
+			FROM    t_ddq_slt_account 
+			WHERE   CUSTOMER_ID = #{value}   
+			AND 	TRANS_STATUS in('1','3') 
+			LIMIT 1;
+		]]>	
+	</select>
+	
+	<select id="findAllByCreditAuthAndCustomerId" resultType="com.vcredit.ddcash.server.model.entity.transfer.SltAccountEntity" parameterType="com.vcredit.ddcash.server.model.entity.auth.CreditAuthEntity">
+		<![CDATA[
+			SELECT  t.CARD_ID  cardId,
+                    t.SLT_ACCOUNT_ID sltAccountId,
+                    t.CLEAN_STATUS cleanStatus,
+                    t.CLEAN_REMARKS cleanRemarks,
+                    t.CUSTOMER_ID customerId,
+                    t.DUE_AMOUNT dueAmount,
+                    t.BEGIN_DATE beginDate,
+                    t.END_DATE endDate,
+                    t.GUID      guid,
+                    t.LOAN_TYPE loanType,
+                    t.OPERATE_FLAG operateFlag,
+                    t.PAYMENT_TYPE paymentType,
+                    t.SCHEDULE_AMOUNT scheduleAmount,
+                    t.TRANS_STATUS transStatus,
+                    t.VBS_BID  vbsBid,
+                    t.OPERATE_FLAG operateFlag,
+                    t.WITHDRAW_JSON withdrawJson,
+                    t.WITHDRAW_FAIL_DESC withdrawFailDesc,
+                    t.CREDIT_AUTH_ID creditAuthId,
+                    t.CONTRACTNO contractNO,
+                    t.UPDATED_DATE updatedDate
+               from T_DDQ_SLT_ACCOUNT t 
+              where t.CUSTOMER_ID=#{customerId} and t.CREDIT_AUTH_ID= #{id}
+		]]>	
+	</select>
+	
+	
+	<select id="findAllComplementRepay" resultType="com.vcredit.ddcash.server.model.entity.transfer.SltAccountEntity" parameterType="com.vcredit.ddcash.server.model.entity.auth.CreditAuthEntity">
+		<![CDATA[
+			SELECT  t.CARD_ID  cardId,
+                    t.SLT_ACCOUNT_ID sltAccountId,
+                    t.CLEAN_STATUS cleanStatus,
+                    t.CLEAN_REMARKS cleanRemarks,
+                    t.CUSTOMER_ID customerId,
+                    t.DUE_AMOUNT dueAmount,
+                    t.BEGIN_DATE beginDate,
+                    t.END_DATE endDate,
+                    t.GUID      guid,
+                    t.LOAN_TYPE loanType,
+                    t.OPERATE_FLAG operateFlag,
+                    t.PAYMENT_TYPE paymentType,
+                    t.SCHEDULE_AMOUNT scheduleAmount,
+                    t.TRANS_STATUS transStatus,
+                    t.VBS_BID  vbsBid,
+                    t.OPERATE_FLAG operateFlag,
+                    t.WITHDRAW_JSON withdrawJson,
+                    t.WITHDRAW_FAIL_DESC withdrawFailDesc,
+                    t.CREDIT_AUTH_ID creditAuthId,
+                    t.CONTRACTNO contractNO,
+                    t.UPDATED_DATE updatedDate
+               from T_DDQ_SLT_ACCOUNT t 
+              where t.CUSTOMER_ID=#{customerId} and t.CREDIT_AUTH_ID=#{id} and t.TRANS_STATUS=4 order by t.UPDATED_DATE desc
+		]]>	
+	</select>
+	
+	<!--查询当日加贷再贷客户总数 -->
+	<select id="findSecondLoanCountForToday" parameterType="String" resultType="Integer">
+		<![CDATA[
+			SELECT COUNT(1) FROM T_DDQ_SLT_ACCOUNT t WHERE T.LOAN_SIDE = 'COMPANY/P2P'
+			and T.CREATED_DATE BETWEEN STR_TO_DATE(#{beginDate,jdbcType=VARCHAR},'%Y-%m-%d %H:%i:%s') 
+			and STR_TO_DATE(#{endDate,jdbcType=VARCHAR},'%Y-%m-%d %H:%i:%s');
+		]]>
+	</select>
+	
+	<update id="updateSltUnionPayInfo" parameterType='java.util.Map'>
+		<![CDATA[
+			UPDATE T_DDQ_SLT_ACCOUNT T1
+			SET T1.PAY_INSTRUCTION_CODE = #{payInstructionCode} ,
+				T1.PAY_TIME = #{payTime},
+				T1.OPERATE_FLAG = #{operateFlag}
+			WHERE T1.VBS_BID=#{businessId}	
+		]]>
+	</update>
+	
+	<update id="updateModifyAmountBySltAccountId" parameterType="com.vcredit.ddcash.server.model.entity.transfer.SltAccountEntity">
+        update  <include refid="table_name" />
+        SET PAYMENT_TYPE = #{paymentType},SCHEDULE_AMOUNT = #{scheduleAmount},MODIFY_AMOUNT_STATUS = #{modifyAmountStatus},UPDATED_DATE = #{updatedDate}
+        where SLT_ACCOUNT_ID = #{sltAccountId}
+    </update>
+    
+    <!-- 根据客户id获取该客户所有订单的状态记录 -->
+    <select id="findAccountStatusByCustomerId" resultType="com.vcredit.ddcash.server.model.entity.transfer.SltAccountEntity" parameterType="com.vcredit.ddcash.server.model.entity.auth.CreditAuthEntity">
+		<![CDATA[
+			SELECT  t.CARD_ID  cardId,
+                    t.SLT_ACCOUNT_ID sltAccountId,
+                    t.CLEAN_STATUS cleanStatus,
+                    t.CLEAN_REMARKS cleanRemarks,
+                    t.CUSTOMER_ID customerId,
+                    t.DUE_AMOUNT dueAmount,
+                    t.BEGIN_DATE beginDate,
+                    t.END_DATE endDate,
+                    t.GUID      guid,
+                    t.LOAN_TYPE loanType,
+                    t.OPERATE_FLAG operateFlag,
+                    t.PAYMENT_TYPE paymentType,
+                    t.SCHEDULE_AMOUNT scheduleAmount,
+                    t.TRANS_STATUS transStatus,
+                    t.VBS_BID  vbsBid,
+                    t.OPERATE_FLAG operateFlag,
+                    t.WITHDRAW_JSON withdrawJson,
+                    t.WITHDRAW_FAIL_DESC withdrawFailDesc,
+                    t.CREDIT_AUTH_ID creditAuthId,
+                    t.CONTRACTNO contractNO,
+                    t.UPDATED_DATE updatedDate
+               from T_DDQ_SLT_ACCOUNT t 
+              where t.CUSTOMER_ID=#{customerId} order by t.UPDATED_DATE desc
+		]]>	
+	</select>
+    <select id="findNeedBindCardSlt" parameterType="Long" resultType="com.vcredit.ddcash.server.model.entity.transfer.SltAccountEntity">
+		<![CDATA[
+			SELECT  t.CARD_ID  cardId,
+                    t.SLT_ACCOUNT_ID sltAccountId,
+                    t.CLEAN_STATUS cleanStatus,
+                    t.CLEAN_REMARKS cleanRemarks,
+                    t.CUSTOMER_ID customerId,
+                    t.DUE_AMOUNT dueAmount,
+                    t.BEGIN_DATE beginDate,
+                    t.END_DATE endDate,
+                    t.GUID      guid,
+                    t.LOAN_TYPE loanType,
+                    t.OPERATE_FLAG operateFlag,
+                    t.PAYMENT_TYPE paymentType,
+                    t.SCHEDULE_AMOUNT scheduleAmount,
+                    t.TRANS_STATUS transStatus,
+                    t.VBS_BID  vbsBid,
+                    t.OPERATE_FLAG operateFlag,
+                    t.WITHDRAW_JSON withdrawJson,
+                    t.WITHDRAW_FAIL_DESC withdrawFailDesc,
+                    t.CREDIT_AUTH_ID creditAuthId,
+                    t.CONTRACTNO contractNO,
+                    t.UPDATED_DATE updatedDate
+               from T_DDQ_SLT_ACCOUNT t 
+              where t.CUSTOMER_ID=#{customerId} AND TRANS_STATUS = '-5'
+		]]>
+	</select>
+	
+    <!-- 根据customerId查询最新订单的状态 -->
+	<select id="findLastStatusByCustomerId" resultType="com.vcredit.ddcash.server.model.entity.transfer.SltAccountEntity" parameterType="java.lang.Long">
+		<![CDATA[
+			SELECT 
+				MAX(SLT_ACCOUNT_ID)		sltAccountId,
+				TRANS_STATUS			transStatus,
+				RE_IDENTITY_STATUS		reIdentityStatus,
+				RE_BACK_STATUS			reBackStatus,
+				RE_HAND_STATUS			reHandStatus
+			FROM t_ddq_slt_account
+			WHERE CUSTOMER_ID = #{customerId}
+		]]>
+	</select>
+</mapper>

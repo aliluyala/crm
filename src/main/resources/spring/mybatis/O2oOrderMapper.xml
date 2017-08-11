@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- insert,select,selectByPK,count, delete, update,updateAll -->
+<mapper namespace="O2oOrderEntity">
+
+	<!-- 插入 -->
+	<insert id="insert" parameterType="O2oOrderEntity">
+	<![CDATA[
+		INSERT INTO t_ddq_o2o_order (
+			CUSTOMER_ID,
+			ORDER_ID,
+			DECISION_RESULT,
+			LOAN_MONEY,
+			DECISION_RETURN_DATE,
+			MESSAGE,
+			CREATED_DATE,
+			UPDATED_DATE
+		)
+		VALUES
+		(
+			#{customerId, jdbcType=BIGINT}, 
+			#{orderId, jdbcType=BIGINT}, 
+			#{decisionResult, jdbcType=VARCHAR}, 
+			#{loanMoney, jdbcType=DECIMAL}, 
+			#{decisionReturnDate, jdbcType=VARCHAR},
+			#{message, jdbcType=VARCHAR},					
+			CURRENT_TIMESTAMP,
+			CURRENT_TIMESTAMP
+		)
+	]]>
+		<selectKey resultType="Integer" keyProperty="id" order="AFTER">
+			<![CDATA[ SELECT LAST_INSERT_ID()  AS id  ]]>
+	    </selectKey>
+	</insert>
+	
+	<select id="selectById" parameterType="Long" resultType="O2oOrderEntity">
+	<![CDATA[
+		SELECT  ID                           Id,
+				CUSTOMER_ID                  customerId,
+				ORDER_ID               		 orderId,
+				DECISION_RESULT              decisionResult,
+				LOAN_MONEY                   loanMoney,
+				DECISION_RETURN_DATE         decisionReturnDate,
+				VBS_ORDER_ID				 vbsOrderId,
+				LOAN_DATE					 loanDate,
+				CREATED_DATE				 createdDate,
+				UPDATED_DATE				 updatedDate
+		FROM t_ddq_o2o_order WHERE ORDER_ID = #{value}
+	]]>
+	</select>
+	
+	<update id="update" parameterType="O2oOrderEntity">
+		<![CDATA[
+			 UPDATE t_ddq_o2o_order 
+				SET 
+					VBS_ORDER_ID =	#{vbsOrderId},
+					UPDATED_DATE  = CURRENT_TIMESTAMP
+			  WHERE ORDER_ID  = #{orderId, jdbcType=BIGINT} 
+		]]>
+	</update>
+	
+	<select id="selectByVbsId" parameterType="Long" resultType="O2oOrderEntity">
+	<![CDATA[
+		SELECT  ID                           Id,
+				CUSTOMER_ID                  customerId,
+				ORDER_ID               		 orderId,
+				DECISION_RESULT              decisionResult,
+				LOAN_MONEY                   loanMoney,
+				DECISION_RETURN_DATE         decisionReturnDate,
+				VBS_ORDER_ID				 vbsOrderId,
+				LOAN_DATE					 loanDate,
+				CREATED_DATE				 createdDate,
+				UPDATED_DATE				 updatedDate
+		FROM t_ddq_o2o_order WHERE VBS_ORDER_ID = #{value}
+	]]>
+	</select>
+	
+	<update id="updateLoanDate" parameterType="O2oOrderEntity">
+		<![CDATA[
+			 UPDATE t_ddq_o2o_order 
+				SET 
+					LOAN_DATE =	#{loanDate},
+					LOAN_AMOUNT = #{loanAmount},
+					UPDATED_DATE  = CURRENT_TIMESTAMP
+			  WHERE ORDER_ID  = #{orderId, jdbcType=BIGINT} 
+		]]>
+	</update>
+	
+	<select id="getOrderInfo" parameterType="Long" resultType="O2oOrderEntity">
+	<![CDATA[
+		SELECT  ID                           Id,
+				CUSTOMER_ID                  customerId,
+				ORDER_ID               		 orderId,
+				DECISION_RESULT 	         decisionResult,
+				LOAN_MONEY                   loanMoney,
+				DATE_FORMAT(DECISION_RETURN_DATE,'%Y-%m-%d %T')   decisionReturnDate,
+				MESSAGE						 message,
+				VBS_ORDER_ID				 vbsOrderId,
+				DATE_FORMAT(LOAN_DATE,'%Y-%m-%d %T')			loanDate,
+				DATE_FORMAT(CREATED_DATE,'%Y-%m-%d %T')		    createdDate,
+				DATE_FORMAT(UPDATED_DATE,'%Y-%m-%d %T')		    updatedDate
+		FROM t_ddq_o2o_order WHERE CUSTOMER_ID = #{value}
+		
+	]]>
+	</select>
+	
+</mapper> 

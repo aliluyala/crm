@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- insert,select,selectByPK,count, delete, update,updateAll -->
+<mapper namespace="RepaymentInfoEntity">
+
+	<!-- 插入 -->
+	<insert id="insert" parameterType="com.vcredit.ddcash.server.model.entity.transfer.RepaymentInfoEntity"
+	 useGeneratedKeys="true" keyProperty="repaymentId">
+	<![CDATA[
+		INSERT INTO T_DDQ_REPAYMENT_INFO (
+			REPAYMENT_ID,
+			CUSTOMER_ID,
+            REPAYMENT_AMOUNT,
+            REPAY_TYPE,
+            IS_SUCCESS,
+			SLT_ID_STR,
+			INSTALL_ID_STR,
+			CREATED_DATE,
+			UPDATED_DATE
+		)
+		VALUES
+		(
+			#{repaymentId},
+			#{customerId, jdbcType=BIGINT}, 
+			#{repaymentAmount, jdbcType=DECIMAL}, 
+			#{repayType, jdbcType=INTEGER},
+			#{isSuccess, jdbcType=INTEGER},
+			#{sltIdStr, jdbcType=VARCHAR},
+			#{installIdStr, jdbcType=VARCHAR},
+			CURRENT_TIMESTAMP,
+			CURRENT_TIMESTAMP
+		)
+	]]>
+	<selectKey resultType="Long" keyProperty="repaymentId" order="AFTER">
+		<![CDATA[ SELECT LAST_INSERT_ID()  AS repaymentId  ]]>
+	</selectKey>
+	</insert>
+
+	<!-- 更新 -->
+	<update id="updateById" parameterType="com.vcredit.ddcash.server.model.entity.transfer.RepaymentInfoEntity">
+	<![CDATA[
+		UPDATE T_DDQ_REPAYMENT_INFO
+	]]>
+		<set>
+		<![CDATA[
+			UPDATED_DATE = CURRENT_TIMESTAMP,
+		]]>
+			<if test="isSuccess != null">
+				IS_SUCCESS = #{isSuccess, jdbcType=INTEGER}
+			</if>
+		</set>
+	<![CDATA[
+		WHERE ID = #{repaymentId, jdbcType=BIGINT} 
+	]]>
+	</update>
+	<!--orgloan 添加  根据customerId 查询 最近的 一次手动还款 -->
+	<select id="selectByCustomerId" resultType="com.vcredit.ddcash.server.model.entity.transfer.RepaymentInfoEntity" parameterType="java.lang.Long">
+	<![CDATA[
+   		SELECT 
+			REPAYMENT_ID repaymentId,
+			CUSTOMER_ID customerId,
+            REPAYMENT_AMOUNT repaymentAmount,
+            REPAY_TYPE repayType,
+            IS_SUCCESS isSuccess,
+			SLT_ID_STR sltIdStr,
+			INSTALL_ID_STR installIdStr,
+			CREATED_DATE createDate,
+			UPDATED_DATE updateDate
+		FROM
+   			T_DDQ_REPAYMENT_INFO 
+   			WHERE REPAYMENT_ID = 
+   				( SELECT 
+   					MAX(t.REPAYMENT_ID) 
+   					FROM t_ddq_repayment_info t 
+   					WHERE t.CUSTOMER_ID = #{value}
+   				);
+   	]]>
+  	</select>
+
+
+</mapper> 

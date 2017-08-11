@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- insert,select,selectByPK,count, delete, update,updateAll -->
+<mapper namespace="ContractInfoEntity">
+	
+	<resultMap id="BaseResultMap" type="com.vcredit.ddcash.server.model.entity.transfer.ContractInfoEntity">
+		<id column="CONTRACT_ID" property="contractId" />
+		<result column="SLT_ACCOUNT_ID" property="sltAccountId" />
+		<result column="LOAN_AMOUNT" property="loanAmount" />
+		<result column="LOAN_DATE"      property="loanDate" />
+		<result column="DEPOSIT_FEE" property="depositFee" />
+		<result column="INTEREST_RATE" property="interestRate" />
+		<result column="SERVICE_RATE" property="serviceRate" />
+		<result column="PAYMENT_DUE_DATE" property="paymentDueDate" />
+		<result column="AGREEMENT_ID" property="agreementId" />
+		<result column="CREATED_DATE" property="createDate" />
+		<result column="UPDATED_DATE" property="updateDate" />
+		<result column="P2P_JKXY_URL" property="p2pJKXYUrl" />
+	</resultMap>
+	
+	<sql id="table_columns_without_id">
+  		SLT_ACCOUNT_ID,
+  		LOAN_AMOUNT,
+  		LOAN_DATE,
+  		DEPOSIT_FEE,
+  		INTEREST_RATE,
+  		SERVICE_RATE,
+  		PAYMENT_DUE_DATE,
+  		AGREEMENT_ID,
+  		CREATED_DATE,
+  		UPDATED_DATE,
+  		P2P_JKXY_URL
+   	</sql>
+  
+  	<sql id="columns" >
+  		CONTRACT_ID,<include refid="table_columns_without_id"/>
+  	</sql>
+
+	<sql id="table_name" >
+  		T_DDQ_CONTRACT_INFO
+  	</sql>
+  	
+  	<insert id="insert" parameterType="com.vcredit.ddcash.server.model.entity.transfer.ContractInfoEntity"
+  	 useGeneratedKeys="true" keyProperty="contractId">
+  		<![CDATA[ 
+		INSERT INTO T_DDQ_CONTRACT_INFO (
+		SLT_ACCOUNT_ID,
+  		LOAN_AMOUNT,
+  		LOAN_DATE,
+  		DEPOSIT_FEE,
+  		INTEREST_RATE,
+  		SERVICE_RATE,
+  		PAYMENT_DUE_DATE,
+  		AGREEMENT_ID,
+  		CLEAR_LOAN_SERVICE_RATE,
+  		CLEAR_LOAN_SERVICE_FEE_MIN,
+  		CREATED_DATE,
+  		UPDATED_DATE,
+        COUPON_AMT,
+        collection_fee_rate,
+        platform_deposit_fee,
+  		MONTH_SERVICE_RATE,
+  		GUARANTEE_RATE
+		)
+		VALUES (
+		#{sltAccountId},
+		#{loanAmount},
+		#{loanDate},
+		#{depositFee},
+		#{interestRate},
+		#{serviceRate},
+		#{paymentDueDate},
+		#{agreementId},
+		#{clearLoanServiceRate},
+		#{clearLoanServiceFeeMin},
+		now(),
+		now(),
+		#{couponAmt},
+		#{collectionFeeRate},
+		#{platformDepositFee},
+		#{monthServiceRate},
+		#{guaranteeRate}
+		)
+		]]>
+		<selectKey resultType="Long" keyProperty="contractId" order="AFTER">
+		<![CDATA[ SELECT LAST_INSERT_ID()  AS contractId  ]]>
+	    </selectKey>
+	</insert>
+	
+	<sql id="query_where_clause">
+  		<trim prefix="where" prefixOverrides="and|or"> 
+  			<if test="contractId !=null ">  
+	            CONTRACT_ID = #{contractId}
+	        </if> 
+	         <if test="sltAccountId != null">  
+	            and SLT_ACCOUNT_ID = #{sltAccountId}
+	        </if> 
+	    </trim> 
+  	</sql>
+  	
+  	<sql id="update_where_clause">
+		<trim prefix="where" prefixOverrides="and|or"> 
+	        <if test="contractId !=null ">  
+	            CONTRACT_ID = #{contractId}
+	        </if> 
+	        <if test="sltAccountId != null">  
+	            and SLT_ACCOUNT_ID = #{sltAccountId}
+	        </if>  
+	    </trim>
+   	</sql>
+   	
+   	<sql id="update_set_clause">
+  		<trim prefix="set" suffixOverrides=",">  
+  			UPDATED_DATE = now(),
+	         <if test="loanAmount !=null">  
+	            LOAN_AMOUNT = #{loanAmount},
+	        </if>
+	        <if test="loanDate !=null">  
+	            LOAN_DATE = #{loanDate},
+	        </if>
+	        <if test="paymentDueDate !=null">  
+	            PAYMENT_DUE_DATE = #{paymentDueDate},
+	        </if>
+   		</trim>
+  	</sql>
+  	
+  	<select id="count" resultType="java.lang.Integer" parameterType="com.vcredit.ddcash.server.model.entity.transfer.ContractInfoEntity">
+  		select count(1)
+        from <include refid="table_name" />  
+       	<include refid="query_where_clause"/>
+   	</select>
+  	
+  	<select id="select" resultMap="BaseResultMap" parameterType="com.vcredit.ddcash.server.model.entity.transfer.ContractInfoEntity">
+   		select  CONTRACT_ID,
+   		        SLT_ACCOUNT_ID,
+  		        LOAN_AMOUNT,
+  		        LOAN_DATE,
+  		        DEPOSIT_FEE,
+  		        INTEREST_RATE,
+  		        SERVICE_RATE,
+  		        PAYMENT_DUE_DATE,
+  		        AGREEMENT_ID,
+  		        CREATED_DATE,
+  		        UPDATED_DATE
+   		   from T_DDQ_CONTRACT_INFO 
+   		<where>
+			<if test="contractId != null">
+				AND CONTRACT_ID = #{contractId, jdbcType=BIGINT}
+			</if>
+			<if test="openId != null and openId != ''">
+				AND SLT_ACCOUNT_ID = #{sltAccountId, jdbcType=VARCHAR}
+			</if>
+		</where>
+   		order by CONTRACT_ID desc
+  	</select>
+   	
+   	<update id="update" parameterType="com.vcredit.ddcash.server.model.entity.transfer.ContractInfoEntity">
+   		update <include refid="table_name" /> 
+       	<include refid="update_set_clause"/>
+       	<include refid="update_where_clause"/>
+  	</update>
+   	
+   	 <update id="updateById" parameterType="com.vcredit.ddcash.server.model.entity.transfer.ContractInfoEntity">
+   		update <include refid="table_name" /> 
+       	<include refid="update_set_clause"/>
+       where CONTRACT_ID = #{contractId}
+  	</update>
+   	
+   	 <update id="updateP2PJKXYUrl" parameterType="java.util.Map">
+   		update T_DDQ_CONTRACT_INFO
+   		SET P2P_JKXY_URL = #{p2pJKXYUrl}
+      	WHERE SLT_ACCOUNT_ID = #{sltAccountId}
+  	</update>
+   	
+   	
+   	<select id="selectByPK" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+  		select <include refid="columns" /> 
+  		from <include refid="table_name" /> 
+  		where CONTRACT_ID = #{value}
+  	</select>
+  	
+    <select id="getBySltAccountId" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+  		select <include refid="columns" /> 
+  		from <include refid="table_name" /> 
+  		where SLT_ACCOUNT_ID = #{value}
+  	</select>
+  	<update id="updateBySltAccountId" parameterType="java.util.Map">
+        update <include refid="table_name" /> 
+        set LOAN_AMOUNT = #{loanAmount},DEPOSIT_FEE = #{depositFee}, COUPON_AMT = #{couponAmt},UPDATED_DATE = #{updateDate}
+       where SLT_ACCOUNT_ID = #{sltAccountId, jdbcType=VARCHAR}
+    </update>
+    
+</mapper>

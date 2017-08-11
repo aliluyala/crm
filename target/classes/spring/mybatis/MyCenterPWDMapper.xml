@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="CustomerPasswordEntity">
+	
+	<!-- 查询 T_DDQ_TRANS_PASSWORD表-->
+	<select id="selectByCustomerId" parameterType="String" resultType="com.vcredit.ddcash.server.model.entity.myCenter.CustomerPasswordEntity">
+		<![CDATA[
+			SELECT  PASSWORD_ID 	passWordId,
+					CUSTOMER_ID 	customerId,
+					OPEN_ID			openId,
+					PASS_WORD		passWord,
+					CREATED_DATE	createdDate,
+					UPDATED_DATE	updatedDate
+			FROM 	T_DDQ_TRANS_PASSWORD 
+			WHERE   CUSTOMER_ID = #{value}
+		]]>
+	</select>
+	
+	<!-- 通过openId和customerId查找密码 -->
+	<select id="selectByOpenIdAndCustomerId" parameterType="String" resultType="com.vcredit.ddcash.server.model.entity.myCenter.CustomerPasswordEntity">
+		<![CDATA[
+			SELECT  PASSWORD_ID 	passWordId,
+					CUSTOMER_ID 	customerId,
+					OPEN_ID			openId,
+					PASS_WORD		passWord,
+					CREATED_DATE	createdDate,
+					UPDATED_DATE	updatedDate
+			FROM 	T_DDQ_TRANS_PASSWORD 
+			WHERE   CUSTOMER_ID = #{customerId}
+			AND     OPEN_ID =     #{openId}
+		]]>
+	</select>
+	
+	<!-- 设置用户密码 -->
+	<insert id="insert" parameterType="com.vcredit.ddcash.server.model.entity.myCenter.CustomerPasswordEntity">
+		<![CDATA[
+		insert into T_DDQ_TRANS_PASSWORD
+		(
+			CUSTOMER_ID,
+			OPEN_ID,
+			PASS_WORD,
+			CREATED_DATE,
+			UPDATED_DATE
+			
+		)VALUE
+		(
+			#{customerId},
+			#{openId},
+			#{passWord},
+			SYSDATE(),
+			SYSDATE()
+		)
+		]]>
+	</insert>
+	
+	<!-- 更新用户重置密码 -->
+	<update id="update" parameterType="com.vcredit.ddcash.server.model.entity.myCenter.CustomerPasswordEntity" >
+		UPDATE 
+			T_DDQ_TRANS_PASSWORD T  
+		SET
+			T.PASS_WORD = #{passWord},
+			T.UPDATED_DATE = SYSDATE()
+		WHERE T.OPEN_ID = #{openId}
+		AND   T.CUSTOMER_ID = #{customerId}
+		AND   T.PASSWORD_ID = #{passWordId}
+	</update>
+	
+</mapper> 

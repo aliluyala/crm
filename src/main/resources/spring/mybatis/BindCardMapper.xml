@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- insert,select,selectByPK,count, delete, update,updateAll -->
+<mapper namespace="BindCardEntity">
+
+	<!-- 插入 -->
+	<insert id="insert" parameterType="com.vcredit.ddcash.server.model.entity.auth.BindCardEntity"
+	useGeneratedKeys="true" keyProperty="id">
+	<![CDATA[
+		INSERT INTO T_DDQ_BIND_CARDS (
+		    ID,
+            CUSTOMER_ID,
+			CARD_BANK,
+            CARD_NO,
+            CARD_TYPE,
+            BANK_CODE,
+			STATUS,
+			CREATED_DATE,
+			UPDATED_DATE
+		)
+		VALUES
+		(
+		    #{id},
+			#{customerId, jdbcType=VARCHAR}, 
+			#{cardBank, jdbcType=VARCHAR}, 
+			#{cardNo, jdbcType=VARCHAR}, 
+			#{cardType, jdbcType=VARCHAR},
+			#{bankCode, jdbcType=VARCHAR},
+			#{status, jdbcType=VARCHAR},
+			CURRENT_TIMESTAMP,
+			CURRENT_TIMESTAMP
+		)
+	]]>
+	</insert>
+
+	<!-- 通过客户号查询 -->
+	<select id="selectByCustomerId" parameterType="Long" resultType="com.vcredit.ddcash.server.model.entity.auth.BindCardEntity">
+	<![CDATA[
+		SELECT  card.ID           id,
+                card.CARD_BANK    cardBank,
+                card.CARD_NO      cardNo,
+                card.CARD_TYPE    cardType,
+                card.BANK_CODE    bankCode,
+                card.CUSTOMER_ID  customerId,
+                card.`STATUS`     status,
+                card.CREATED_DATE createdDate,
+                card.UPDATED_DATE updatedDate,
+                card.OPENBANK     openBank	
+           FROM T_DDQ_BIND_CARDS card
+          WHERE card.`STATUS`='1'
+            and card.CUSTOMER_ID = #{customerId}
+	]]>
+	</select>
+	
+	<select id="seachBindCardInfoList" parameterType="com.vcredit.ddcash.server.model.entity.auth.BindCardEntity" resultType="com.vcredit.ddcash.server.model.entity.auth.BindCardEntity">
+	<![CDATA[
+		SELECT  card.ID           id,
+                card.CARD_BANK    cardBank,
+                card.CARD_NO      cardNo,
+                card.CARD_TYPE    cardType,
+                card.BANK_CODE    bankCode,
+                card.CUSTOMER_ID  customerId,
+                card.`STATUS`     status,
+                card.CREATED_DATE createdDate,
+                card.UPDATED_DATE updatedDate
+           FROM T_DDQ_BIND_CARDS card
+          WHERE card.`STATUS`='1'
+            and card.CUSTOMER_ID = #{customerId}
+            and card.CARD_NO     = #{cardNo}
+            and card.CARD_BANK   = #{cardBank}
+            and card.BANK_CODE   = #{bankCode}
+	]]>
+	</select>
+	
+	
+   <select id="selectByPK" parameterType="Long" resultType="com.vcredit.ddcash.server.model.entity.auth.BindCardEntity">
+	<![CDATA[
+		SELECT  ID                    id,
+				CUSTOMER_ID           customerId,
+			    CARD_BANK             cardBank,
+                CARD_NO               cardNo,
+                CARD_TYPE             cardType,
+                BANK_CODE             bankCode,
+			    STATUS                status,
+			    CREATED_DATE          createdDate,
+			    UPDATED_DATE          updatedDate
+		FROM T_DDQ_BIND_CARDS WHERE ID = #{value}
+	]]>
+	</select>
+	
+	
+	
+	<!-- 通过银行卡号查询 -->
+	<select id="selectByCardNo" parameterType="String" resultType="String">
+	<![CDATA[
+		SELECT card.BANK_CODE bankCode
+        FROM   T_DDQ_BIND_CARDS card
+        WHERE  card.CARD_NO = #{cardNo}
+	]]>
+	</select>
+
+	<!-- 删除 -->
+	<delete id="delete" parameterType="Long">
+	<![CDATA[
+		DELETE FROM T_DDQ_BIND_CARDS WHERE ID = #{value}
+	]]>
+	</delete>
+
+	<!-- 更新 -->
+	<update id="update" parameterType="BindCardEntity">
+	<![CDATA[
+		UPDATE T_DDQ_BIND_CARDS 
+	]]>
+		<set>
+		<![CDATA[
+			UPDATED_DATE = CURRENT_TIMESTAMP,
+		]]>
+			<if test="cardBank != null">
+				CARD_BANK = #{cardBank, jdbcType=VARCHAR},
+			</if>
+			<if test="bankCode != null">
+				BANK_CODE = #{bankCode, jdbcType=VARCHAR},
+			</if>
+			<if test="cardNo != null">
+				CARD_NO = #{cardNo, jdbcType=VARCHAR},
+			</if>
+			<if test="cardType != null">
+				CARD_TYPE = #{cardType, jdbcType=VARCHAR},
+			</if>
+			<if test="customerId != null">
+				CUSTOMER_ID = #{customerId, jdbcType=VARCHAR},
+			</if>
+			<if test="status != null ">
+				STATUS = #{status, jdbcType=VARCHAR},
+			</if>
+			<if test="openBank != null ">
+				OPENBANK = #{openBank, jdbcType=VARCHAR},
+			</if>
+		</set>
+	<![CDATA[
+		WHERE ID = #{id, jdbcType=VARCHAR} 
+	]]>
+	</update>
+	<!-- 更新 -->
+	<update id="updateByCustomerId" parameterType="BindCardEntity">
+	<![CDATA[
+		UPDATE T_DDQ_BIND_CARDS 
+	]]>
+		<set>
+		<![CDATA[
+			UPDATED_DATE = CURRENT_TIMESTAMP,
+		]]>
+			<if test="status != null ">
+				STATUS = #{status, jdbcType=VARCHAR},
+			</if>
+		</set>
+	<![CDATA[
+		WHERE CUSTOMER_ID = #{customerId, jdbcType=VARCHAR} 
+	]]>
+	</update>
+<!-- 主键查询 -->
+	<select id="selectByIdentityNo" parameterType="String" resultType="CustomerEntity">
+	<![CDATA[
+		SELECT  ID                           ID,
+				OPEN_ID                      OPENID,
+				INVITE_ID                    INVITEID,
+				AGENT                        AGENT,
+				IDENTITY_NO                  IDENTITYNO,
+				IDENTITY_EXPIRES             IDENTITYEXPIRES,
+				IDENTITY_PERSON              IDENTITYPERSON,
+				REAL_NAME                    REALNAME,
+				WORK_CITY                    WORKCITY,
+				WORK_PROVINCE                WORKPROVINCE,
+				SUPPORT_ADVANCE              SUPPORTADVANCE,
+				EDUCATION_DEGREE             EDUCATIONDEGREE,
+				JOB							 JOB,
+				MARRY_STATUS                 MARRYSTATUS,
+				LOCAL_REGISTRY               LOCALREGISTRY,
+				MOBILE                       MOBILE,
+				MOBILE_AUTH_IDENTITY         MOBILEAUTHIDENTITY,
+				MOBILE_AUTH_STATUS           MOBILEAUTHSTATUS,
+				MOBILE_AUTH_DATE             MOBILEAUTHDATE,
+				MOBILE_AUTH_FLAG             MOBILEAUTHFLAG,
+				MOBILE_REPEAT_APPLY          MOBILEREPEATAPPLY,
+				IDENTITY_RECOGNIZE_NAME      IDENTITYRECOGNIZENAME,
+				IDENTITY_RECOGNIZE_ADDRESS   IDENTITYRECOGNIZEADDRESS,
+				STATUS                       STATUS,
+				CUST_HEAD                    CUSTHEAD,
+				QUICK_LOAN_CUST              QUICKLOANCUST,
+				MONTHLY_INCOME				 MONTHLYINCOME,
+				CREATED_DATE                 CREATEDDATE,
+				UPDATED_DATE                 UPDATEDDATE,
+				REMIND_REPAYMENT 			 remindRepayment
+		FROM T_DDQ_CUSTOMER WHERE IDENTITY_NO = #{value}
+	]]>
+	</select>
+	<!-- 主键查询 -->
+	<select id="selectCustByCustomerId" parameterType="String" resultType="CustomerEntity">
+	<![CDATA[
+		SELECT  ID                           ID,
+				OPEN_ID                      OPENID,
+				INVITE_ID                    INVITEID,
+				AGENT                        AGENT,
+				IDENTITY_NO                  IDENTITYNO,
+				IDENTITY_EXPIRES             IDENTITYEXPIRES,
+				IDENTITY_PERSON              IDENTITYPERSON,
+				REAL_NAME                    REALNAME,
+				WORK_CITY                    WORKCITY,
+				WORK_PROVINCE                WORKPROVINCE,
+				SUPPORT_ADVANCE              SUPPORTADVANCE,
+				EDUCATION_DEGREE             EDUCATIONDEGREE,
+				JOB							 JOB,
+				MARRY_STATUS                 MARRYSTATUS,
+				LOCAL_REGISTRY               LOCALREGISTRY,
+				MOBILE                       MOBILE,
+				MOBILE_AUTH_IDENTITY         MOBILEAUTHIDENTITY,
+				MOBILE_AUTH_STATUS           MOBILEAUTHSTATUS,
+				MOBILE_AUTH_DATE             MOBILEAUTHDATE,
+				MOBILE_AUTH_FLAG             MOBILEAUTHFLAG,
+				MOBILE_REPEAT_APPLY          MOBILEREPEATAPPLY,
+				IDENTITY_RECOGNIZE_NAME      IDENTITYRECOGNIZENAME,
+				IDENTITY_RECOGNIZE_ADDRESS   IDENTITYRECOGNIZEADDRESS,
+				STATUS                       STATUS,
+				CUST_HEAD                    CUSTHEAD,
+				QUICK_LOAN_CUST              QUICKLOANCUST,
+				MONTHLY_INCOME				 MONTHLYINCOME,
+				CREATED_DATE                 CREATEDDATE,
+				UPDATED_DATE                 UPDATEDDATE,
+				REMIND_REPAYMENT 			 remindRepayment
+		FROM T_DDQ_CUSTOMER WHERE ID = #{value}
+	]]>
+	</select>
+</mapper> 

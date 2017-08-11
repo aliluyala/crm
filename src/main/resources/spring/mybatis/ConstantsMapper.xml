@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- insert,select,selectByPK,count, delete, update,updateAll -->
+<mapper namespace="ConstantsEntity">
+
+	<!-- 分页查询&过滤查询 -->
+	<select id="selectListByDictCode" resultType="ConstantsEntity">
+		<![CDATA[
+			SELECT  ID                    ID,
+					DICT_CODE             DICTCODE,
+					MAPPING_DICT_CODE     MAPPINGDICTCODE,
+					DICT_VALUE            DICTVALUE,
+					MAPPING_DICT_VALUE    MAPPINGDICTVALUE,
+					DICT_NAME             DICTNAME,
+					PARENT_ID             PARENTID
+			FROM T_DDQ_CONSTANTS WHERE DICT_CODE = #{value}
+		]]>
+	</select>
+
+	<select id="selectByDictCodeAndValue" resultType="ConstantsEntity" parameterType="java.util.HashMap">
+		<![CDATA[
+			SELECT  ID                    ID,
+					DICT_CODE             DICTCODE,
+					MAPPING_DICT_CODE     MAPPINGDICTCODE,
+					DICT_VALUE            DICTVALUE,
+					MAPPING_DICT_VALUE    MAPPINGDICTVALUE,
+					DICT_NAME             DICTNAME,
+					PARENT_ID             PARENTID
+			FROM T_DDQ_CONSTANTS WHERE DICT_CODE = #{dictCode} 
+				AND DICT_VALUE=#{dictValue}
+		]]>
+	</select>
+	
+	<!-- 分页查询&过滤查询 -->
+	<select id="selectConstantsListByDictCode" resultType="ConstantsEntity">
+		<![CDATA[
+			SELECT  ID                    ID,
+					DICT_CODE             DICTCODE,
+					MAPPING_DICT_CODE     MAPPINGDICTCODE,
+					DICT_VALUE            DICTVALUE,
+					MAPPING_DICT_VALUE    MAPPINGDICTVALUE,
+					DICT_NAME             DICTNAME,
+					PARENT_ID             PARENTID
+			FROM T_DDQ_CONSTANTS WHERE DELETE_FLAG = '1'
+			AND  DICT_CODE = #{value}
+		]]>
+	</select>
+	
+	<!-- 根据编码查找值 -->
+	<select id="selectByDictCode" resultType="ConstantsEntity" parameterType="java.util.HashMap">
+		<![CDATA[
+			SELECT  ID                    ID,
+					DICT_CODE             DICTCODE,
+					MAPPING_DICT_CODE     MAPPINGDICTCODE,
+					DICT_VALUE            DICTVALUE,
+					MAPPING_DICT_VALUE    MAPPINGDICTVALUE,
+					DICT_NAME             DICTNAME,
+					PARENT_ID             PARENTID
+			FROM T_DDQ_CONSTANTS 
+			WHERE DELETE_FLAG = '1' AND  DICT_CODE = #{dictCode} 
+		]]>
+	</select>
+</mapper> 

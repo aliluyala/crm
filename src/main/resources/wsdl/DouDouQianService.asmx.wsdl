@@ -1,0 +1,1702 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="http://tempuri.org/" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" targetNamespace="http://tempuri.org/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://tempuri.org/">
+      <s:element name="DDQInsertVBS">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="json" type="s:string"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="DDQInsertVBSResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="DDQInsertVBSResult" type="tns:RequestResult"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="RequestResult">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="Status" type="s:int"/>
+          <s:element minOccurs="0" maxOccurs="1" name="Result"/>
+          <s:element minOccurs="0" maxOccurs="1" name="Content" type="s:string"/>
+        </s:sequence>
+      </s:complexType>
+      <s:element name="IsSubmitOrders">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="json" type="s:string"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="IsSubmitOrdersResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="IsSubmitOrdersResult" type="tns:RequestResult"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="DownContractPDF">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="bid" type="s:int"/>
+            <s:element minOccurs="0" maxOccurs="1" name="filetype" type="s:string"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="DownContractPDFResponse">
+        <s:complexType/>
+      </s:element>
+      <s:element name="IsBlacklistUser">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="json" type="s:string"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="IsBlacklistUserResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="IsBlacklistUserResult" type="tns:RequestResult"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="IsSignCompleteUser">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="json" type="s:string"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="IsSignCompleteUserResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="IsSignCompleteUserResult" type="tns:RequestResult"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="SecondSalesTypeVBS">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="json" type="s:string"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="SecondSalesTypeVBSResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="SecondSalesTypeVBSResult" type="tns:RequestResult"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="CancelContract">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="json" type="s:string"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="CancelContractResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="CancelContractResult" type="tns:RequestResult"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetContractNo">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="json" type="s:string"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetContractNoResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetContractNoResult" type="tns:RequestResult"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ChangeCard">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="json" type="s:string"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ChangeCardResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="ChangeCardResult" type="tns:RequestResult"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="SecondSalesType">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="json" type="s:string"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="SecondSalesTypeResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="SecondSalesTypeResult" type="tns:RequestResult"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="CheckCard">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="jsonParm" type="s:string"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="CheckCardResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="CheckCardResult" type="tns:RequestResult"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="QuerySimBillDetails">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="jsonParm" type="s:string"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="QuerySimBillDetailsResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="QuerySimBillDetailsResult" type="tns:RequestResult"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="QueryContractSimInfos">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="jsonParm" type="s:string"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="QueryContractSimInfosResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="QueryContractSimInfosResult" type="tns:RequestResult"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="DoOverdueLoan">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="jsonParm" type="s:string"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="DoOverdueLoanResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="DoOverdueLoanResult" type="tns:RequestResult"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="QueryAdvCloanInfo">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="jsonParm" type="s:string"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="QueryAdvCloanInfoResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="QueryAdvCloanInfoResult" type="tns:RequestResult"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="DoAdvCloan">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="jsonParm" type="s:string"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="DoAdvCloanResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="DoAdvCloanResult" type="tns:RequestResult"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="QueryRepayRecord">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="jsonParm" type="s:string"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="QueryRepayRecordResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="QueryRepayRecordResult" type="tns:RequestResult"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="QueryLoanDetails">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="jsonParm" type="s:string"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="QueryLoanDetailsResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="QueryLoanDetailsResult" type="tns:RequestResult"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="QueryBillDetails">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="jsonParm" type="s:string"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="QueryBillDetailsResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="QueryBillDetailsResult" type="tns:RequestResult"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="PropellingWeChat">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="Bid" type="s:int"/>
+            <s:element minOccurs="1" maxOccurs="1" name="operStatus" type="s:int"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="PropellingWeChatResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="PropellingWeChatResult" type="s:string"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="RequestResult" nillable="true" type="tns:RequestResult"/>
+      <s:element name="string" nillable="true" type="s:string"/>
+    </s:schema>
+  </wsdl:types>
+  <wsdl:message name="DDQInsertVBSSoapIn">
+    <wsdl:part name="parameters" element="tns:DDQInsertVBS"/>
+  </wsdl:message>
+  <wsdl:message name="DDQInsertVBSSoapOut">
+    <wsdl:part name="parameters" element="tns:DDQInsertVBSResponse"/>
+  </wsdl:message>
+  <wsdl:message name="IsSubmitOrdersSoapIn">
+    <wsdl:part name="parameters" element="tns:IsSubmitOrders"/>
+  </wsdl:message>
+  <wsdl:message name="IsSubmitOrdersSoapOut">
+    <wsdl:part name="parameters" element="tns:IsSubmitOrdersResponse"/>
+  </wsdl:message>
+  <wsdl:message name="DownContractPDFSoapIn">
+    <wsdl:part name="parameters" element="tns:DownContractPDF"/>
+  </wsdl:message>
+  <wsdl:message name="DownContractPDFSoapOut">
+    <wsdl:part name="parameters" element="tns:DownContractPDFResponse"/>
+  </wsdl:message>
+  <wsdl:message name="IsBlacklistUserSoapIn">
+    <wsdl:part name="parameters" element="tns:IsBlacklistUser"/>
+  </wsdl:message>
+  <wsdl:message name="IsBlacklistUserSoapOut">
+    <wsdl:part name="parameters" element="tns:IsBlacklistUserResponse"/>
+  </wsdl:message>
+  <wsdl:message name="IsSignCompleteUserSoapIn">
+    <wsdl:part name="parameters" element="tns:IsSignCompleteUser"/>
+  </wsdl:message>
+  <wsdl:message name="IsSignCompleteUserSoapOut">
+    <wsdl:part name="parameters" element="tns:IsSignCompleteUserResponse"/>
+  </wsdl:message>
+  <wsdl:message name="SecondSalesTypeVBSSoapIn">
+    <wsdl:part name="parameters" element="tns:SecondSalesTypeVBS"/>
+  </wsdl:message>
+  <wsdl:message name="SecondSalesTypeVBSSoapOut">
+    <wsdl:part name="parameters" element="tns:SecondSalesTypeVBSResponse"/>
+  </wsdl:message>
+  <wsdl:message name="CancelContractSoapIn">
+    <wsdl:part name="parameters" element="tns:CancelContract"/>
+  </wsdl:message>
+  <wsdl:message name="CancelContractSoapOut">
+    <wsdl:part name="parameters" element="tns:CancelContractResponse"/>
+  </wsdl:message>
+  <wsdl:message name="GetContractNoSoapIn">
+    <wsdl:part name="parameters" element="tns:GetContractNo"/>
+  </wsdl:message>
+  <wsdl:message name="GetContractNoSoapOut">
+    <wsdl:part name="parameters" element="tns:GetContractNoResponse"/>
+  </wsdl:message>
+  <wsdl:message name="ChangeCardSoapIn">
+    <wsdl:part name="parameters" element="tns:ChangeCard"/>
+  </wsdl:message>
+  <wsdl:message name="ChangeCardSoapOut">
+    <wsdl:part name="parameters" element="tns:ChangeCardResponse"/>
+  </wsdl:message>
+  <wsdl:message name="SecondSalesTypeSoapIn">
+    <wsdl:part name="parameters" element="tns:SecondSalesType"/>
+  </wsdl:message>
+  <wsdl:message name="SecondSalesTypeSoapOut">
+    <wsdl:part name="parameters" element="tns:SecondSalesTypeResponse"/>
+  </wsdl:message>
+  <wsdl:message name="CheckCardSoapIn">
+    <wsdl:part name="parameters" element="tns:CheckCard"/>
+  </wsdl:message>
+  <wsdl:message name="CheckCardSoapOut">
+    <wsdl:part name="parameters" element="tns:CheckCardResponse"/>
+  </wsdl:message>
+  <wsdl:message name="QuerySimBillDetailsSoapIn">
+    <wsdl:part name="parameters" element="tns:QuerySimBillDetails"/>
+  </wsdl:message>
+  <wsdl:message name="QuerySimBillDetailsSoapOut">
+    <wsdl:part name="parameters" element="tns:QuerySimBillDetailsResponse"/>
+  </wsdl:message>
+  <wsdl:message name="QueryContractSimInfosSoapIn">
+    <wsdl:part name="parameters" element="tns:QueryContractSimInfos"/>
+  </wsdl:message>
+  <wsdl:message name="QueryContractSimInfosSoapOut">
+    <wsdl:part name="parameters" element="tns:QueryContractSimInfosResponse"/>
+  </wsdl:message>
+  <wsdl:message name="DoOverdueLoanSoapIn">
+    <wsdl:part name="parameters" element="tns:DoOverdueLoan"/>
+  </wsdl:message>
+  <wsdl:message name="DoOverdueLoanSoapOut">
+    <wsdl:part name="parameters" element="tns:DoOverdueLoanResponse"/>
+  </wsdl:message>
+  <wsdl:message name="QueryAdvCloanInfoSoapIn">
+    <wsdl:part name="parameters" element="tns:QueryAdvCloanInfo"/>
+  </wsdl:message>
+  <wsdl:message name="QueryAdvCloanInfoSoapOut">
+    <wsdl:part name="parameters" element="tns:QueryAdvCloanInfoResponse"/>
+  </wsdl:message>
+  <wsdl:message name="DoAdvCloanSoapIn">
+    <wsdl:part name="parameters" element="tns:DoAdvCloan"/>
+  </wsdl:message>
+  <wsdl:message name="DoAdvCloanSoapOut">
+    <wsdl:part name="parameters" element="tns:DoAdvCloanResponse"/>
+  </wsdl:message>
+  <wsdl:message name="QueryRepayRecordSoapIn">
+    <wsdl:part name="parameters" element="tns:QueryRepayRecord"/>
+  </wsdl:message>
+  <wsdl:message name="QueryRepayRecordSoapOut">
+    <wsdl:part name="parameters" element="tns:QueryRepayRecordResponse"/>
+  </wsdl:message>
+  <wsdl:message name="QueryLoanDetailsSoapIn">
+    <wsdl:part name="parameters" element="tns:QueryLoanDetails"/>
+  </wsdl:message>
+  <wsdl:message name="QueryLoanDetailsSoapOut">
+    <wsdl:part name="parameters" element="tns:QueryLoanDetailsResponse"/>
+  </wsdl:message>
+  <wsdl:message name="QueryBillDetailsSoapIn">
+    <wsdl:part name="parameters" element="tns:QueryBillDetails"/>
+  </wsdl:message>
+  <wsdl:message name="QueryBillDetailsSoapOut">
+    <wsdl:part name="parameters" element="tns:QueryBillDetailsResponse"/>
+  </wsdl:message>
+  <wsdl:message name="PropellingWeChatSoapIn">
+    <wsdl:part name="parameters" element="tns:PropellingWeChat"/>
+  </wsdl:message>
+  <wsdl:message name="PropellingWeChatSoapOut">
+    <wsdl:part name="parameters" element="tns:PropellingWeChatResponse"/>
+  </wsdl:message>
+  <wsdl:message name="DDQInsertVBSHttpGetIn">
+    <wsdl:part name="json" type="s:string"/>
+  </wsdl:message>
+  <wsdl:message name="DDQInsertVBSHttpGetOut">
+    <wsdl:part name="Body" element="tns:RequestResult"/>
+  </wsdl:message>
+  <wsdl:message name="IsSubmitOrdersHttpGetIn">
+    <wsdl:part name="json" type="s:string"/>
+  </wsdl:message>
+  <wsdl:message name="IsSubmitOrdersHttpGetOut">
+    <wsdl:part name="Body" element="tns:RequestResult"/>
+  </wsdl:message>
+  <wsdl:message name="DownContractPDFHttpGetIn">
+    <wsdl:part name="bid" type="s:string"/>
+    <wsdl:part name="filetype" type="s:string"/>
+  </wsdl:message>
+  <wsdl:message name="DownContractPDFHttpGetOut"/>
+  <wsdl:message name="IsBlacklistUserHttpGetIn">
+    <wsdl:part name="json" type="s:string"/>
+  </wsdl:message>
+  <wsdl:message name="IsBlacklistUserHttpGetOut">
+    <wsdl:part name="Body" element="tns:RequestResult"/>
+  </wsdl:message>
+  <wsdl:message name="IsSignCompleteUserHttpGetIn">
+    <wsdl:part name="json" type="s:string"/>
+  </wsdl:message>
+  <wsdl:message name="IsSignCompleteUserHttpGetOut">
+    <wsdl:part name="Body" element="tns:RequestResult"/>
+  </wsdl:message>
+  <wsdl:message name="SecondSalesTypeVBSHttpGetIn">
+    <wsdl:part name="json" type="s:string"/>
+  </wsdl:message>
+  <wsdl:message name="SecondSalesTypeVBSHttpGetOut">
+    <wsdl:part name="Body" element="tns:RequestResult"/>
+  </wsdl:message>
+  <wsdl:message name="CancelContractHttpGetIn">
+    <wsdl:part name="json" type="s:string"/>
+  </wsdl:message>
+  <wsdl:message name="CancelContractHttpGetOut">
+    <wsdl:part name="Body" element="tns:RequestResult"/>
+  </wsdl:message>
+  <wsdl:message name="GetContractNoHttpGetIn">
+    <wsdl:part name="json" type="s:string"/>
+  </wsdl:message>
+  <wsdl:message name="GetContractNoHttpGetOut">
+    <wsdl:part name="Body" element="tns:RequestResult"/>
+  </wsdl:message>
+  <wsdl:message name="ChangeCardHttpGetIn">
+    <wsdl:part name="json" type="s:string"/>
+  </wsdl:message>
+  <wsdl:message name="ChangeCardHttpGetOut">
+    <wsdl:part name="Body" element="tns:RequestResult"/>
+  </wsdl:message>
+  <wsdl:message name="SecondSalesTypeHttpGetIn">
+    <wsdl:part name="json" type="s:string"/>
+  </wsdl:message>
+  <wsdl:message name="SecondSalesTypeHttpGetOut">
+    <wsdl:part name="Body" element="tns:RequestResult"/>
+  </wsdl:message>
+  <wsdl:message name="CheckCardHttpGetIn">
+    <wsdl:part name="jsonParm" type="s:string"/>
+  </wsdl:message>
+  <wsdl:message name="CheckCardHttpGetOut">
+    <wsdl:part name="Body" element="tns:RequestResult"/>
+  </wsdl:message>
+  <wsdl:message name="QuerySimBillDetailsHttpGetIn">
+    <wsdl:part name="jsonParm" type="s:string"/>
+  </wsdl:message>
+  <wsdl:message name="QuerySimBillDetailsHttpGetOut">
+    <wsdl:part name="Body" element="tns:RequestResult"/>
+  </wsdl:message>
+  <wsdl:message name="QueryContractSimInfosHttpGetIn">
+    <wsdl:part name="jsonParm" type="s:string"/>
+  </wsdl:message>
+  <wsdl:message name="QueryContractSimInfosHttpGetOut">
+    <wsdl:part name="Body" element="tns:RequestResult"/>
+  </wsdl:message>
+  <wsdl:message name="DoOverdueLoanHttpGetIn">
+    <wsdl:part name="jsonParm" type="s:string"/>
+  </wsdl:message>
+  <wsdl:message name="DoOverdueLoanHttpGetOut">
+    <wsdl:part name="Body" element="tns:RequestResult"/>
+  </wsdl:message>
+  <wsdl:message name="QueryAdvCloanInfoHttpGetIn">
+    <wsdl:part name="jsonParm" type="s:string"/>
+  </wsdl:message>
+  <wsdl:message name="QueryAdvCloanInfoHttpGetOut">
+    <wsdl:part name="Body" element="tns:RequestResult"/>
+  </wsdl:message>
+  <wsdl:message name="DoAdvCloanHttpGetIn">
+    <wsdl:part name="jsonParm" type="s:string"/>
+  </wsdl:message>
+  <wsdl:message name="DoAdvCloanHttpGetOut">
+    <wsdl:part name="Body" element="tns:RequestResult"/>
+  </wsdl:message>
+  <wsdl:message name="QueryRepayRecordHttpGetIn">
+    <wsdl:part name="jsonParm" type="s:string"/>
+  </wsdl:message>
+  <wsdl:message name="QueryRepayRecordHttpGetOut">
+    <wsdl:part name="Body" element="tns:RequestResult"/>
+  </wsdl:message>
+  <wsdl:message name="QueryLoanDetailsHttpGetIn">
+    <wsdl:part name="jsonParm" type="s:string"/>
+  </wsdl:message>
+  <wsdl:message name="QueryLoanDetailsHttpGetOut">
+    <wsdl:part name="Body" element="tns:RequestResult"/>
+  </wsdl:message>
+  <wsdl:message name="QueryBillDetailsHttpGetIn">
+    <wsdl:part name="jsonParm" type="s:string"/>
+  </wsdl:message>
+  <wsdl:message name="QueryBillDetailsHttpGetOut">
+    <wsdl:part name="Body" element="tns:RequestResult"/>
+  </wsdl:message>
+  <wsdl:message name="PropellingWeChatHttpGetIn">
+    <wsdl:part name="Bid" type="s:string"/>
+    <wsdl:part name="operStatus" type="s:string"/>
+  </wsdl:message>
+  <wsdl:message name="PropellingWeChatHttpGetOut">
+    <wsdl:part name="Body" element="tns:string"/>
+  </wsdl:message>
+  <wsdl:message name="DDQInsertVBSHttpPostIn">
+    <wsdl:part name="json" type="s:string"/>
+  </wsdl:message>
+  <wsdl:message name="DDQInsertVBSHttpPostOut">
+    <wsdl:part name="Body" element="tns:RequestResult"/>
+  </wsdl:message>
+  <wsdl:message name="IsSubmitOrdersHttpPostIn">
+    <wsdl:part name="json" type="s:string"/>
+  </wsdl:message>
+  <wsdl:message name="IsSubmitOrdersHttpPostOut">
+    <wsdl:part name="Body" element="tns:RequestResult"/>
+  </wsdl:message>
+  <wsdl:message name="DownContractPDFHttpPostIn">
+    <wsdl:part name="bid" type="s:string"/>
+    <wsdl:part name="filetype" type="s:string"/>
+  </wsdl:message>
+  <wsdl:message name="DownContractPDFHttpPostOut"/>
+  <wsdl:message name="IsBlacklistUserHttpPostIn">
+    <wsdl:part name="json" type="s:string"/>
+  </wsdl:message>
+  <wsdl:message name="IsBlacklistUserHttpPostOut">
+    <wsdl:part name="Body" element="tns:RequestResult"/>
+  </wsdl:message>
+  <wsdl:message name="IsSignCompleteUserHttpPostIn">
+    <wsdl:part name="json" type="s:string"/>
+  </wsdl:message>
+  <wsdl:message name="IsSignCompleteUserHttpPostOut">
+    <wsdl:part name="Body" element="tns:RequestResult"/>
+  </wsdl:message>
+  <wsdl:message name="SecondSalesTypeVBSHttpPostIn">
+    <wsdl:part name="json" type="s:string"/>
+  </wsdl:message>
+  <wsdl:message name="SecondSalesTypeVBSHttpPostOut">
+    <wsdl:part name="Body" element="tns:RequestResult"/>
+  </wsdl:message>
+  <wsdl:message name="CancelContractHttpPostIn">
+    <wsdl:part name="json" type="s:string"/>
+  </wsdl:message>
+  <wsdl:message name="CancelContractHttpPostOut">
+    <wsdl:part name="Body" element="tns:RequestResult"/>
+  </wsdl:message>
+  <wsdl:message name="GetContractNoHttpPostIn">
+    <wsdl:part name="json" type="s:string"/>
+  </wsdl:message>
+  <wsdl:message name="GetContractNoHttpPostOut">
+    <wsdl:part name="Body" element="tns:RequestResult"/>
+  </wsdl:message>
+  <wsdl:message name="ChangeCardHttpPostIn">
+    <wsdl:part name="json" type="s:string"/>
+  </wsdl:message>
+  <wsdl:message name="ChangeCardHttpPostOut">
+    <wsdl:part name="Body" element="tns:RequestResult"/>
+  </wsdl:message>
+  <wsdl:message name="SecondSalesTypeHttpPostIn">
+    <wsdl:part name="json" type="s:string"/>
+  </wsdl:message>
+  <wsdl:message name="SecondSalesTypeHttpPostOut">
+    <wsdl:part name="Body" element="tns:RequestResult"/>
+  </wsdl:message>
+  <wsdl:message name="CheckCardHttpPostIn">
+    <wsdl:part name="jsonParm" type="s:string"/>
+  </wsdl:message>
+  <wsdl:message name="CheckCardHttpPostOut">
+    <wsdl:part name="Body" element="tns:RequestResult"/>
+  </wsdl:message>
+  <wsdl:message name="QuerySimBillDetailsHttpPostIn">
+    <wsdl:part name="jsonParm" type="s:string"/>
+  </wsdl:message>
+  <wsdl:message name="QuerySimBillDetailsHttpPostOut">
+    <wsdl:part name="Body" element="tns:RequestResult"/>
+  </wsdl:message>
+  <wsdl:message name="QueryContractSimInfosHttpPostIn">
+    <wsdl:part name="jsonParm" type="s:string"/>
+  </wsdl:message>
+  <wsdl:message name="QueryContractSimInfosHttpPostOut">
+    <wsdl:part name="Body" element="tns:RequestResult"/>
+  </wsdl:message>
+  <wsdl:message name="DoOverdueLoanHttpPostIn">
+    <wsdl:part name="jsonParm" type="s:string"/>
+  </wsdl:message>
+  <wsdl:message name="DoOverdueLoanHttpPostOut">
+    <wsdl:part name="Body" element="tns:RequestResult"/>
+  </wsdl:message>
+  <wsdl:message name="QueryAdvCloanInfoHttpPostIn">
+    <wsdl:part name="jsonParm" type="s:string"/>
+  </wsdl:message>
+  <wsdl:message name="QueryAdvCloanInfoHttpPostOut">
+    <wsdl:part name="Body" element="tns:RequestResult"/>
+  </wsdl:message>
+  <wsdl:message name="DoAdvCloanHttpPostIn">
+    <wsdl:part name="jsonParm" type="s:string"/>
+  </wsdl:message>
+  <wsdl:message name="DoAdvCloanHttpPostOut">
+    <wsdl:part name="Body" element="tns:RequestResult"/>
+  </wsdl:message>
+  <wsdl:message name="QueryRepayRecordHttpPostIn">
+    <wsdl:part name="jsonParm" type="s:string"/>
+  </wsdl:message>
+  <wsdl:message name="QueryRepayRecordHttpPostOut">
+    <wsdl:part name="Body" element="tns:RequestResult"/>
+  </wsdl:message>
+  <wsdl:message name="QueryLoanDetailsHttpPostIn">
+    <wsdl:part name="jsonParm" type="s:string"/>
+  </wsdl:message>
+  <wsdl:message name="QueryLoanDetailsHttpPostOut">
+    <wsdl:part name="Body" element="tns:RequestResult"/>
+  </wsdl:message>
+  <wsdl:message name="QueryBillDetailsHttpPostIn">
+    <wsdl:part name="jsonParm" type="s:string"/>
+  </wsdl:message>
+  <wsdl:message name="QueryBillDetailsHttpPostOut">
+    <wsdl:part name="Body" element="tns:RequestResult"/>
+  </wsdl:message>
+  <wsdl:message name="PropellingWeChatHttpPostIn">
+    <wsdl:part name="Bid" type="s:string"/>
+    <wsdl:part name="operStatus" type="s:string"/>
+  </wsdl:message>
+  <wsdl:message name="PropellingWeChatHttpPostOut">
+    <wsdl:part name="Body" element="tns:string"/>
+  </wsdl:message>
+  <wsdl:portType name="DouDouQianServiceSoap">
+    <wsdl:operation name="DDQInsertVBS">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">将豆豆钱信息插入到VBS中</wsdl:documentation>
+      <wsdl:input message="tns:DDQInsertVBSSoapIn"/>
+      <wsdl:output message="tns:DDQInsertVBSSoapOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="IsSubmitOrders">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">是否允许提交订单</wsdl:documentation>
+      <wsdl:input message="tns:IsSubmitOrdersSoapIn"/>
+      <wsdl:output message="tns:IsSubmitOrdersSoapOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="DownContractPDF">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">下载合同</wsdl:documentation>
+      <wsdl:input message="tns:DownContractPDFSoapIn"/>
+      <wsdl:output message="tns:DownContractPDFSoapOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="IsBlacklistUser">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">是否是黑名单用户</wsdl:documentation>
+      <wsdl:input message="tns:IsBlacklistUserSoapIn"/>
+      <wsdl:output message="tns:IsBlacklistUserSoapOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="IsSignCompleteUser">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">若客户在系统中有一笔订单未完成签约，即为‘在途’状态，则该客户不能申请豆豆钱</wsdl:documentation>
+      <wsdl:input message="tns:IsSignCompleteUserSoapIn"/>
+      <wsdl:output message="tns:IsSignCompleteUserSoapOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="SecondSalesTypeVBS">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">获取VBS线下交单规则</wsdl:documentation>
+      <wsdl:input message="tns:SecondSalesTypeVBSSoapIn"/>
+      <wsdl:output message="tns:SecondSalesTypeVBSSoapOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="CancelContract">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">解约</wsdl:documentation>
+      <wsdl:input message="tns:CancelContractSoapIn"/>
+      <wsdl:output message="tns:CancelContractSoapOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="GetContractNo">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">获取合同编号</wsdl:documentation>
+      <wsdl:input message="tns:GetContractNoSoapIn"/>
+      <wsdl:output message="tns:GetContractNoSoapOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="ChangeCard">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">改卡</wsdl:documentation>
+      <wsdl:input message="tns:ChangeCardSoapIn"/>
+      <wsdl:output message="tns:ChangeCardSoapOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="SecondSalesType">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">加贷，再贷</wsdl:documentation>
+      <wsdl:input message="tns:SecondSalesTypeSoapIn"/>
+      <wsdl:output message="tns:SecondSalesTypeSoapOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="CheckCard">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">验卡</wsdl:documentation>
+      <wsdl:input message="tns:CheckCardSoapIn"/>
+      <wsdl:output message="tns:CheckCardSoapOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="QuerySimBillDetails">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">查询模拟账单信息</wsdl:documentation>
+      <wsdl:input message="tns:QuerySimBillDetailsSoapIn"/>
+      <wsdl:output message="tns:QuerySimBillDetailsSoapOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="QueryContractSimInfos">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">查询合同要素信息</wsdl:documentation>
+      <wsdl:input message="tns:QueryContractSimInfosSoapIn"/>
+      <wsdl:output message="tns:QueryContractSimInfosSoapOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="DoOverdueLoan">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">逾期还款</wsdl:documentation>
+      <wsdl:input message="tns:DoOverdueLoanSoapIn"/>
+      <wsdl:output message="tns:DoOverdueLoanSoapOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="QueryAdvCloanInfo">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">提前清贷查询</wsdl:documentation>
+      <wsdl:input message="tns:QueryAdvCloanInfoSoapIn"/>
+      <wsdl:output message="tns:QueryAdvCloanInfoSoapOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="DoAdvCloan">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">提前清贷处理</wsdl:documentation>
+      <wsdl:input message="tns:DoAdvCloanSoapIn"/>
+      <wsdl:output message="tns:DoAdvCloanSoapOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="QueryRepayRecord">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">查看分期的每一期部分还款记录</wsdl:documentation>
+      <wsdl:input message="tns:QueryRepayRecordSoapIn"/>
+      <wsdl:output message="tns:QueryRepayRecordSoapOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="QueryLoanDetails">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">获取主页信息</wsdl:documentation>
+      <wsdl:input message="tns:QueryLoanDetailsSoapIn"/>
+      <wsdl:output message="tns:QueryLoanDetailsSoapOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="QueryBillDetails">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">查看分期详情</wsdl:documentation>
+      <wsdl:input message="tns:QueryBillDetailsSoapIn"/>
+      <wsdl:output message="tns:QueryBillDetailsSoapOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="PropellingWeChat">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">手动推送到微信端</wsdl:documentation>
+      <wsdl:input message="tns:PropellingWeChatSoapIn"/>
+      <wsdl:output message="tns:PropellingWeChatSoapOut"/>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:portType name="DouDouQianServiceHttpGet">
+    <wsdl:operation name="DDQInsertVBS">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">将豆豆钱信息插入到VBS中</wsdl:documentation>
+      <wsdl:input message="tns:DDQInsertVBSHttpGetIn"/>
+      <wsdl:output message="tns:DDQInsertVBSHttpGetOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="IsSubmitOrders">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">是否允许提交订单</wsdl:documentation>
+      <wsdl:input message="tns:IsSubmitOrdersHttpGetIn"/>
+      <wsdl:output message="tns:IsSubmitOrdersHttpGetOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="DownContractPDF">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">下载合同</wsdl:documentation>
+      <wsdl:input message="tns:DownContractPDFHttpGetIn"/>
+      <wsdl:output message="tns:DownContractPDFHttpGetOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="IsBlacklistUser">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">是否是黑名单用户</wsdl:documentation>
+      <wsdl:input message="tns:IsBlacklistUserHttpGetIn"/>
+      <wsdl:output message="tns:IsBlacklistUserHttpGetOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="IsSignCompleteUser">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">若客户在系统中有一笔订单未完成签约，即为‘在途’状态，则该客户不能申请豆豆钱</wsdl:documentation>
+      <wsdl:input message="tns:IsSignCompleteUserHttpGetIn"/>
+      <wsdl:output message="tns:IsSignCompleteUserHttpGetOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="SecondSalesTypeVBS">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">获取VBS线下交单规则</wsdl:documentation>
+      <wsdl:input message="tns:SecondSalesTypeVBSHttpGetIn"/>
+      <wsdl:output message="tns:SecondSalesTypeVBSHttpGetOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="CancelContract">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">解约</wsdl:documentation>
+      <wsdl:input message="tns:CancelContractHttpGetIn"/>
+      <wsdl:output message="tns:CancelContractHttpGetOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="GetContractNo">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">获取合同编号</wsdl:documentation>
+      <wsdl:input message="tns:GetContractNoHttpGetIn"/>
+      <wsdl:output message="tns:GetContractNoHttpGetOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="ChangeCard">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">改卡</wsdl:documentation>
+      <wsdl:input message="tns:ChangeCardHttpGetIn"/>
+      <wsdl:output message="tns:ChangeCardHttpGetOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="SecondSalesType">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">加贷，再贷</wsdl:documentation>
+      <wsdl:input message="tns:SecondSalesTypeHttpGetIn"/>
+      <wsdl:output message="tns:SecondSalesTypeHttpGetOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="CheckCard">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">验卡</wsdl:documentation>
+      <wsdl:input message="tns:CheckCardHttpGetIn"/>
+      <wsdl:output message="tns:CheckCardHttpGetOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="QuerySimBillDetails">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">查询模拟账单信息</wsdl:documentation>
+      <wsdl:input message="tns:QuerySimBillDetailsHttpGetIn"/>
+      <wsdl:output message="tns:QuerySimBillDetailsHttpGetOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="QueryContractSimInfos">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">查询合同要素信息</wsdl:documentation>
+      <wsdl:input message="tns:QueryContractSimInfosHttpGetIn"/>
+      <wsdl:output message="tns:QueryContractSimInfosHttpGetOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="DoOverdueLoan">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">逾期还款</wsdl:documentation>
+      <wsdl:input message="tns:DoOverdueLoanHttpGetIn"/>
+      <wsdl:output message="tns:DoOverdueLoanHttpGetOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="QueryAdvCloanInfo">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">提前清贷查询</wsdl:documentation>
+      <wsdl:input message="tns:QueryAdvCloanInfoHttpGetIn"/>
+      <wsdl:output message="tns:QueryAdvCloanInfoHttpGetOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="DoAdvCloan">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">提前清贷处理</wsdl:documentation>
+      <wsdl:input message="tns:DoAdvCloanHttpGetIn"/>
+      <wsdl:output message="tns:DoAdvCloanHttpGetOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="QueryRepayRecord">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">查看分期的每一期部分还款记录</wsdl:documentation>
+      <wsdl:input message="tns:QueryRepayRecordHttpGetIn"/>
+      <wsdl:output message="tns:QueryRepayRecordHttpGetOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="QueryLoanDetails">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">获取主页信息</wsdl:documentation>
+      <wsdl:input message="tns:QueryLoanDetailsHttpGetIn"/>
+      <wsdl:output message="tns:QueryLoanDetailsHttpGetOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="QueryBillDetails">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">查看分期详情</wsdl:documentation>
+      <wsdl:input message="tns:QueryBillDetailsHttpGetIn"/>
+      <wsdl:output message="tns:QueryBillDetailsHttpGetOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="PropellingWeChat">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">手动推送到微信端</wsdl:documentation>
+      <wsdl:input message="tns:PropellingWeChatHttpGetIn"/>
+      <wsdl:output message="tns:PropellingWeChatHttpGetOut"/>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:portType name="DouDouQianServiceHttpPost">
+    <wsdl:operation name="DDQInsertVBS">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">将豆豆钱信息插入到VBS中</wsdl:documentation>
+      <wsdl:input message="tns:DDQInsertVBSHttpPostIn"/>
+      <wsdl:output message="tns:DDQInsertVBSHttpPostOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="IsSubmitOrders">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">是否允许提交订单</wsdl:documentation>
+      <wsdl:input message="tns:IsSubmitOrdersHttpPostIn"/>
+      <wsdl:output message="tns:IsSubmitOrdersHttpPostOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="DownContractPDF">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">下载合同</wsdl:documentation>
+      <wsdl:input message="tns:DownContractPDFHttpPostIn"/>
+      <wsdl:output message="tns:DownContractPDFHttpPostOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="IsBlacklistUser">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">是否是黑名单用户</wsdl:documentation>
+      <wsdl:input message="tns:IsBlacklistUserHttpPostIn"/>
+      <wsdl:output message="tns:IsBlacklistUserHttpPostOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="IsSignCompleteUser">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">若客户在系统中有一笔订单未完成签约，即为‘在途’状态，则该客户不能申请豆豆钱</wsdl:documentation>
+      <wsdl:input message="tns:IsSignCompleteUserHttpPostIn"/>
+      <wsdl:output message="tns:IsSignCompleteUserHttpPostOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="SecondSalesTypeVBS">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">获取VBS线下交单规则</wsdl:documentation>
+      <wsdl:input message="tns:SecondSalesTypeVBSHttpPostIn"/>
+      <wsdl:output message="tns:SecondSalesTypeVBSHttpPostOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="CancelContract">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">解约</wsdl:documentation>
+      <wsdl:input message="tns:CancelContractHttpPostIn"/>
+      <wsdl:output message="tns:CancelContractHttpPostOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="GetContractNo">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">获取合同编号</wsdl:documentation>
+      <wsdl:input message="tns:GetContractNoHttpPostIn"/>
+      <wsdl:output message="tns:GetContractNoHttpPostOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="ChangeCard">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">改卡</wsdl:documentation>
+      <wsdl:input message="tns:ChangeCardHttpPostIn"/>
+      <wsdl:output message="tns:ChangeCardHttpPostOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="SecondSalesType">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">加贷，再贷</wsdl:documentation>
+      <wsdl:input message="tns:SecondSalesTypeHttpPostIn"/>
+      <wsdl:output message="tns:SecondSalesTypeHttpPostOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="CheckCard">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">验卡</wsdl:documentation>
+      <wsdl:input message="tns:CheckCardHttpPostIn"/>
+      <wsdl:output message="tns:CheckCardHttpPostOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="QuerySimBillDetails">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">查询模拟账单信息</wsdl:documentation>
+      <wsdl:input message="tns:QuerySimBillDetailsHttpPostIn"/>
+      <wsdl:output message="tns:QuerySimBillDetailsHttpPostOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="QueryContractSimInfos">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">查询合同要素信息</wsdl:documentation>
+      <wsdl:input message="tns:QueryContractSimInfosHttpPostIn"/>
+      <wsdl:output message="tns:QueryContractSimInfosHttpPostOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="DoOverdueLoan">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">逾期还款</wsdl:documentation>
+      <wsdl:input message="tns:DoOverdueLoanHttpPostIn"/>
+      <wsdl:output message="tns:DoOverdueLoanHttpPostOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="QueryAdvCloanInfo">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">提前清贷查询</wsdl:documentation>
+      <wsdl:input message="tns:QueryAdvCloanInfoHttpPostIn"/>
+      <wsdl:output message="tns:QueryAdvCloanInfoHttpPostOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="DoAdvCloan">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">提前清贷处理</wsdl:documentation>
+      <wsdl:input message="tns:DoAdvCloanHttpPostIn"/>
+      <wsdl:output message="tns:DoAdvCloanHttpPostOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="QueryRepayRecord">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">查看分期的每一期部分还款记录</wsdl:documentation>
+      <wsdl:input message="tns:QueryRepayRecordHttpPostIn"/>
+      <wsdl:output message="tns:QueryRepayRecordHttpPostOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="QueryLoanDetails">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">获取主页信息</wsdl:documentation>
+      <wsdl:input message="tns:QueryLoanDetailsHttpPostIn"/>
+      <wsdl:output message="tns:QueryLoanDetailsHttpPostOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="QueryBillDetails">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">查看分期详情</wsdl:documentation>
+      <wsdl:input message="tns:QueryBillDetailsHttpPostIn"/>
+      <wsdl:output message="tns:QueryBillDetailsHttpPostOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="PropellingWeChat">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">手动推送到微信端</wsdl:documentation>
+      <wsdl:input message="tns:PropellingWeChatHttpPostIn"/>
+      <wsdl:output message="tns:PropellingWeChatHttpPostOut"/>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="DouDouQianServiceSoap" type="tns:DouDouQianServiceSoap">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="DDQInsertVBS">
+      <soap:operation soapAction="http://tempuri.org/DDQInsertVBS" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="IsSubmitOrders">
+      <soap:operation soapAction="http://tempuri.org/IsSubmitOrders" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DownContractPDF">
+      <soap:operation soapAction="http://tempuri.org/DownContractPDF" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="IsBlacklistUser">
+      <soap:operation soapAction="http://tempuri.org/IsBlacklistUser" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="IsSignCompleteUser">
+      <soap:operation soapAction="http://tempuri.org/IsSignCompleteUser" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SecondSalesTypeVBS">
+      <soap:operation soapAction="http://tempuri.org/SecondSalesTypeVBS" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CancelContract">
+      <soap:operation soapAction="http://tempuri.org/CancelContract" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetContractNo">
+      <soap:operation soapAction="http://tempuri.org/GetContractNo" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ChangeCard">
+      <soap:operation soapAction="http://tempuri.org/ChangeCard" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SecondSalesType">
+      <soap:operation soapAction="http://tempuri.org/SecondSalesType" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CheckCard">
+      <soap:operation soapAction="http://tempuri.org/CheckCard" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="QuerySimBillDetails">
+      <soap:operation soapAction="http://tempuri.org/QuerySimBillDetails" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="QueryContractSimInfos">
+      <soap:operation soapAction="http://tempuri.org/QueryContractSimInfos" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DoOverdueLoan">
+      <soap:operation soapAction="http://tempuri.org/DoOverdueLoan" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="QueryAdvCloanInfo">
+      <soap:operation soapAction="http://tempuri.org/QueryAdvCloanInfo" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DoAdvCloan">
+      <soap:operation soapAction="http://tempuri.org/DoAdvCloan" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="QueryRepayRecord">
+      <soap:operation soapAction="http://tempuri.org/QueryRepayRecord" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="QueryLoanDetails">
+      <soap:operation soapAction="http://tempuri.org/QueryLoanDetails" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="QueryBillDetails">
+      <soap:operation soapAction="http://tempuri.org/QueryBillDetails" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="PropellingWeChat">
+      <soap:operation soapAction="http://tempuri.org/PropellingWeChat" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="DouDouQianServiceSoap12" type="tns:DouDouQianServiceSoap">
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="DDQInsertVBS">
+      <soap12:operation soapAction="http://tempuri.org/DDQInsertVBS" style="document"/>
+      <wsdl:input>
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="IsSubmitOrders">
+      <soap12:operation soapAction="http://tempuri.org/IsSubmitOrders" style="document"/>
+      <wsdl:input>
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DownContractPDF">
+      <soap12:operation soapAction="http://tempuri.org/DownContractPDF" style="document"/>
+      <wsdl:input>
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="IsBlacklistUser">
+      <soap12:operation soapAction="http://tempuri.org/IsBlacklistUser" style="document"/>
+      <wsdl:input>
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="IsSignCompleteUser">
+      <soap12:operation soapAction="http://tempuri.org/IsSignCompleteUser" style="document"/>
+      <wsdl:input>
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SecondSalesTypeVBS">
+      <soap12:operation soapAction="http://tempuri.org/SecondSalesTypeVBS" style="document"/>
+      <wsdl:input>
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CancelContract">
+      <soap12:operation soapAction="http://tempuri.org/CancelContract" style="document"/>
+      <wsdl:input>
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetContractNo">
+      <soap12:operation soapAction="http://tempuri.org/GetContractNo" style="document"/>
+      <wsdl:input>
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ChangeCard">
+      <soap12:operation soapAction="http://tempuri.org/ChangeCard" style="document"/>
+      <wsdl:input>
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SecondSalesType">
+      <soap12:operation soapAction="http://tempuri.org/SecondSalesType" style="document"/>
+      <wsdl:input>
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CheckCard">
+      <soap12:operation soapAction="http://tempuri.org/CheckCard" style="document"/>
+      <wsdl:input>
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="QuerySimBillDetails">
+      <soap12:operation soapAction="http://tempuri.org/QuerySimBillDetails" style="document"/>
+      <wsdl:input>
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="QueryContractSimInfos">
+      <soap12:operation soapAction="http://tempuri.org/QueryContractSimInfos" style="document"/>
+      <wsdl:input>
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DoOverdueLoan">
+      <soap12:operation soapAction="http://tempuri.org/DoOverdueLoan" style="document"/>
+      <wsdl:input>
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="QueryAdvCloanInfo">
+      <soap12:operation soapAction="http://tempuri.org/QueryAdvCloanInfo" style="document"/>
+      <wsdl:input>
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DoAdvCloan">
+      <soap12:operation soapAction="http://tempuri.org/DoAdvCloan" style="document"/>
+      <wsdl:input>
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="QueryRepayRecord">
+      <soap12:operation soapAction="http://tempuri.org/QueryRepayRecord" style="document"/>
+      <wsdl:input>
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="QueryLoanDetails">
+      <soap12:operation soapAction="http://tempuri.org/QueryLoanDetails" style="document"/>
+      <wsdl:input>
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="QueryBillDetails">
+      <soap12:operation soapAction="http://tempuri.org/QueryBillDetails" style="document"/>
+      <wsdl:input>
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="PropellingWeChat">
+      <soap12:operation soapAction="http://tempuri.org/PropellingWeChat" style="document"/>
+      <wsdl:input>
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="DouDouQianServiceHttpGet" type="tns:DouDouQianServiceHttpGet">
+    <http:binding verb="GET"/>
+    <wsdl:operation name="DDQInsertVBS">
+      <http:operation location="/DDQInsertVBS"/>
+      <wsdl:input>
+        <http:urlEncoded/>
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="IsSubmitOrders">
+      <http:operation location="/IsSubmitOrders"/>
+      <wsdl:input>
+        <http:urlEncoded/>
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DownContractPDF">
+      <http:operation location="/DownContractPDF"/>
+      <wsdl:input>
+        <http:urlEncoded/>
+      </wsdl:input>
+      <wsdl:output/>
+    </wsdl:operation>
+    <wsdl:operation name="IsBlacklistUser">
+      <http:operation location="/IsBlacklistUser"/>
+      <wsdl:input>
+        <http:urlEncoded/>
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="IsSignCompleteUser">
+      <http:operation location="/IsSignCompleteUser"/>
+      <wsdl:input>
+        <http:urlEncoded/>
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SecondSalesTypeVBS">
+      <http:operation location="/SecondSalesTypeVBS"/>
+      <wsdl:input>
+        <http:urlEncoded/>
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CancelContract">
+      <http:operation location="/CancelContract"/>
+      <wsdl:input>
+        <http:urlEncoded/>
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetContractNo">
+      <http:operation location="/GetContractNo"/>
+      <wsdl:input>
+        <http:urlEncoded/>
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ChangeCard">
+      <http:operation location="/ChangeCard"/>
+      <wsdl:input>
+        <http:urlEncoded/>
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SecondSalesType">
+      <http:operation location="/SecondSalesType"/>
+      <wsdl:input>
+        <http:urlEncoded/>
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CheckCard">
+      <http:operation location="/CheckCard"/>
+      <wsdl:input>
+        <http:urlEncoded/>
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="QuerySimBillDetails">
+      <http:operation location="/QuerySimBillDetails"/>
+      <wsdl:input>
+        <http:urlEncoded/>
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="QueryContractSimInfos">
+      <http:operation location="/QueryContractSimInfos"/>
+      <wsdl:input>
+        <http:urlEncoded/>
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DoOverdueLoan">
+      <http:operation location="/DoOverdueLoan"/>
+      <wsdl:input>
+        <http:urlEncoded/>
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="QueryAdvCloanInfo">
+      <http:operation location="/QueryAdvCloanInfo"/>
+      <wsdl:input>
+        <http:urlEncoded/>
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DoAdvCloan">
+      <http:operation location="/DoAdvCloan"/>
+      <wsdl:input>
+        <http:urlEncoded/>
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="QueryRepayRecord">
+      <http:operation location="/QueryRepayRecord"/>
+      <wsdl:input>
+        <http:urlEncoded/>
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="QueryLoanDetails">
+      <http:operation location="/QueryLoanDetails"/>
+      <wsdl:input>
+        <http:urlEncoded/>
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="QueryBillDetails">
+      <http:operation location="/QueryBillDetails"/>
+      <wsdl:input>
+        <http:urlEncoded/>
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="PropellingWeChat">
+      <http:operation location="/PropellingWeChat"/>
+      <wsdl:input>
+        <http:urlEncoded/>
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="DouDouQianServiceHttpPost" type="tns:DouDouQianServiceHttpPost">
+    <http:binding verb="POST"/>
+    <wsdl:operation name="DDQInsertVBS">
+      <http:operation location="/DDQInsertVBS"/>
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded"/>
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="IsSubmitOrders">
+      <http:operation location="/IsSubmitOrders"/>
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded"/>
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DownContractPDF">
+      <http:operation location="/DownContractPDF"/>
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded"/>
+      </wsdl:input>
+      <wsdl:output/>
+    </wsdl:operation>
+    <wsdl:operation name="IsBlacklistUser">
+      <http:operation location="/IsBlacklistUser"/>
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded"/>
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="IsSignCompleteUser">
+      <http:operation location="/IsSignCompleteUser"/>
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded"/>
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SecondSalesTypeVBS">
+      <http:operation location="/SecondSalesTypeVBS"/>
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded"/>
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CancelContract">
+      <http:operation location="/CancelContract"/>
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded"/>
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetContractNo">
+      <http:operation location="/GetContractNo"/>
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded"/>
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ChangeCard">
+      <http:operation location="/ChangeCard"/>
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded"/>
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SecondSalesType">
+      <http:operation location="/SecondSalesType"/>
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded"/>
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CheckCard">
+      <http:operation location="/CheckCard"/>
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded"/>
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="QuerySimBillDetails">
+      <http:operation location="/QuerySimBillDetails"/>
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded"/>
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="QueryContractSimInfos">
+      <http:operation location="/QueryContractSimInfos"/>
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded"/>
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DoOverdueLoan">
+      <http:operation location="/DoOverdueLoan"/>
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded"/>
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="QueryAdvCloanInfo">
+      <http:operation location="/QueryAdvCloanInfo"/>
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded"/>
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DoAdvCloan">
+      <http:operation location="/DoAdvCloan"/>
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded"/>
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="QueryRepayRecord">
+      <http:operation location="/QueryRepayRecord"/>
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded"/>
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="QueryLoanDetails">
+      <http:operation location="/QueryLoanDetails"/>
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded"/>
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="QueryBillDetails">
+      <http:operation location="/QueryBillDetails"/>
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded"/>
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="PropellingWeChat">
+      <http:operation location="/PropellingWeChat"/>
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded"/>
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="DouDouQianService">
+    <wsdl:port name="DouDouQianServiceSoap" binding="tns:DouDouQianServiceSoap">
+      <soap:address location="http://10.138.60.55:6666/DDQService/WebService/DouDouQianService.asmx"/>
+    </wsdl:port>
+    <wsdl:port name="DouDouQianServiceSoap12" binding="tns:DouDouQianServiceSoap12">
+      <soap12:address location="http://10.138.60.55:6666/DDQService/WebService/DouDouQianService.asmx"/>
+    </wsdl:port>
+    <wsdl:port name="DouDouQianServiceHttpGet" binding="tns:DouDouQianServiceHttpGet">
+      <http:address location="http://10.138.60.55:6666/DDQService/WebService/DouDouQianService.asmx"/>
+    </wsdl:port>
+    <wsdl:port name="DouDouQianServiceHttpPost" binding="tns:DouDouQianServiceHttpPost">
+      <http:address location="http://10.138.60.55:6666/DDQService/WebService/DouDouQianService.asmx"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

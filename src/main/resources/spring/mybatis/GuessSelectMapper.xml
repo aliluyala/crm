@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="GuessSelectEntity">
+	<!-- 插入 -->
+	<insert id="insert" parameterType="com.vcredit.ddcash.server.model.entity.activities.GuessSelectEntity"
+	        useGeneratedKeys="true" keyProperty="id">
+	<![CDATA[
+		INSERT INTO t_ddq_activitie_guess (
+			        ID,
+			        OPENID,
+			        REALNAME,
+			        SEX,
+			        BORROWMETHOD,
+			        PAYMENT,
+			        CREATEDATE,
+			        UPDATEDATE
+		)
+		VALUES
+		(
+			#{id, jdbcType=BIGINT}, 
+			#{openId, jdbcType=VARCHAR}, 
+			#{realName, jdbcType=VARCHAR}, 
+			#{sex, jdbcType=VARCHAR}, 
+			#{borrowMethod, jdbcType=INTEGER}, 
+			#{payMent, jdbcType=INTEGER}, 
+			CURRENT_TIMESTAMP,
+			CURRENT_TIMESTAMP
+		)
+	]]>
+	</insert>
+	
+	<!-- 记录总数 -->
+	<select id="count" parameterType="com.vcredit.ddcash.server.model.entity.activities.GuessSelectEntity" resultType="Integer">
+	<![CDATA[
+		SELECT COUNT(1) FROM t_ddq_activitie_guess
+	]]>
+	</select>
+</mapper> 

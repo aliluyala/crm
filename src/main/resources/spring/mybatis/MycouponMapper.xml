@@ -1,0 +1,263 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- insert,select,selectByPK,count, delete, update,updateAll -->
+<mapper namespace="MycouponEntity">
+
+	<resultMap id="BaseResultMap"
+		type="com.vcredit.ddcash.server.model.entity.mycoupon.MycouponEntity">
+		<id column="ID" property="id" />
+		<result column="CUSTOMER_ID" property="customerId" />
+		<result column="TICKET_ID" property="ticketId" />
+		<result column="STATUS" property="status" />
+		<result column="EXPIRE_DATE" property="expireDate" />
+		<result column="CREATED_DATE" property="createdDate" />
+		<result column="UPDATED_DATE" property="updatedDate" />
+		<result column="DELETE_FLAG" property="deleteFlag" />
+	</resultMap>
+
+	<!-- 查询条件 -->
+	<sql id="query_where_clause">
+		<where>
+			<if test="id != null">
+				AND ID = #{id, jdbcType=BIGINT}
+			</if>
+			<if test="customerId != null and customerId !=''">
+				AND CUSTOMER_ID = #{customerId, jdbcType=VARCHAR}
+			</if>
+			<if test="ticketId != null">
+				AND TICKET_ID = #{ticketId, jdbcType=BIGINT}
+			</if>
+			<if test="status != null and status != ''">
+				AND STATUS = #{status, jdbcType=VARCHAR}
+			</if>
+		</where>
+	</sql>
+
+	<sql id="columns">
+		ID				id,
+		CUSTOMER_ID		customerId,
+		TICKET_ID		ticketId,
+		STATUS			status,
+		EXPIRE_DATE		expireDate,
+		CREATED_DATE	createdDate,
+		UPDATED_DATE	updatedDate,
+		DELETE_FLAG		deleteFlag
+	</sql>
+
+	<sql id="table_name">
+		T_DDQ_MYCOUPON
+	</sql>
+
+	<!--查询集合 -->
+	<select id="select" resultMap="BaseResultMap" parameterType="MycouponEntity">
+		select
+		<include refid="columns" />
+		from
+		<include refid="table_name" />
+		<include refid="query_where_clause" />
+		ORDER BY CREATED_DATE desc
+	</select>
+
+
+	<!-- 批量修改券的状态 -->
+	<update id="updateMycouponStatus" parameterType="java.util.Map">
+		update
+		<include refid="table_name" />
+		set
+		<if test="status != null and status != ''">
+			STATUS=#{status},
+		</if>
+		UPDATED_DATE = CURRENT_TIMESTAMP
+		where ID in
+		<foreach collection="ids" index="index" item="item" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+		AND DELETE_FLAG = '1'
+	</update>
+
+	<!-- 根据用户ID和券ID查找我的券包是否存在 -->
+	<select id="queryByIdAndCusId" parameterType="java.util.Map"
+		resultType="MycouponEntity">
+		SELECT
+		<include refid="columns" />
+		FROM
+		<include refid="table_name" />
+		WHERE CUSTOMER_ID = #{customerId}
+		AND ID =#{id}
+		AND DELETE_FLAG = '1'
+	</select>
+
+	<select id="ticketCnt" parameterType="java.util.Map" resultType="Integer">
+		SELECT COUNT(1)
+		FROM
+		<include refid="table_name" />
+		where CUSTOMER_ID =#{customerId}
+		AND STATUS = #{status}
+		AND
+		DELETE_FLAG='1'
+	</select>
+
+
+	<update id="updateStatusByCusAndId" parameterType="java.util.Map">
+		update
+		<include refid="table_name" />
+		set
+		<if test="status != null and status != ''">
+			STATUS=#{status},
+		</if>
+		UPDATED_DATE = CURRENT_TIMESTAMP
+		where TICKET_ID = #{ticketId}
+		AND CUSTOMER_ID = #{customerId}
+		AND DELETE_FLAG = '1'
+	</update>
+
+	<!-- 插入额度券 -->
+	<insert id="insert" parameterType="MycouponEntity"
+		useGeneratedKeys="true" keyProperty="ID">
+		<![CDATA[
+			INSERT INTO t_ddq_mycoupon (
+				        CUSTOMER_ID,
+				        TICKET_ID,
+				        STATUS,
+				        EXPIRE_DATE,
+				        CREATED_DATE,
+				        UPDATED_DATE
+			)
+			VALUES
+			(
+				#{customerId,jdbcType=BIGINT}, 
+				#{ticketId,jdbcType=BIGINT},
+				#{status,jdbcType=VARCHAR}, 
+				#{expireDate,jdbcType=DATE},
+				CURRENT_TIMESTAMP,
+				CURRENT_TIMESTAMP
+			)
+		]]>
+		<selectKey resultType="Long" keyProperty="id" order="AFTER">
+		<![CDATA[ SELECT LAST_INSERT_ID()  AS id  ]]>
+		</selectKey>
+	</insert>
+	
+	<!-- 根据用户ID和券类型查找我的券包是否存在 -->
+	<select id="queryByIdAndTicketId" parameterType="java.util.Map"
+		resultType="MycouponEntity">
+		SELECT
+		<include refid="columns" />
+		FROM
+		<include refid="table_name" />
+		WHERE CUSTOMER_ID = #{customerId}
+		AND TICKET_ID =#{ticketId}
+	</select>
+	
+	<!-- 更新 -->
+	<update id="update" parameterType="MycouponEntity">
+		update
+		<include refid="table_name" />
+		<set>
+		<![CDATA[
+			UPDATED_DATE = CURRENT_TIMESTAMP,
+		]]>
+			<if test="expireDate != null">
+				EXPIRE_DATE = #{expireDate},
+			</if>
+		</set>
+		<![CDATA[
+		where ID = #{id}
+		]]>
+	</update>
+	
+	<!-- 主键查询 -->
+	<select id="selectByPK" parameterType="Long" resultType="MycouponEntity">
+		SELECT 
+		<include refid="columns" />
+		FROM <include refid="table_name" /> 
+		WHERE ID = #{id}
+	</select>
+	
+	<!-- 插入券使用记录 -->
+	<insert id="saveMycouponOutflow" parameterType="MycouponOutflowEntity"
+		useGeneratedKeys="true" keyProperty="ID">
+		<![CDATA[
+			INSERT INTO t_ddq_mycoupon_outflow (
+				        CUSTOMER_ID,
+				        REF_ID,
+				        TICKET_ID,
+				        MYCOUPON_ID,
+				        DELETE_FLAG,
+				        CREATED_DATE,
+				        UPDATED_DATE
+			)
+			VALUES
+			(
+				#{customerId,jdbcType=BIGINT}, 
+				#{refId,jdbcType=BIGINT}, 
+				#{ticketId,jdbcType=BIGINT},
+				#{mycouponId,jdbcType=BIGINT},
+				#{deleteFlag,jdbcType=DATE},
+				CURRENT_TIMESTAMP,
+				CURRENT_TIMESTAMP
+			)
+		]]>
+		<selectKey resultType="Long" keyProperty="id" order="AFTER">
+		<![CDATA[ SELECT LAST_INSERT_ID()  AS id  ]]>
+		</selectKey>
+	</insert>
+	
+	    <!-- 查询券使用记录 -->
+    <select id="selectMycouponOutflow" parameterType="MycouponOutflowEntity" resultType="MycouponOutflowEntity">
+        select
+        ID id,
+        CUSTOMER_ID customerId,
+        REF_ID refId,
+        TICKET_ID ticketId,
+        CREATED_DATE createdDate,
+        UPDATED_DATE updatedDate,
+        DELETE_FLAG deleteFlag
+        from t_ddq_mycoupon_outflow
+        <where>
+            <if test="customerId != null and customerId !=''">
+                AND CUSTOMER_ID = #{customerId}
+            </if>
+            <if test="refId != null">
+                AND REF_ID = #{refId}
+            </if>
+            <if test="deleteFlag != null">
+                AND DELETE_FLAG = #{deleteFlag}
+            </if>
+        </where>
+    </select>
+    
+        <!-- 根据用户ID和券类型查询券信息 -->
+    <select id="queryMyCoupon" parameterType="java.util.Map"
+            resultType="MycouponEntity">
+        SELECT
+        <include refid="columns"/>
+        FROM
+        <include refid="table_name"/>
+        WHERE CUSTOMER_ID = #{customerId}
+        AND TICKET_ID =#{ticketId}
+        <if test="status != null">
+            AND STATUS = #{status}
+        </if>
+    </select>
+    
+        <!-- 修改券使用状态 -->
+    <update id="updateMycouponOutflow" parameterType="MycouponOutflowEntity">
+        update
+        t_ddq_mycoupon_outflow
+        <set>
+            <![CDATA[
+            UPDATED_DATE = CURRENT_TIMESTAMP,
+        ]]>
+            <if test="deleteFlag != null">
+                DELETE_FLAG = #{deleteFlag},
+            </if>
+        </set>
+        <![CDATA[
+        where REF_ID = #{refId}
+        ]]>
+    </update>
+</mapper> 

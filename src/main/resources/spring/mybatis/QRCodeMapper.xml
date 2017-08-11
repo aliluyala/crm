@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- insert,select,selectByPK,count, delete, update,updateAll -->
+<mapper namespace="WeiXinQRCodeEntity">
+
+	<!-- 批量插入 -->
+	<insert id="generateQRCode" parameterType="java.util.List">
+		<![CDATA[
+			INSERT INTO T_DDQ_QRCODE 
+			(
+				TICKET, 
+				STATUS, 
+				OPEN_ID,
+				EVENT_KEY, 
+				CREATE_DATE,
+				UPDATE_DATE
+			) 
+			VALUES 
+		]]>
+		<foreach collection="list" item="item" index="index" separator=",">
+			(
+			#{item.ticket},
+			#{item.status},
+			#{item.openId},
+			#{item.eventKey},
+			CURRENT_TIMESTAMP,
+			CURRENT_TIMESTAMP
+			)
+		</foreach>
+	</insert>
+
+<!-- 单个插入 -->
+	<insert id="generateOneQRCode" parameterType="WeiXinQRCodeEntity">
+		<![CDATA[
+			INSERT INTO T_DDQ_QRCODE 
+			(
+				TICKET, 
+				STATUS, 
+				OPEN_ID,
+				EVENT_KEY, 
+				IS_TEMPORARY,
+				CREATE_DATE,
+				UPDATE_DATE
+			) 
+			VALUES 			
+			(
+			#{ticket,jdbcType=VARCHAR},
+			#{status,jdbcType=BIGINT},
+			#{openId,jdbcType=VARCHAR},
+			#{eventKey,jdbcType=VARCHAR},
+			1,
+			CURRENT_TIMESTAMP,
+			CURRENT_TIMESTAMP
+			)
+		]]>				
+	</insert>
+	<!-- 记录总数 -->
+	<select id="totalAmt" parameterType="WeiXinQRCodeEntity" resultType="Integer">
+		<![CDATA[
+			SELECT COUNT(1) FROM T_DDQ_QRCODE
+		]]>
+		
+	</select>
+
+	<!-- 记录未绑定，剩余二维码的数量 -->
+	<select id="unbindAmt" parameterType="WeiXinQRCodeEntity" resultType="Integer">
+		<![CDATA[
+			SELECT COUNT(1) FROM T_DDQ_QRCODE WHERE STATUS=0
+		]]>
+		
+	</select>
+	
+	
+	<!-- 根据eventKey查询二维码对象 add by guixiaofeng 2015-10-29-->
+	<select id="selectWeiXinQRCodeEntityByEventKey" parameterType="String" resultType="String">
+		<![CDATA[
+			SELECT OPEN_ID FROM T_DDQ_QRCODE WHERE EVENT_KEY = #{eventKey, jdbcType=VARCHAR}
+		]]>
+	</select>
+	
+	
+	<!-- 根据openId查询eventKey-->
+	<select id="selectEventKey" parameterType="String" resultType="String">
+		<![CDATA[
+			SELECT EVENT_KEY FROM T_DDQ_QRCODE WHERE OPEN_ID = #{openId, jdbcType=VARCHAR}
+		]]>
+	</select>
+	
+	<!-- 检查指定用户是否已绑定二维码 add by guixiaofeng 2015-10-29-->
+	<select id="getBindAmtBylinkId" parameterType="String" resultType="Integer">
+		<![CDATA[
+			SELECT COUNT(1) FROM T_DDQ_QRCODE WHERE OPEN_ID = #{value} and STATUS=1
+		]]>
+	</select>
+	
+	<!-- 绑定二维码至指定用户  取status=0的最小一条记录并将OPENID更新进去同时更新status=1 add by guixiaofeng 2015-10-29-->
+	<update id="bindQRCode" parameterType="String">
+		<![CDATA[
+			  UPDATE T_DDQ_QRCODE T
+				SET T.OPEN_ID  = #{value},
+				    T.`STATUS`   = 1,
+					T.UPDATE_DATE  = CURRENT_TIMESTAMP
+			  WHERE T.ID  IN  (SELECT A.ID FROM (SELECT MIN(T1.ID) as id FROM T_DDQ_QRCODE T1 WHERE T1.`STATUS` = 0) AS A)
+		]]>
+	</update>
+	<update id="refreshQRCode" parameterType="WeiXinQRCodeEntity">
+		<![CDATA[
+			  UPDATE T_DDQ_QRCODE T
+				SET T.TICKET  = #{ticket,jdbcType=VARCHAR},
+					T.UPDATE_DATE  = CURRENT_TIMESTAMP,
+					T.EVENT_KEY = #{eventKey,jdbcType=VARCHAR}
+			  WHERE T.OPEN_ID = #{openId,jdbcType=VARCHAR}
+			  AND 	T.IS_TEMPORARY = '1'
+		]]>
+	</update>
+	<!-- 获取指定用户所绑定的二维码 add by guixiaofeng 2015-10-29-->
+	<select id="getQRCode" parameterType="String" resultType="String">
+		<![CDATA[
+			SELECT TICKET FROM T_DDQ_QRCODE WHERE OPEN_ID = #{value}
+		]]>
+	</select>
+	<!-- 获取指定用户所绑定的二维码 add by guixiaofeng 2015-10-29-->
+	<select id="getQRCodeInfo" parameterType="String" resultType="WeiXinQRCodeEntity">
+		<![CDATA[
+			SELECT TICKET ticket,
+				   STATUS status,
+				   OPEN_ID openId,
+				   EVENT_KEY eventKey,
+				   CREATE_DATE createDate,
+				   UPDATE_DATE updateDate				   
+		    FROM T_DDQ_QRCODE WHERE OPEN_ID = #{value} and IS_TEMPORARY = '1' order by CREATE_DATE DESC LIMIT 1
+		]]>
+	</select>
+	<!-- 根据eventKey获取指定用户所绑定的二维码 -->
+	<select id="getQRCodeInfoByEventKey" parameterType="String" resultType="WeiXinQRCodeEntity">
+		<![CDATA[
+			SELECT TICKET ticket,
+				   STATUS status,
+				   OPEN_ID openId,
+				   EVENT_KEY eventKey,
+				   CREATE_DATE createDate,
+				   UPDATE_DATE updateDate				   
+		    FROM T_DDQ_QRCODE WHERE EVENT_KEY = #{value} and IS_TEMPORARY = '1' order by UPDATE_DATE DESC LIMIT 1
+		]]>
+	</select>
+	<!-- 根据eventKey查询二维码TICKET -->
+	<select id="selectTicketByEventKey" parameterType="String" resultType="String">
+		<![CDATA[
+			SELECT TICKET FROM T_DDQ_QRCODE WHERE EVENT_KEY = #{eventKey, jdbcType=VARCHAR}
+		]]>
+	</select>
+</mapper> 

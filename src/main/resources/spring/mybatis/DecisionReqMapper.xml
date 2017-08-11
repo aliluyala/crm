@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<!-- insert,select,selectByPK,count, delete, update,updateAll -->
+<mapper namespace="DecisionReqEntity">
+
+	<!-- 插入 -->
+	<insert id="saveDecisionResponse" parameterType="Map">
+		INSERT INTO t_ddq_decision_response (SERIAL_NO,CUSTOMER_ID,VB_ID,VB_NM,VB_COL,VB_SRC_ID,VB_VAL,CREATE_DATE,UPDATE_DATE)
+    	VALUES 
+	    <foreach collection="response" item="item" index="index" separator="," >
+	        (#{serialNo},#{customerid},#{item.vbId},#{item.vbName},#{item.vbColumn},#{item.vbSrcId},#{item.vbValue},NOW(),NOW())
+	    </foreach>
+	    <if test="rejectList != null">
+		   	,
+		    <foreach collection="rejectList" item="item" index="index" separator="," >
+		        (#{serialNo},#{customerid},null,#{item.ruleName},'rejectReason',null,#{item.ruleDesc},NOW(),NOW())
+		    </foreach>
+	    </if>
+	</insert>
+
+	<!-- 插入 -->
+	<insert id="saveDecisionRequest" parameterType="Map">
+		INSERT INTO t_ddq_decision_request (SERIAL_NO,CUSTOMER_ID,VB_COL,VB_VALUE,CREATE_DATE,UPDATE_DATE)
+    	VALUES 
+	    <foreach collection="request" item="item" index="index" separator="," >
+	        (#{serialNo},#{customerid},#{item.attributeName},#{item.attributeValue},NOW(),NOW())
+	    </foreach>
+	    ,(#{serialNo},#{customerid},'NC_REPORT_NO',#{ncReportNo},NOW(),NOW())
+	    ,(#{serialNo},#{customerid},'JXL_REPORT_NO',#{jxlReportNo},NOW(),NOW())
+	    ,(#{serialNo},#{customerid},'DECISION_TYPE',#{decisionType},NOW(),NOW())
+	</insert>
+	
+	
+	<!-- 插入 -->
+	<insert id="saveDecision" parameterType="com.vcredit.ddcash.server.model.entity.common.DecisionReqEntity"
+	        useGeneratedKeys="true" keyProperty="id">
+	<![CDATA[
+		INSERT INTO T_DDQ_DECISION_INFO (
+			        CUSTOMER_ID,
+			        ln_housing_mortgage_amount,
+			        MOBILE_USED_IS6MTH,
+			        MOBILE_USED_MONTHS,
+			        ALL_LOAN_OTHER_DELAY90_CNT,
+			        SOCIALFUND_SOCIAL_COMP,
+			        COUNT_loan_IN3M,
+			        COUNT_Nonbank_IN3M,
+			        credit_dlq_amount,
+			        CREDIT_grade,
+			        ln_housing_fund_amount,
+			        lnd_max_normal_Age,
+			        lnd_Used_Credit_Limit_Amount,
+			        ALL_LOAN_HOUSE_DELAY90_CNT,
+			        MOBILE_ISREALNAME,
+			        SOCIAL_BASEPAY,
+			        loan_dlq_amount,
+			        ln_shopfront_amount,
+			        IsVcreditNull,
+			        COUNT_CARD_IN3M,
+			        lnd_max_normal_Credit_Limit_Amount,
+			        SOCIAL_SCORE,
+			        MOBILE_CONSUM_6MTH,
+			        SOCIALFUND_FUND_COMP,
+			        CREDIT_DELAY90_CNT,
+			        NC_M3_ALL_CNT_TOTAL,
+			        DD_AGE,
+			        DD_IsSpecialRegion,
+			        CREATED_DATE,
+			        UPDATED_DATE,
+			        NC_REPORT_NO,
+			        MOBILE_CONSUM_3MTH,
+			        MOBILE_CALLCOUNT_3MTH,
+			        ALL_CREDIT_DELAY90_CNT,
+			        MOBILE_REG_DATE,
+			        LND_MAX_OVERDUE_PERCENT,
+			        LND_EARLIEST_NORMAL_AGE_MONTHS,
+			        CREDIT_IS_FORCED_RECORD,
+			        CALLED_TIMES_IN30DAY,
+			        CALLED_TIMES_IN15DAY,
+			        CALLED_TIMES_IN15DAY_GRAY,
+			        CALLED_TIMES_IN30DAY_GRAY,
+			        NC_ASSURER_REPAY_AMOUNT,
+			        jxlReportNo,
+			        Mobile_Score,
+			        Monthly_Other_Mortgage_Payment_Total,
+			        ln_Curr_Overdue_Amount,
+			        Monthly_Commercial_Mortgage_Payment_Total,
+			        Monthly_Mortgage_Payment_Total,
+			        loand_Badrecord,
+			        stncard_Badrecord,
+			        StnCard_UseCreditLimit,
+			        lnd_Curr_Overdue_Amount
+		)
+		VALUES
+		(
+			#{customerId, jdbcType=BIGINT},
+			#{ln_housing_mortgage_amount, jdbcType=DECIMAL},
+			#{MOBILE_USED_IS6MTH, jdbcType=VARCHAR},
+			#{MOBILE_USED_MONTHS, jdbcType=INTEGER},
+			#{ALL_LOAN_OTHER_DELAY90_CNT, jdbcType=BIGINT},
+			#{SOCIALFUND_SOCIAL_COMP, jdbcType=VARCHAR},
+			#{COUNT_loan_IN3M, jdbcType=BIGINT},
+			#{COUNT_Nonbank_IN3M, jdbcType=BIGINT},
+			#{credit_dlq_amount, jdbcType=DECIMAL},
+			#{CREDIT_grade, jdbcType=BIGINT},
+			#{ln_housing_fund_amount, jdbcType=DECIMAL},
+			#{lnd_max_normal_Age, jdbcType=VARCHAR},
+			#{lnd_Used_Credit_Limit_Amount, jdbcType=DECIMAL},
+			#{ALL_LOAN_HOUSE_DELAY90_CNT, jdbcType=BIGINT},
+			#{MOBILE_ISREALNAME, jdbcType=VARCHAR},
+			#{SOCIAL_BASEPAY, jdbcType=VARCHAR},
+			#{loan_dlq_amount, jdbcType=DECIMAL},
+			#{ln_shopfront_amount, jdbcType=DECIMAL},
+			#{IsVcreditNull, jdbcType=VARCHAR},
+			#{COUNT_CARD_IN3M, jdbcType=BIGINT},
+			#{lnd_max_normal_Credit_Limit_Amount, jdbcType=DECIMAL}, 
+			#{SOCIAL_SCORE, jdbcType=BIGINT}, 
+			#{MOBILE_CONSUM_6MTH, jdbcType=DECIMAL}, 
+			#{SOCIALFUND_FUND_COMP, jdbcType=VARCHAR},
+			#{CREDIT_DELAY90_CNT, jdbcType=BIGINT}, 
+			#{NC_M3_ALL_CNT_TOTAL, jdbcType=BIGINT}, 
+			#{DD_AGE, jdbcType=VARCHAR}, 
+			#{DD_IsSpecialRegion, jdbcType=VARCHAR}, 
+			CURRENT_TIMESTAMP,
+			CURRENT_TIMESTAMP,
+			#{ncReportNo, jdbcType=VARCHAR},
+			#{MOBILE_CONSUM_3MTH, jdbcType=DECIMAL },
+			#{MOBILE_CALLCOUNT_3MTH, jdbcType=INTEGER },
+			#{ALL_CREDIT_DELAY90_CNT, jdbcType=BIGINT},
+			#{MOBILE_REG_DATE, jdbcType=VARCHAR},
+			#{LND_MAX_OVERDUE_PERCENT, jdbcType=VARCHAR},
+			#{LND_EARLIEST_NORMAL_AGE_MONTHS, jdbcType=VARCHAR},
+			#{CREDIT_IS_FORCED_RECORD, jdbcType=VARCHAR},
+			#{CALLED_TIMES_IN30DAY, jdbcType=VARCHAR},
+			#{CALLED_TIMES_IN15DAY, jdbcType=VARCHAR},
+			#{CALLED_TIMES_IN15DAY_GRAY, jdbcType=VARCHAR},
+			#{CALLED_TIMES_IN30DAY_GRAY, jdbcType=VARCHAR},
+			#{NC_ASSURER_REPAY_AMOUNT, jdbcType=DECIMAL},
+			#{jxlReportNo, jdbcType=VARCHAR},
+			#{MOBILE_SCORE, jdbcType=INTEGER},
+			#{Monthly_Other_Mortgage_Payment_Total, jdbcType=DECIMAL},
+			#{ln_Curr_Overdue_Amount, jdbcType=DECIMAL},
+			#{Monthly_Commercial_Mortgage_Payment_Total, jdbcType=DECIMAL},
+			#{Monthly_Mortgage_Payment_Total, jdbcType=DECIMAL},
+			#{loand_Badrecord, jdbcType=INTEGER},
+			#{stncard_Badrecord, jdbcType=INTEGER},
+			#{StnCard_UseCreditLimit, jdbcType=DECIMAL},
+			#{lnd_Curr_Overdue_Amount, jdbcType=DECIMAL}
+		)
+	]]>
+	</insert>
+	
+	<!-- New Insert -->
+	<insert id="newInsert" parameterType="java.util.Map"></insert>
+	
+	<!-- 通过客户号和协议类型查询协议信息-->
+	<select id="queryDecisionInfo" parameterType="DecisionReqEntity" resultType="DecisionReqEntity">
+	<![CDATA[
+		SELECT MOBILE_USED_MONTHS,
+				CREDIT_grade
+		FROM T_DDQ_DECISION_INFO
+		WHERE CUSTOMER_ID = #{value}
+		ORDER BY UPDATED_DATE DESC LIMIT 0,1
+	]]>
+	</select>
+	
+	<select id="selectCustDeciNo" parameterType="String" resultType="DecisionReqEntity">
+	<![CDATA[
+		SELECT NC_REPORT_NO ncReportNo,
+				jxlReportNo jxlReportNo
+		FROM T_DDQ_DECISION_INFO
+		WHERE CUSTOMER_ID = #{value}
+		ORDER BY UPDATED_DATE DESC LIMIT 0,1
+	]]>
+	</select>
+	</mapper>

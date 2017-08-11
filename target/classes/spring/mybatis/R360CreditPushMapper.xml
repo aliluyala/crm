@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- insert,select,selectByPK,count, delete, update,updateAll -->
+<mapper namespace="R360CreditPushEntity">
+	<!-- 插入 -->
+	<insert id="insertR360CreditPush" parameterType="com.vcredit.ddcash.server.model.entity.institutionalCredit.R360CreditPushEntity"
+	        useGeneratedKeys="true" keyProperty="id">
+	<![CDATA[
+		INSERT INTO t_ddq_r360_creditpush (
+			        CUSTOMER_ID,
+			        credit_id,
+			        order_no,
+			        push_status,
+			        enable_flag,
+			        CREATED_DATE,
+			        UPDATED_DATE
+		)
+		VALUES
+		(
+			#{customerId, jdbcType=BIGINT}, 
+			#{creditId, jdbcType=BIGINT}, 
+			#{orderNo, jdbcType=BIGINT}, 
+			#{pushStatus, jdbcType=VARCHAR},
+			#{enableFlag, jdbcType=VARCHAR}, 
+			CURRENT_TIMESTAMP,
+			CURRENT_TIMESTAMP
+		)
+	]]>
+	</insert>
+	
+</mapper> 

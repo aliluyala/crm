@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- insert,select,selectByPK,count, delete, update,updateAll -->
+<mapper namespace="ZhounianVisitorEntity">
+
+	<!-- 插入新纪录 -->
+	<insert id="insert" parameterType="ZhounianVisitorEntity"
+		useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO t_ddq_activities_zhounian_visitor
+		VALUES(
+			NULL,
+			#{playerUniqueId},
+			#{helperOpenId},
+			#{role},
+			#{firstBag},
+			#{bagCount},
+			#{visitCount},
+			#{shareCount},
+			#{nickName},
+			#{headImg},
+			#{registerFlag},
+			#{downloadFlag},
+			NOW(),
+			NOW()
+		)
+	</insert>
+	
+	<!-- 更新访客信息 -->
+	<update id="updateVisitor" parameterType="ZhounianVisitorEntity">
+		UPDATE t_ddq_activities_zhounian_visitor
+		<set>
+			<if test="playerUniqueId != null">
+				PLAYER_UNIQUE_ID = #{playerUniqueId},
+			</if>
+			<if test="helperOpenId != null">
+				HELPER_OPEN_ID = #{helperOpenId},
+			</if>
+			<if test="role != null">
+				ROLE = #{role},
+			</if>
+			<if test="firstBag != null">
+				FIRST_BAG = #{firstBag},
+			</if>
+			<if test="bagCount != null">
+				BAG_COUNT = #{bagCount},
+			</if>
+			<if test="visitCount != null">
+				VISIT_COUNT = #{visitCount},
+			</if>
+			<if test="shareCount != null">
+				SHARE_COUNT = #{shareCount},
+			</if>
+			<if test="nickName != null">
+				NICK_NAME = #{nickName},
+			</if>
+			<if test="headImg != null">
+				HEAD_IMG = #{headImg},
+			</if>
+			<if test="registerFlag != null">
+				REGISTER_FLAG = #{registerFlag},
+			</if>
+			<if test="downloadFlag != null">
+				DOWNLOAD_FLAG = #{downloadFlag},
+			</if>
+			<if test="1 == 1">
+				UPDATED_DATE = NOW(),
+			</if>
+		</set>
+		WHERE ID = #{id}
+	</update>
+	
+	<!-- 查找福袋总数 -->
+	<select id="selectTotalBagCount"  resultType="Integer">
+		SELECT 	SUM(BAG_COUNT)
+		FROM	t_ddq_activities_zhounian_visitor
+		WHERE 	ROLE IN ('player','both')
+	</select>
+	
+	<!-- 根据playerUniqueId查询ID -->
+	<select id="selectIdByPlayerUniqueId" parameterType="String" resultType="Long">
+		SELECT 	ID 
+		FROM	t_ddq_activities_zhounian_visitor
+		WHERE 	PLAYER_UNIQUE_ID = #{playerUniqueId}
+	</select>
+	
+	<!-- 根据helperOpenId查询ID -->
+	<select id="selectIdByHelperOpenId" parameterType="String" resultType="Long">
+		SELECT 	ID 
+		FROM	t_ddq_activities_zhounian_visitor
+		WHERE 	HELPER_OPEN_ID = #{helperOpenId}
+	</select>
+	
+	<!-- 查询总访问量 -->
+	<select id="selectTotalVisitCount" resultType="Integer">
+		SELECT 	SUM(VISIT_COUNT)
+		FROM	t_ddq_activities_zhounian_visitor
+	</select>
+	
+	<!-- 查询总访客数 -->
+	<select id="selectTotalVisitor" resultType="Integer">
+		SELECT 	COUNT(1)
+		FROM	t_ddq_activities_zhounian_visitor
+	</select>
+	
+	<!-- 查询总分享数 -->
+	<select id="selectTotalShareCount" resultType="Integer">
+		SELECT 	SUM(SHARE_COUNT)
+		FROM 	t_ddq_activities_zhounian_visitor
+	</select>
+	
+	<!-- 查询新增注册用户数 -->
+	<select id="selectUserIncrement" resultType="Integer">
+		SELECT 	COUNT(1)
+		FROM 	t_ddq_activities_zhounian_visitor
+		WHERE	REGISTER_FLAG = TRUE
+	</select>
+	
+	<!-- 查询活动增加的粉丝数 -->
+	<select id="selectFanIncrement" resultType="Integer" parameterType="String">
+		SELECT 	COUNT(1)
+		FROM	t_ddq_customer_amt
+		WHERE	EVENT_KEY = #{eventKey}
+				AND
+				SUBSCRIBE_STATUS = 'subscribe'
+	</select>
+	
+	<!-- 查找本日的参与者数量 -->
+	<select id="selectPlayerCountToday" resultType="Integer" parameterType="String">
+		SELECT 	COUNT(1)
+		FROM 	t_ddq_activities_zhounian_visitor
+		WHERE	ROLE IN ('player','both')
+				AND
+				CREATED_DATE > #{createdDate}
+	</select>
+	
+	<!-- 查找活动参与者总数 -->
+	<select id="selectPlayerSum" resultType="Integer">
+		SELECT 	COUNT(1)
+		FROM 	t_ddq_activities_zhounian_visitor
+		WHERE	ROLE IN ('player','both')
+	</select>
+	
+	<!-- 查找助力者总数 -->
+	<select id="selectHelperSum" resultType="Integer">
+		SELECT 	COUNT(1)
+		FROM 	t_ddq_activities_zhounian_visitor
+		WHERE	ROLE IN ('helper','both')
+	</select>
+	
+	<!-- 查找点击下载按钮人数 -->
+	<select id="selectDownloadCount" resultType="Integer">
+		SELECT 	COUNT(1)
+		FROM 	t_ddq_activities_zhounian_visitor
+		WHERE	DOWNLOAD_FLAG = TRUE
+	</select>
+	
+	<!-- 查找玩家的排位 -->
+	<select id="selectRankingByPlayerUniqueId" resultType="Integer" parameterType="String">
+		SELECT 	t.rowNo as ranking
+		FROM	(	
+					SELECT a.PLAYER_UNIQUE_ID,(@rowNum:=@rowNum+1) as rowNo
+					FROM 	t_ddq_activities_zhounian_visitor a,
+							(Select (@rowNum :=0) ) b
+					WHERE a.ROLE IN ('player','both')
+					ORDER BY a.BAG_COUNT DESC
+			 	) t
+		WHERE 	t.PLAYER_UNIQUE_ID = #{uniqueId}
+	</select>
+	
+	<!-- 查找玩家的福袋数 -->
+	<select id="selectBagCountByPlayerUniqueId" resultType="Integer" parameterType="String">
+		SELECT 	t.BAG_COUNT
+		FROM	t_ddq_activities_zhounian_visitor t
+		WHERE 	t.PLAYER_UNIQUE_ID = #{uniqueId}
+	</select>
+	
+	<!-- 根据uniqueId查找访客信息 -->
+	<select id="selectByPlayerUniqueId" parameterType="String" resultType="ZhounianVisitorEntity">
+		SELECT 	t.ID					id,
+				t.PLAYER_UNIQUE_ID		playerUniqueId,
+				t.HELPER_OPEN_ID		helperOpenId,
+				t.ROLE					role,
+				t.FIRST_BAG				firstBag,
+				t.BAG_COUNT				bagCount,
+				t.VISIT_COUNT			visitCount,
+				t.SHARE_COUNT			shareCount,
+				t.NICK_NAME				nickName,
+				t.HEAD_IMG				headImg,
+				t.REGISTER_FLAG			registerFlag,
+				t.DOWNLOAD_FLAG			downloadFlag,
+				t.CREATED_DATE			createdDate,
+				t.UPDATED_DATE			updatedDate
+		FROM	t_ddq_activities_zhounian_visitor t
+		WHERE	t.PLAYER_UNIQUE_ID = #{uniqueId}
+	</select>
+	
+	<!-- 根据helperOpenId查找访客信息 -->
+	<select id="selectByHelperOpenId" parameterType="String" resultType="ZhounianVisitorEntity">
+		SELECT 	t.ID					id,
+				t.PLAYER_UNIQUE_ID		playerUniqueId,
+				t.HELPER_OPEN_ID		helperOpenId,
+				t.ROLE					role,
+				t.FIRST_BAG				firstBag,
+				t.BAG_COUNT				bagCount,
+				t.VISIT_COUNT			visitCount,
+				t.SHARE_COUNT			shareCount,
+				t.NICK_NAME				nickName,
+				t.HEAD_IMG				headImg,
+				t.REGISTER_FLAG			registerFlag,
+				t.DOWNLOAD_FLAG			downloadFlag,
+				t.CREATED_DATE			createdDate,
+				t.UPDATED_DATE			updatedDate
+		FROM	t_ddq_activities_zhounian_visitor t
+		WHERE	t.HELPER_OPEN_ID = #{helperOpenId}
+	</select>
+	
+	<!-- 查询所有玩家信息列表 -->
+	<select id="selectTotalPlayerList" resultType="ZhounianVisitorEntity">
+		SELECT 	t.ID					id,
+				t.PLAYER_UNIQUE_ID		playerUniqueId,
+				t.BAG_COUNT				bagCount
+		FROM	t_ddq_activities_zhounian_visitor t
+		WHERE	t.ROLE = 'player' or t.ROLE = 'both'
+	</select>
+</mapper>

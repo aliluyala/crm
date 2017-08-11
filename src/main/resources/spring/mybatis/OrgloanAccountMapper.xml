@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- insert,select,selectByPK,count, delete, update,updateAll -->
+<mapper namespace="OrgloanAccountEntity">
+
+	<!-- 插入 -->
+	<insert id="insert" parameterType="OrgloanAccountEntity">
+	<![CDATA[
+		INSERT INTO T_DDQ_ORGLOAN_ACCOUNT (
+			REPAY_ID,
+			SLT_ACCOUNT_ID,
+			CREATED_DATE,
+			UPDATED_DATE
+		)
+		VALUES
+		(
+			#{repayId, jdbcType=VARCHAR}, 
+			#{sltAccountId, jdbcType=BIGINT}, 
+			CURRENT_TIMESTAMP,
+			CURRENT_TIMESTAMP
+		)
+	]]>
+		<selectKey resultType="Long" keyProperty="id" order="AFTER">
+		<![CDATA[ SELECT LAST_INSERT_ID()  AS id  ]]>
+		</selectKey>
+	</insert>
+
+
+
+	
+
+	<select id="selectByPK" parameterType="Long" resultType="OrgloanAccountEntity">
+	<![CDATA[
+		SELECT  ID                           Id,
+				REPAY_ID                     repayId,
+				SLT_ACCOUNT_ID               sltAccountId,
+				CREATED_DATE                 createdDate,
+				UPDATED_DATE                 updatedDate,
+				INSTALLMENTS             	 installments
+		FROM T_DDQ_ORGLOAN_ACCOUNT WHERE ID = #{value}
+	]]>
+	</select>
+
+
+	<update id="updateOrgloanAccount" parameterType="OrgloanAccountEntity">
+		<![CDATA[
+		UPDATE T_DDQ_ORGLOAN_ACCOUNT 
+			SET UPDATED_DATE               = CURRENT_TIMESTAMP,
+				INSTALLMENTS               = #{installments, jdbcType=VARCHAR},
+				REAL_REPAY_AMOUNT          = #{installmentrealPay, jdbcType=VARCHAR}
+		WHERE ID = #{id, jdbcType=BIGINT}
+		AND SLT_ACCOUNT_ID = #{sltAccountId, jdbcType=VARCHAR} 
+		]]>
+	</update>
+
+		<select id="selectByRepayId" parameterType="OrgloanAccountEntity" resultType="OrgloanAccountEntity">
+	<![CDATA[
+		SELECT  ID                           Id,
+				REPAY_ID                     repayId,
+				SLT_ACCOUNT_ID               sltAccountId,
+				REAL_REPAY_AMOUNT            installmentrealPay,
+				CREATED_DATE                 createdDate,
+				UPDATED_DATE                 updatedDate,
+				INSTALLMENTS             	 installments
+		FROM T_DDQ_ORGLOAN_ACCOUNT WHERE REPAY_ID = #{repayId, jdbcType=VARCHAR}
+	]]>
+	</select>
+	
+	<select id="selectBySltAccountId" parameterType="String" resultType="OrgloanAccountEntity">
+	<![CDATA[
+		SELECT  ID                           Id,
+				REPAY_ID                     repayId,
+				SLT_ACCOUNT_ID               sltAccountId,
+				REAL_REPAY_AMOUNT            installmentrealPay,
+				CREATED_DATE                 createdDate,
+				UPDATED_DATE                 updatedDate,
+				INSTALLMENTS             	 installments
+		FROM T_DDQ_ORGLOAN_ACCOUNT o WHERE o.ID = 
+   				( SELECT 
+   					MAX(t.ID) 
+   					FROM T_DDQ_ORGLOAN_ACCOUNT t 
+   					WHERE t.SLT_ACCOUNT_ID = #{value}
+   				);
+	]]>
+	</select>
+	
+</mapper> 

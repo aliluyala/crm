@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- insert,select,selectByPK,count, delete, update,updateAll -->
+<mapper namespace="BlackListEntity">
+	<insert id="insert" parameterType="BlackListEntity">
+		INSERT INTO t_ddq_blacklistnew (
+			CUSTOMER_ID,
+			IDENTITY_NO,
+			TYPE,
+			CALLSOURCE,
+			CREATED_DATE,
+			UPDATED_DATE,
+			DELETE_FLAG
+		)
+		VALUES
+			(
+			#{customerId,jdbcType=BIGINT},
+			#{identityNo,jdbcType=VARCHAR},
+			#{type,jdbcType=VARCHAR},
+			#{callsource,jdbcType=VARCHAR},
+			NOW(),
+			NOW(),
+			'1'
+			)
+	</insert>
+	
+	<select id="getFilteredBlackList" parameterType="BlackListEntity" resultType="BlackListEntity">
+		SELECT
+			t.ID id,
+			t.CUSTOMER_ID customerId,
+			t.IDENTITY_NO identityNo,
+			t.TYPE type,
+			t.CALLSOURCE callsource
+		FROM
+			t_ddq_blacklistnew t
+		WHERE
+			t.IDENTITY_NO = #{identityNo}
+		AND t.TYPE = #{type}
+		AND t.CALLSOURCE = #{callsource}
+		AND t.DELETE_FLAG = '1'
+	</select>
+	
+	<update id="updateBlackListDate" parameterType="BlackListEntity">
+		UPDATE t_ddq_blacklistnew t
+		SET t.UPDATED_DATE = NOW()
+		WHERE
+			t.IDENTITY_NO = #{identityNo}
+		AND t.TYPE = #{type}
+		AND t.CALLSOURCE = #{callsource}
+		AND t.DELETE_FLAG = '1'
+	</update>
+	
+	<!-- 360新用户，根据掩码身份证查询黑名单 -->
+	<select id="findLikeIdentityNo" parameterType="String" resultType="BlackListEntity">
+		SELECT
+			t.ID id,
+			t.CUSTOMER_ID customerId,
+			t.IDENTITY_NO identityNo,
+			t.TYPE type,
+			t.CALLSOURCE callsource
+		FROM
+			t_ddq_blacklistnew t
+		WHERE
+			t.IDENTITY_NO LIKE #{identityNo}
+		AND t.DELETE_FLAG = '1'
+	</select>
+	
+	<!-- 360老用户，根据身份证查询黑名单 -->
+	<select id="findByIdentityNo" parameterType="String" resultType="BlackListEntity">
+		SELECT
+			t.ID id,
+			t.CUSTOMER_ID customerId,
+			t.IDENTITY_NO identityNo,
+			t.TYPE type,
+			t.CALLSOURCE callsource
+		FROM
+			t_ddq_blacklistnew t
+		WHERE
+			t.IDENTITY_NO = #{identityNo}
+		AND t.DELETE_FLAG = '1'
+	</select>
+</mapper> 

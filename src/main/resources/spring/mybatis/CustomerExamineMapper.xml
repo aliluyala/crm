@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="CustomerExamineEntity">
+	   <!-- 插入 -->
+    <insert id="insert"
+        parameterType="com.vcredit.functions.model.entity.CustomerExamineEntity"
+        useGeneratedKeys="true" keyProperty="id">
+    <![CDATA[
+        INSERT INTO T_DDQ_CUSTOMER_EXAMINE (
+                    CUSTOMER_ID,
+                    SPECIAL_MARK,
+                    REMARK,
+                    OPERATOR,
+                    CREATED_DATE
+        )
+        VALUES
+        (
+            #{customerId, jdbcType=BIGINT}, 
+            #{specialMark, jdbcType=VARCHAR}, 
+            #{remark, jdbcType=VARCHAR}, 
+            #{operator, jdbcType=BIGINT}, 
+            CURRENT_TIMESTAMP
+        )
+    ]]>
+    </insert>
+    
+	<select id="getIdenSpecialMark" parameterType="Long" resultType="com.vcredit.functions.model.entity.CustomerExamineEntity">
+	<![CDATA[
+		SELECT  ID            Id,
+				CUSTOMER_ID   customerId,
+			    SPECIAL_MARK  specialMark,
+			    CREATED_DATE  createDate
+		FROM T_DDQ_CUSTOMER_EXAMINE WHERE CUSTOMER_ID = #{value} and SPECIAL_MARK in('7','8','7,8','8,7')
+	]]>
+	</select>
+	
+	<update id="update" parameterType="com.vcredit.functions.model.entity.CustomerExamineEntity">
+   	   update T_DDQ_CUSTOMER_EXAMINE set SPECIAL_MARK= #{specialMark}
+       where ID = #{id}
+  	</update>
+  	
+  	<!-- 删除 -->
+	<delete id="delete" parameterType="Long">
+	<![CDATA[
+		DELETE FROM T_DDQ_CUSTOMER_EXAMINE WHERE ID = #{value}
+	]]>
+	</delete>
+	
+	<update id="updateCreatedDate" parameterType="com.vcredit.functions.model.entity.CustomerExamineEntity">
+		UPDATE t_ddq_customer_examine
+		SET CREATED_DATE = NOW()
+		WHERE
+			CUSTOMER_ID = #{customerId}
+			AND SPECIAL_MARK = #{specialMark}
+			ORDER BY
+				ID DESC
+			LIMIT 1
+	</update>
+	
+	<select id="getCsutomerExamine" parameterType="com.vcredit.functions.model.entity.CustomerExamineEntity" resultType="com.vcredit.functions.model.entity.CustomerExamineEntity">
+	<![CDATA[
+		SELECT  ID            Id,
+				CUSTOMER_ID   customerId,
+			    SPECIAL_MARK  specialMark,
+			    OPERATOR	  operator,
+			    CREATED_DATE  createDate
+		FROM T_DDQ_CUSTOMER_EXAMINE WHERE CUSTOMER_ID = #{customerId} and SPECIAL_MARK = #{specialMark}
+	]]>
+	</select>
+	
+</mapper> 
